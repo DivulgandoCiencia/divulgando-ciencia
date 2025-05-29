@@ -12,6 +12,7 @@ import { calcReadTime } from '../../components/readTime';
 import ShareMenu from '../../components/ui/ShareMenu.astro';
 import { clientTranslations } from '../../i18n';
 import { supabase } from '../../lib/supabase';
+import { RenderTemplateResult } from 'astro/runtime/server/render/astro/render-template.js';
 const lang = Astro.locals.lang;
 const t = clientTranslations[lang];
 
