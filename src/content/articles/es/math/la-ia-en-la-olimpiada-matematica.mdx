@@ -69,7 +69,7 @@ Para conseguir una investigación eficaz y neutral seguiremos el siguiente proce
 
 ## Problemas, soluciones y respuestas
 
-Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Castilla y León celebrada en Cervera de Pisuerga (Palencia) el pasado junio de 2025.
+Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Castilla y León celebrada en Cervera de Pisuerga (Palencia) el pasado junio de 2025 en su categoría Juvenil (4º. ESO).
 
 <details>
   <summary><strong>Problema 1</strong></summary>
@@ -1346,34 +1346,48 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
 
 ## Resultados
 
-| IA      | Problema 1 | Problema 2 | Problema 3 | Problema 4 | Nota final |
-|-------------|------------|------------|------------|------------|----------|
-| ChatGPT     | 5,83       | 1,67       | 3,17       | 9,67       | 5,08     |
-| Claude AI   | 6,00       | 9,50       | 1,00       | 10,00      | 6,63     |
-| Gemini      | 7,67       | 8,50       | 9,33       | 10,00      | 8,88     |
-| Deepseek    | 4,83       | 3,67       | 5,67       | 10,00      | 6,04     |
-| Grok        | 1,17       | 2,67       | 3,17       | 9,33       | 4,08     |
-| Mistral AI  | 3,50       | 1,67       | 6,00       | 10,00      | 6,42     |
-| GauthMath   | 5,83       | 0,33       | 3,50       | 10,00      | 4,92     |
+La siguiente tabla muestra los resultados de los diferentes modelos evaluados ordenados de mejor a peor puntuación.
 
+| IA          | Problema 1 | Problema 2 | Problema 3 | Problema 4 | Nota final |
+|-------------|------------|------------|------------|------------|------------|
+| Gemini      | 8,17       | 8,50       | 10,00      | 10,00      | 9,17       |
+| Claude AI   | 4,00       | 9,50       | 1,00       | 10,00      | 6,13       |
+| Deepseek    | 4,83       | 3,67       | 5,67       | 10,00      | 6,04       |
+| Mistral AI  | 4,50       | 4,17       | 4,00       | 10,00      | 5,67       |
+| ChatGPT     | 6,00       | 3,33       | 1,17       | 9,67       | 5,04       |
+| GauthMath   | 5,83       | 0,33       | 4,00       | 10,00      | 5,04       |
+| Grok        | 1,17       | 2,67       | 2,33       | 9,33       | 3,88       |
 
-**Nota media de la IA: 6,01**
+**Nota media de la IA: 5,85**
+
 ## Conclusiones
+
+### Respuestas a las preguntas iniciales
 
 Tras realizar esta investigación podemos responder las preguntas cuestionadas al inicio:
 
-1. No, la IA en general no ha sido capaz de resolver problemas de Olimpiada Matemática. La nota media es considerablemente inferior al umbral mínimo necesario (7,50). Esto puede ser debido a las siguientes causas: mal procesado de los datos (en algunos casos leían mal las imágenes directamente) y razonamientos deficiente (muchos razonamientos ni se acercaban al correcto).
+1. No, la IA en general no ha sido capaz de resolver problemas de Olimpiada Matemática. La nota media es considerablemente inferior al umbral mínimo necesario (7,50). Esto puede ser debido a las siguientes causas: mal procesado de los datos (en algunos casos leían mal las imágenes directamente) y razonamientos deficiente (muchos razonamientos ni se acercaban al correcto). *Se cumple la hipótesis sobre esta pregunta*.
 
-2. Ha habido **solo una IA** que ha sido capaz de resolver estos problemas: Gemini. Ha conseguido una nota final de 8,88, que supone 1,38 puntos más que la puntuación mínima para considerar que sabe resolver los problemas.
+2. Ha habido **solo una IA** que ha sido capaz de resolver estos problemas: Gemini. Ha conseguido una nota final de 9,17, que supone 1,38 puntos más que la puntuación mínima para considerar que sabe resolver los problemas. *Se cumple la hipótesis sobre esta pregunta*.
 
-3. Por tanto, Gemini ha sido la IA que mejor sabe resolver estos problemas.
+3. Por tanto, Gemini ha sido la IA que mejor sabe resolver estos problemas. *No se cumple la hipótesis sobre esta pregunta*.
 
-Volviendo a las hipótesis iniciales, se cumple con la cuestión 1, ya que creíamos que la IA no iba a ser capaz de resolver estos problemas. En el caso 2 también se cumple, pero en la pregunta número 3 no, ya que pensamos en otros modelos antes que en Gemini, pues este es menos popular y no era de esperar que fuera el mejor resolviendo este tipo de problemas.
+### Análisis generales
 
-Ha quedado clara la falta de razonamiento matemático y lógico de las diferentes inteligencias artificiales a lo largo de este artículo, por lo que, ¿seguís creyendo que nos van a sustituir?
+Queda clara la falta de razonamiento matemático por parte de los diferentes modelos de inteligencia artificial. Esto es algo a mejorar próximamente, y seguramente así sea, por las compañías que los ofrecen.
+
+En cuanto a los problemas, el único que han podido resolver todas las inteligencias ha sido el cuarto, ya que era el más fácil sin duda. En cambio, el resto de problemas no han sido resueltos completamente prácticamente por ninguna herramienta, salvo Gemini (resolvió decentemente los problemas 1 y 2 y correctamente el problema 3).
+
+Cabe destacar las dificultades, más que aparentes, por parte de las inteligencias en cuanto a:
+
+1. Los problemas de lógica avanzada, como era el primer problema. En este problema la mayoría desarrollaron un razonamiento muy largo, para acabar con conclusiones sin sentido.
+
+2. Los problemas de geometría (2 y 3), ya que presentaban una imagen de apoyo y muchas no han sido capaces de leerla o la han leído de forma incorrecta.
 
 ## Bonus: dificultades de la investigación
 
 Como todo proceso de investigación, ha habido ciertas dificultades:
 
-1. 
+1. Se intentó añadir a la investigación el modelo Julius AI, ya que se dice ser especialista en razonamiento matemático, pero no respondió al *prompt*, ni al documento, tras varios intentos.
+
+2. Las respuestas de Gemini fueron demasiado extensas, por lo que se recurrió a la IA para reducirlas con la petición de mantener las soluciones originales (comprobado manualmente) y los razonamientos.
