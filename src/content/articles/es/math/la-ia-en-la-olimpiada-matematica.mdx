@@ -364,6 +364,8 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
                 <div class="boxed">
                     <Latex formula='x = \boxed{13\ \text{cm}^2}'/>
                 </div>
+                <b>Calificación obtenida. Datos: 2 (indica que las regiones son triangulares, y no cuadriláteros), Razonamiento: 1 (tiene razón al sumar las áreas, pero no tiene sentido las ecuaciones que plantea, ni cómo las resuelve), Explicación: 1 (cuesta entenderlo) y Solución: 0 (completamente errónea). Nota del problema: 3,33. </b>
+
             </div>
         </details>
         
@@ -405,6 +407,8 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
                 <div class="boxed">
                     <Latex formula='\text{Fracción}=\frac{1}{6} h^2 / 3h^2 = \boxed{\frac{1}{18}}'/>
                 </div>
+
+                <b>Calificación obtenida. Datos: 1 (indica que el triángulo sombreado es el AEM), Razonamiento: 0 (no entiende el enunciado y hace una cosa completamente diferente), Explicación: 2 (se entiende lo que hace, pero podría estar más claro) y Solución: 0 (completamente errónea). Nota del problema: 1,17. </b>
             </div>
         </details>
         
@@ -442,12 +446,7 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
                     <Latex formula='n + 1 = \boxed{15\ \text{exámenes}}'/>
                 </div>
                 
-                <p><strong>✅ Resumen de respuestas finales:</strong></p>
-                <p><strong>1. Alumnos: 1350, Profesores: 675</strong></p>
-                <p><strong>2. Área sombreada: 13 cm²</strong></p>
-                <p><strong>3. Fracción del área total ocupada por el triángulo sombreado: <Latex formula='\boxed{\frac{1}{18}}'/></strong></p>
-                <p><strong>4. Número de exámenes: <Latex formula='\boxed{15}'/></strong></p>
-                
+                <b>Calificación obtenida. Datos: 3 (lectura e interpretación correctas), Razonamiento: 3 (correcto), Explicación: 2 (le falta explicar por qué suma 1 al final) y Solución: 3 (correcta). Nota del problema: 9,67. </b>
             </div>
         </details>
 
@@ -658,20 +657,32 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
 <details>
   <summary><strong>Problema 1</strong></summary>
   <div style="margin-left: 20px;">
-    <p><strong>a) Estrategia óptima:</strong></p>
-    <p>La barca debe llevar siempre la máxima carga posible (100 kg). En viajes de ida, transportar 2 alumnos (50 kg cada uno) o 1 profesor (100 kg). En viajes de vuelta, un alumno (50 kg) debe regresar para minimizar el peso.</p>
-    <p>Pasos:</p>
-    <p>1. Viaje de ida: 2 alumnos o 1 profesor.</p>
-    <p>2. Viaje de vuelta: 1 alumno regresa.</p>
-    <p>Repetir hasta que todos crucen.</p>
+    <p><strong>a) Explica cómo deben hacer para cruzar en el menor número de viajes:</strong></p>
+    <p>Para minimizar el número de viajes, la barca debe llevar la máxima carga posible en cada trayecto. Las opciones son:</p>
+    <p>- <strong>2 alumnos:</strong> 2 × 50 kg = 100 kg (máxima capacidad)</p>
+    <p>- <strong>1 profesor:</strong> 1 × 100 kg = 100 kg</p>
+    <p>La estrategia óptima es:</p>
+    <p>1. <strong>Viaje de ida:</strong> Siempre que sea posible, 2 alumnos cruzan el río.</p>
+    <p>2. <strong>Viaje de vuelta:</strong> 1 alumno regresa la barca.</p>
+    <p>Este proceso se repite hasta que queden pocos alumnos/profesores. Los profesores cruzan solos cuando sea necesario.</p>
 
-    <p><strong>b) Número de profesores y alumnos:</strong></p>
-    <p>Sean <Latex formula='P'/> profesores y <Latex formula='A'/> alumnos. Se sabe:</p>
-    <p><Latex formula='P + A = 2025'/> (Ecuación 1).</p>
-    <p>El peso neto transferido es <Latex formula='100P + 50A = 105950'/> (Ecuación 2).</p>
+    <p><strong>b) Halla el número de profesores y el de alumnos:</strong></p>
+    <p>Sean P = número de profesores, A = número de alumnos. Sabemos:</p>
+    <p>1. <Latex formula='P + A = 2025'/></p>
+    <p>2. El peso neto transferido es: <Latex formula='100P + 50A = (2118 \times 100) - (2117 \times 50) = 105950'/></p>
     <p>Resolviendo el sistema:</p>
-    <p><Latex formula='P = 94'/>, <Latex formula='A = 1931'/>.</p>
-    <p><strong>Solución:</strong> 94 profesores y 1931 alumnos.</p>
+    <p>De la ecuación 1: <Latex formula='P = 2025 - A'/></p>
+    <p>Sustituyendo en la ecuación 2:</p>
+    <p><Latex formula='100(2025 - A) + 50A = 105950'/></p>
+    <p><Latex formula='202500 - 100A + 50A = 105950'/></p>
+    <p><Latex formula='-50A = -96550'/></p>
+    <p><Latex formula='A = 1931'/></p>
+    <p>Entonces <Latex formula='P = 2025 - 1931 = 94'/></p>
+    <p><strong>Respuesta:</strong> 94 profesores y 1931 alumnos.</p>
+
+    <p><b>Calificación obtenida (apartado 1). Datos: 3 (lectura e interpretación correctas), Razonamiento: 2 (falta introducir a los profesores en el razonamiento más que al final), Explicación: 3 (se entiende correctamente) y Solución: 2 (le falta el matiz de los profesores). Nota del apartado: 7,50.</b></p>
+    <p><b>Calificación obtenida (apartado 2). Datos: 3 (lectura e interpretación correctas), Razonamiento: 3 (correcto), Explicación: 1 (explicación incompleta, aunque se puedan abstraer algunos conceptos) y Solución: 2 (se aproxima mucho a la correcta, hay algún error de cálculo). Nota del apartado: 8,83.</b></p>
+    <p><b>Nota del problema (media aritmética): 8,17.</b></p>
   </div>
 </details>
 
@@ -679,11 +690,18 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
   <summary><strong>Problema 2</strong></summary>
   <div style="margin-left: 20px;">
     <p><strong>Razonamiento:</strong></p>
-    <p>El cuadrado se divide en 4 triángulos al unir un punto interior con los vértices. La suma de áreas de triángulos opuestos es igual a la mitad del área total.</p>
-    <p>Dadas las áreas 2 cm², 16 cm² y 9 cm², el área sombreada (<Latex formula='A_s'/>) cumple:</p>
-    <p><Latex formula='A_s + 9 = 2 + 16'/></p>
-    <p><Latex formula='A_s = 18 - 9 = 9 \text{ cm}^2'/>.</p>
-    <p><strong>Solución:</strong> El área sombreada es 9 cm².</p>
+    <p>Al unir un punto interior a los vértices del cuadrado, se forman 4 triángulos. Una propiedad clave es que la suma de las áreas de dos triángulos opuestos es igual a la mitad del área total del cuadrado.</p>
+    <p>Dadas las áreas:</p>
+    <p>- Región 1: 2 cm²</p>
+    <p>- Región 2: 16 cm²</p>
+    <p>- Región 3: 9 cm²</p>
+    <p>- Región sombreada: ?</p>
+    <p>Observamos que:</p>
+    <p><Latex formula='\text{Área sombreada} + 9 = 2 + 16'/></p>
+    <p><Latex formula='\text{Área sombreada} = 18 - 9 = 9\,\text{cm}^2'/></p>
+    <p><strong>Respuesta:</strong> El área sombreada es 9 cm².</p>
+
+    <b>Calificación obtenida. Datos: 1 (indica que las áreas son de 2 y 16, cuando deben ser de 7 y 18. Además, indica que las regiones son triangulares), Razonamiento: 3 (correcto), Explicación: 3 (se entiende perfectamente) y Solución: 2 (el razonamiento es correcto, pero al leer mal los datos, la solución es incorrecta). Nota del problema: 8,50. </b>
   </div>
 </details>
 
@@ -691,12 +709,21 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
   <summary><strong>Problema 3</strong></summary>
   <div style="margin-left: 20px;">
     <p><strong>Razonamiento:</strong></p>
-    <p>El rectángulo ABCD se divide en 3 subrectángulos iguales (ABHE, EHFG, FGCD). El segmento MN divide FGCD en dos áreas iguales, pasando por su centro.</p>
-    <p>Usando coordenadas:</p>
-    <p>El triángulo sombreado △AEK tiene vértices en <Latex formula='A(0,h)'/>, <Latex formula='E(w,h)'/>, y <Latex formula='K(w, \frac{4h}{5})'/>.</p>
-    <p>Área de △AEK: <Latex formula='\frac{wh}{10}'/>.</p>
-    <p>Área total de ABCD: <Latex formula='3wh'/>.</p>
-    <p><strong>Solución:</strong> La fracción del área sombreada es <Latex formula='\frac{1}{30}'/>.</p>
+    <p>El rectángulo ABCD está dividido en 3 regiones iguales (ABHE, EHFG, FGCD). Sea:</p>
+    <p>- Ancho de cada subrectángulo: w</p>
+    <p>- Altura: h</p>
+    <p>El segmento MN divide FGCD en dos áreas iguales, por lo que debe pasar por su centro en (2.5w, 0.5h).</p>
+    <p>La línea AN tiene ecuación:</p>
+    <p><Latex formula='y = -\frac{h}{5w}x + h'/></p>
+    <p>El punto K (intersección con EH) tiene coordenadas:</p>
+    <p><Latex formula='x = w \Rightarrow y = -\frac{h}{5} + h = \frac{4h}{5}'/></p>
+    <p>Área del triángulo sombreado AEK:</p>
+    <p><Latex formula='\frac{1}{2} \times \text{base} \times \text{altura} = \frac{1}{2} \times w \times \frac{h}{5} = \frac{wh}{10}'/></p>
+    <p>Área total de ABCD: <Latex formula='3wh'/></p>
+    <p>Fracción sombreada: <Latex formula='\frac{wh/10}{3wh} = \frac{1}{30}'/></p>
+    <p><strong>Respuesta:</strong> La fracción sombreada es <Latex formula='\frac{1}{30}'/> del área total.</p>
+  
+    <b>Calificación obtenida. Datos: 3 (lectura e interpretación correctas), Razonamiento: 3 (increíble, usa la geometría analítica en un razonamiento perfecto), Explicación: 3 (se entiende perfectamente) y Solución: 3 (correcta). Nota del problema: 10. </b>
   </div>
 </details>
 
@@ -704,15 +731,23 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
   <summary><strong>Problema 4</strong></summary>
   <div style="margin-left: 20px;">
     <p><strong>Razonamiento:</strong></p>
-    <p>Sea <Latex formula='N'/> el número total de exámenes y <Latex formula='S'/> la suma de notas antes del último examen.</p>
-    <p>Escenario 1: <Latex formula='\frac{S + 1.7}{N} = 8'/>.</p>
-    <p>Escenario 2: <Latex formula='\frac{S + 9.2}{N} = 8.5'/>.</p>
-    <p>Resolviendo el sistema:</p>
-    <p><Latex formula='N = 15'/>, <Latex formula='S = 118.3'/>.</p>
-    <p><strong>Solución:</strong> Cal-Culín realizó 15 exámenes.</p>
+    <p>Sea N = número total de exámenes, S = suma de notas antes del último examen.</p>
+    <p><strong>Escenario 1:</strong> Si saca 1.7 en el último examen, media = 8</p>
+    <p><Latex formula='\frac{S + 1.7}{N} = 8 \Rightarrow S = 8N - 1.7'/></p>
+    <p><strong>Escenario 2:</strong> Si saca 9.2 en el último examen, media = 8.5</p>
+    <p><Latex formula='\frac{S + 9.2}{N} = 8.5'/></p>
+    <p>Sustituyendo S:</p>
+    <p><Latex formula='8.5N = (8N - 1.7) + 9.2'/></p>
+    <p><Latex formula='8.5N = 8N + 7.5'/></p>
+    <p><Latex formula='0.5N = 7.5 \Rightarrow N = 15'/></p>
+    <p>Verificación:</p>
+    <p><Latex formula='S = 8 \times 15 - 1.7 = 118.3'/></p>
+    <p>Media con 9.2: <Latex formula='\frac{118.3 + 9.2}{15} = 8.5'/></p>
+    <p><strong>Respuesta:</strong> Cal-Culín hizo 15 exámenes.</p>
+
+    <b>Calificación obtenida. Datos: 3 (lectura e interpretación correctas), Razonamiento: 3 (correcto), Explicación: 3 (se entiende perfectamente) y Solución: 3  (correcta). Nota del problema: 10. </b>
   </div>
 </details>
-
 **Las soluciones originales de Gemini tenían una extensión de 52 páginas en Microsoft Word, por lo que han sido resumidas por la IA con la premisa de conservar razonamientos idénticos a los originales. Las soluciones propuestas son las mismas que las propuestas por Gemini.*
 
 #### Deepseek
@@ -948,6 +983,10 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
             <p><strong>Paso 5: Respuesta</strong></p>
             <p>- <strong>a)</strong> Para cruzar en el menor número de viajes, primero se trasladan los 14 profesores a B en <span class="latex-formula">14²+14-1=209</span> viajes. Luego, estos profesores trasladan a los 2011 alumnos: un profesor lleva la barca a A, un alumno cruza a B (2 viajes por alumno), total <span class="latex-formula">2×2011=4022</span> viajes. Total: 209+4022=4231 viajes (nota: el enunciado dice 4235, posible error tipográfico).</p>
             <p>- <strong>b)</strong> Profesores = 14, alumnos = 2025-14=2011.</p>
+
+            <p><b>Calificación obtenida (apartado 1). Datos: 1 (dice que los alumnos pesan 60 kg), Razonamiento: 0 (no tiene sentido: según su razonamiento, las personas irían y volverían todo el rato), Explicación: 2 (se entiende bastante bien, salvo algún matiz) y Solución: 0 (completamente errónea). Nota del apartado: 1,17.</b></p>
+            <p><b>Calificación obtenida (apartado 2). Datos: 1 (dice que los alumnos pesan 60 kg), Razonamiento: 0 (no tiene sentido: según su razonamiento, las personas irían y volverían todo el rato), Explicación: 2 (se entiende bastante bien, salvo algún matiz) y Solución: 0 (completamente errónea). Nota del apartado: 1,17.</b></p>
+            <p><b>Nota del problema (media aritmética): 1,17.</b></p>
         </div>
     </details>
 
@@ -972,6 +1011,8 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
             
             <p><strong>Solución:</strong></p>
             <p>El área de la región sombreada es 1/4 del área del cuadrado.</p>
+
+            <b>Calificación obtenida. Datos: 0 (no lee la figura), Razonamiento: 1 (se basa en suposiciones falsas, como que la región sombreada es un cuarto de la total), Explicación: 2 (se entiende lo que quiere hacer más o menos) y Solución: 0 (completamente errónea). Nota del problema: 2,67.</b>
         </div>
     </details>
 
@@ -1004,6 +1045,8 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
             
             <p><strong>Solución:</strong></p>
             <p>La fracción es 1/12.</p>
+
+            <b>Calificación obtenida. Datos: 0 (confunde completamente los datos, da la sensación que no lee la figura), Razonamiento: 1 (algunas de las cosas que hace tienen algo de sentido), Explicación: 1 (cuesta entenderlo) y Solución: 0 (completamente errónea). Nota del problema: 2,33.</b>
         </div>
     </details>
 
@@ -1029,6 +1072,8 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
             
             <p><strong>Solución:</strong></p>
             <p>Hizo 15 exámenes.</p>
+
+            <b>Calificación obtenida. Datos: 3 (lectura e interpretación correctas), Razonamiento: 3 (correcto), Explicación: 1 (no explica apenas el razonamiento) y Solución: 3 (correcta). Nota del problema: 9,33.</b>
         </div>
     </details>
 
@@ -1038,82 +1083,83 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
             <div style="margin-left: 20px;">
                 <p><strong>a) Explicación de cómo cruzar el río en el menor número de viajes:</strong></p>
                 <p>Para minimizar el número de viajes, debemos optimizar el transporte de personas en la barca. Dado que la barca no puede llevar más de 100 kg, las combinaciones posibles son:</p>
-                <ul>
-                    <li>Un profesor (100 kg)</li>
-                    <li>Dos alumnos (2 x 50 kg = 100 kg)</li>
-                </ul>
+                <p>- Un profesor (100 kg)</p>
+                <p>- Dos alumnos (2 x 50 kg = 100 kg)</p>
                 <p>La estrategia es la siguiente:</p>
-                <ol>
-                    <li>Dos alumnos cruzan el río.</li>
-                    <li>Un alumno regresa.</li>
-                    <li>Dos alumnos cruzan de nuevo.</li>
-                    <li>Un alumno regresa.</li>
-                </ol>
+                <p>1. Dos alumnos cruzan el río.</p>
+                <p>2. Un alumno regresa.</p>
+                <p>3. Dos alumnos cruzan de nuevo.</p>
+                <p>4. Un alumno regresa.</p>
                 <p>Este ciclo se repite hasta que todos hayan cruzado el río. Cada ciclo consta de 4 viajes (ida y vuelta de dos alumnos y regreso de uno).</p>
                 
                 <p><strong>b) Número de profesores y alumnos:</strong></p>
-                <p>Sea <latex-formula formula="p"></latex-formula> el número de profesores y <latex-formula formula="a"></latex-formula> el número de alumnos. Sabemos que:</p>
-                <ol>
-                    <li><latex-formula formula="p + a = 2025"></latex-formula></li>
-                    <li>Cada viaje de dos alumnos transporta efectivamente a un alumno al otro lado (ya que uno debe regresar).</li>
-                </ol>
-                <p>Para transportar a todos los alumnos, se necesitan <latex-formula formula="a"></latex-formula> viajes efectivos. Cada ciclo de 4 viajes transporta efectivamente a un alumno. Por lo tanto, el número total de viajes es aproximadamente <latex-formula formula="4a"></latex-formula>.</p>
+                <p>Sea <span class="latex-formula">p</span> el número de profesores y <span class="latex-formula">a</span> el número de alumnos. Sabemos que:</p>
+                <p>1. <span class="latex-formula">p + a = 2025</span></p>
+                <p>2. Cada viaje de dos alumnos transporta efectivamente a un alumno al otro lado (ya que uno debe regresar).</p>
+                <p>Para transportar a todos los alumnos, se necesitan <span class="latex-formula">a</span> viajes efectivos. Cada ciclo de 4 viajes transporta efectivamente a un alumno. Por lo tanto, el número total de viajes es aproximadamente <span class="latex-formula">4a</span>.</p>
                 <p>Dado que se necesitan 4235 viajes, tenemos:</p>
-                <p><latex-formula formula="4a \approx 4235"></latex-formula></p>
-                <p><latex-formula formula="a \approx \frac{4235}{4} \approx 1058.75"></latex-formula></p>
+                <p><span class="latex-formula">4a ≈ 4235</span></p>
+                <p><span class="latex-formula">a ≈ 4235/4 ≈ 1058.75</span></p>
                 <p>Como el número de alumnos debe ser un entero, redondeamos a 1059. Por lo tanto:</p>
-                <p><latex-formula formula="a = 1059"></latex-formula></p>
-                <p><latex-formula formula="p = 2025 - 1059 = 966"></latex-formula></p>
+                <p><span class="latex-formula">a = 1059</span></p>
+                <p><span class="latex-formula">p = 2025 - 1059 = 966</span></p>
+
+                <p><b>Calificación obtenida (apartado 1). Datos: 3 (lectura e interpretación correctas), Razonamiento: 1 (no menciona a los profesores en ningún momento del razonamiento), Explicación: 3 (se entiende bien) y Solución: 0 (errónea). Nota del apartado: 4,50.</b></p>
+                <p><b>Calificación obtenida (apartado 2). Datos: 3 (lectura e interpretación correctas), Razonamiento: 1 (correcto con los alumnos, pero no menciona en ningún momento a los profesores. La ecuación planteada con los alumnos es correcta), Explicación: 3 (se entiende bien) y Solución: 0 (completamente errónea). Nota del apartado: 4,50.</b></p>
+                <p><b>Nota del problema (media aritmética): 4,50.</b></p>
+
             </div>
         </details>
         <details>
-            <summary><strong>Problema 2</strong></summary>
-            <div style="margin-left: 20px;">
-                <p><strong>Área de la región sombreada:</strong></p>
-                <p>Para resolver este problema, necesitamos entender la geometría del cuadrado y las áreas dadas. Observamos que el cuadrado está dividido en varias regiones con áreas de 7 cm², 9 cm² y 18 cm².</p>
-                <p>El área total del cuadrado es la suma de las áreas de las regiones:</p>
-                <p><latex-formula formula="7 + 9 + 18 + \text{Área de la región sombreada} = \text{Área total del cuadrado}"></latex-formula></p>
-                <p>Primero, calculamos el área total del cuadrado. Supongamos que el lado del cuadrado es <latex-formula formula="L"></latex-formula>. Entonces:</p>
-                <p><latex-formula formula="L^2 = 7 + 9 + 18 + \text{Área de la región sombreada}"></latex-formula></p>
-                <p>Para encontrar el área de la región sombreada, necesitamos más información sobre cómo están dispuestas las regiones dentro del cuadrado. Sin embargo, podemos suponer que el área de la región sombreada es la diferencia entre el área total del cuadrado y las áreas conocidas.</p>
-                <p>Si asumimos que el área total del cuadrado es la suma de las áreas dadas más el área sombreada, y que el área sombreada es igual a la suma de las áreas conocidas (por simetría o distribución), entonces:</p>
-                <p><latex-formula formula="\text{Área de la región sombreada} = 7 + 9 + 18 = 34 \text{ cm}^2"></latex-formula></p>
-            </div>
-        </details>
+        <summary><strong>Problema 2</strong></summary>
+        <div style="margin-left: 20px;">
+            <p><strong>Área de la región sombreada:</strong></p>
+            <p>Para resolver este problema, necesitamos entender la geometría del cuadrado y las áreas dadas. Observamos que el cuadrado está dividido en varias regiones con áreas de 7 cm², 9 cm² y 18 cm².</p>
+            <p>El área total del cuadrado es la suma de las áreas de las regiones:</p>
+            <p><span class="latex-formula">7 + 9 + 18 + Área de la región sombreada = Área total del cuadrado</span></p>
+            <p>Primero, calculamos el área total del cuadrado. Supongamos que el lado del cuadrado es <span class="latex-formula">L</span>. Entonces:</p>
+            <p><span class="latex-formula">L^2 = 7 + 9 + 18 + Área de la región sombreada</span></p>
+            <p>Para encontrar el área de la región sombreada, necesitamos más información sobre cómo están dispuestas las regiones dentro del cuadrado. Sin embargo, podemos suponer que el área de la región sombreada es la diferencia entre el área total del cuadrado y las áreas conocidas.</p>
+            <p>Si asumimos que el área total del cuadrado es la suma de las áreas dadas más el área sombreada, y que el área sombreada es igual a la suma de las áreas conocidas (por simetría o distribución), entonces:</p>
+            <p><span class="latex-formula">Área de la región sombreada = 7 + 9 + 18 = 34 cm^2</span></p>
+            <b>Calificación obtenida. Datos: 3 (lectura e interpretación correctas), Razonamiento: 1 (razona una suma de áreas, pero el resto no tiene sentido), Explicación: 2 (se podría entender mejor) y Solución: 0 (completamente errónea). Nota del problema: 4,17. </b>
+        </div>
+    </details>
         <details>
-            <summary><strong>Problema 3</strong></summary>
-            <div style="margin-left: 20px;">
-                <p><strong>Fracción del área del rectángulo ABCD ocupada por el triángulo sombreado:</strong></p>
-                <p>Para resolver este problema, necesitamos entender la geometría del rectángulo y las divisiones dadas. El rectángulo ABCD está dividido en 3 regiones iguales, y el segmento MN divide al rectángulo CDFG en dos trozos de igual área.</p>
-                <p>Primero, calculamos el área total del rectángulo ABCD. Supongamos que el área total del rectángulo es <latex-formula formula="A"></latex-formula>. Entonces, cada una de las 3 regiones iguales tiene un área de <latex-formula formula="\frac{A}{3}"></latex-formula>.</p>
-                <p>El segmento MN divide al rectángulo CDFG en dos trozos de igual área, por lo que cada trozo tiene un área de <latex-formula formula="\frac{A}{6}"></latex-formula>.</p>
-                <p>El triángulo sombreado está dentro de una de estas regiones. Para encontrar la fracción del área del rectángulo ABCD ocupada por el triángulo sombreado, necesitamos más información sobre la geometría específica del triángulo. Sin embargo, podemos suponer que el triángulo sombreado ocupa una fracción significativa de una de las regiones.</p>
-                <p>Si asumimos que el triángulo sombreado ocupa la mitad de una de las regiones, entonces:</p>
-                <p><latex-formula formula="\text{Fracción del área del rectángulo ABCD ocupada por el triángulo sombreado} = \frac{1}{2} \times \frac{1}{3} = \frac{1}{6}"></latex-formula></p>
-            </div>
-        </details>
+        <summary><strong>Problema 3</strong></summary>
+        <div style="margin-left: 20px;">
+            <p><strong>Fracción del área del rectángulo ABCD ocupada por el triángulo sombreado:</strong></p>
+            <p>Para resolver este problema, necesitamos entender la geometría del rectángulo y las divisiones dadas. El rectángulo ABCD está dividido en 3 regiones iguales, y el segmento MN divide al rectángulo CDFG en dos trozos de igual área.</p>
+            <p>Primero, calculamos el área total del rectángulo ABCD. Supongamos que el área total del rectángulo es <span class="latex-formula">A</span>. Entonces, cada una de las 3 regiones iguales tiene un área de <span class="latex-formula">A/3</span>.</p>
+            <p>El segmento MN divide al rectángulo CDFG en dos trozos de igual área, por lo que cada trozo tiene un área de <span class="latex-formula">A/6</span>.</p>
+            <p>El triángulo sombreado está dentro de una de estas regiones. Para encontrar la fracción del área del rectángulo ABCD ocupada por el triángulo sombreado, necesitamos más información sobre la geometría específica del triángulo. Sin embargo, podemos suponer que el triángulo sombreado ocupa una fracción significativa de una de las regiones.</p>
+            <p>Si asumimos que el triángulo sombreado ocupa la mitad de una de las regiones, entonces:</p>
+            <p><span class="latex-formula">Fracción del área del rectángulo ABCD ocupada por el triángulo sombreado = 1/2 × 1/3 = 1/6</span></p>
+            <b>Calificación obtenida. Datos: 2 (lectura e interpretación correctas hasta que dice que el triángulo sombreado está dentro de una de las regiones de CDFG), Razonamiento: 1 (correcto hasta que hace suposiciones sin base ninguna), Explicación: 3 (se entiende bien) y Solución: completamente errónea (0). Nota del problema: 4,00. </b>
+
+        </div>
+    </details>
         <details>
-            <summary><strong>Problema 4</strong></summary>
-            <div style="margin-left: 20px;">
-                <p><strong>Número de exámenes realizados por Cal-Culín:</strong></p>
-                <p>Sea <latex-formula formula="n"></latex-formula> el número de exámenes realizados por Cal-Culín antes del último examen. Sea <latex-formula formula="S"></latex-formula> la suma de las notas de los <latex-formula formula="n"></latex-formula> exámenes.</p>
-                <p>Si Cal-Culín saca un 1.7 en el último examen, la nota media sería:</p>
-                <p><latex-formula formula="\frac{S + 1.7}{n + 1} = 8"></latex-formula></p>
-                <p>Si Cal-Culín saca un 9.2 en el último examen, la nota media sería:</p>
-                <p><latex-formula formula="\frac{S + 9.2}{n + 1} = 8.5"></latex-formula></p>
-                <p>Tenemos dos ecuaciones:</p>
-                <ol>
-                    <li><latex-formula formula="S + 1.7 = 8(n + 1)"></latex-formula></li>
-                    <li><latex-formula formula="S + 9.2 = 8.5(n + 1)"></latex-formula></li>
-                </ol>
-                <p>Restando la primera ecuación de la segunda, obtenemos:</p>
-                <p><latex-formula formula="(S + 9.2) - (S + 1.7) = 8.5(n + 1) - 8(n + 1)"></latex-formula></p>
-                <p><latex-formula formula="7.5 = 0.5(n + 1)"></latex-formula></p>
-                <p><latex-formula formula="n + 1 = 15"></latex-formula></p>
-                <p><latex-formula formula="n = 14"></latex-formula></p>
-                <p>Por lo tanto, Cal-Culín realizó 14 exámenes antes del último examen, lo que hace un total de 15 exámenes en el curso.</p>
-            </div>
-        </details>
+        <summary><strong>Problema 4</strong></summary>
+        <div style="margin-left: 20px;">
+            <p><strong>Número de exámenes realizados por Cal-Culín:</strong></p>
+            <p>Sea <span class="latex-formula">n</span> el número de exámenes realizados por Cal-Culín antes del último examen. Sea <span class="latex-formula">S</span> la suma de las notas de los <span class="latex-formula">n</span> exámenes.</p>
+            <p>Si Cal-Culín saca un 1.7 en el último examen, la nota media sería:</p>
+            <p><span class="latex-formula">(S + 1.7)/(n + 1) = 8</span></p>
+            <p>Si Cal-Culín saca un 9.2 en el último examen, la nota media sería:</p>
+            <p><span class="latex-formula">(S + 9.2)/(n + 1) = 8.5</span></p>
+            <p>Tenemos dos ecuaciones:</p>
+            <p>1. <span class="latex-formula">S + 1.7 = 8(n + 1)</span></p>
+            <p>2. <span class="latex-formula">S + 9.2 = 8.5(n + 1)</span></p>
+            <p>Restando la primera ecuación de la segunda, obtenemos:</p>
+            <p><span class="latex-formula">(S + 9.2) - (S + 1.7) = 8.5(n + 1) - 8(n + 1)</span></p>
+            <p><span class="latex-formula">7.5 = 0.5(n + 1)</span></p>
+            <p><span class="latex-formula">n + 1 = 15</span></p>
+            <p><span class="latex-formula">n = 14</span></p>
+            <p>Por lo tanto, Cal-Culín realizó 14 exámenes antes del último examen, lo que hace un total de 15 exámenes en el curso.</p>
+            Calificación obtenida. Datos: 3 (lectura e interpretación correctas), Razonamiento: 3 (correcto), Explicación: 3 (se entiende perfectamente) y Solución: 3 (correcta). Nota del problema: 10,00.
+        </div>
+    </details>
 
 #### GauthMath
 <details>
@@ -1178,6 +1224,10 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
     <h3>Answer:</h3>
     
     <p>185 profesores y 1840 alumnos.</p>
+
+    <p><b>Calificación obtenida (apartado 1). Datos: 3 (lectura e interpretación correctas), Razonamiento: 2 (indica que hay que maximizar, minimizar... pero falta tener en cuenta a los profesores), Explicación: 3 (se entiende bien) y Solución: 2 (falta algún matiz, sobre todo especificar con los profesores). Nota del apartado: 7,50.</b></p>
+    <p><b>Calificación obtenida (apartado 2). Datos: 3 (lectura e interpretación correctas), Razonamiento: 1 (erróneo, se inventa las ecuaciones), Explicación: 2 (se podría entender mejor) y Solución: 0 (completamente errónea). Nota del apartado: 4,17.</b></p>
+    <p><b>Nota del problema (media aritmética): 5,83.</b></p>
   </div>
 </details>
 
@@ -1197,6 +1247,8 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
     <h3>Answer:</h3>
     
     <p><Latex formula="(180\pi)^2"/> m'</p>
+
+    <b>Calificación obtenida. Datos: 0 (se inventa los datos, parece que no lee la figura), Razonamiento: 0 (no tiene sentido), Explicación: 1 (se entiende bastante mal) y Solución: 0 (completamente errónea). Nota del problema: 0,33.</b>
   </div>
 </details>
 
@@ -1232,6 +1284,8 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
     <p>La fracción del área ocupada por el triángulo sombrado en el rectángulo ABCD es <Latex formula="\frac{1}{3}"/>.</p>
     
     <p>Si tienes alguna otra pregunta o necesitas más aclaraciones, ¡no dudes en preguntar! Estoy aquí para ayudarte.</p>
+
+    <b>Calificación obtenida. Datos: 2 (parece leerlos bien, pero más tarde los confunde), Razonamiento: 1 (razona que el triángulo sombreado es un tercio del rectángulo total. Hay algunos matices que pueden ser correctos), Explicación: 3 (se entiende lo que quiere hacer) y Solución: 0 (completamente errónea). Nota del problema: 4,00.</b>
   </div>
 </details>
 
@@ -1285,6 +1339,8 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
     <h3>Answer:</h3>
     
     <p>14</p>
+
+    <b>Calificación obtenida. Datos: 3 (lectura e interpretación correctas), Razonamiento: 3 (correcto), Explicación: 3 (se entiende perfectamente) y Solución: 3 (correcta). Nota del problema: 10,00.</b>
   </div>
 </details>
 
