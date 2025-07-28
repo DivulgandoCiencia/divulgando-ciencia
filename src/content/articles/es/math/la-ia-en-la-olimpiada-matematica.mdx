@@ -41,7 +41,7 @@ A continuación, se muestran los modelos de IA a evaluar:
 
 - **Gemini (Google)**: Modelo multimodal de Google que integra tanto información visual como textual. Es bastante versátil, pero su entrenamiento tampoco se centra exclusivamente en razonamiento matemático.
 
-- **Deepseek**: Específico para razonamiento ógico y matématico. Tiene un enfoque estructurado al resolver problemas.
+- **Deepseek**: Específico para razonamiento lógico y matématico. Tiene un enfoque estructurado al resolver problemas.
 
 - **Grok**: Está desarrollado por xAI (empresa de Elon Musk). Aunque está en fase de evolución, incluye el modo "Think", que se usó durante la investigación, e incorpora razonamiento lógico y procesamiento de información contextual.
 
@@ -53,7 +53,7 @@ A continuación, se muestran los modelos de IA a evaluar:
 
 Para conseguir una investigación eficaz y neutral seguiremos el siguiente procedimiento:
 
-1. Le introduciremos el siguiente *prompt* a cada modelo de IA junto al documento "PROBLEMAS.pdf" (PDF con los problemas a los que se va a enfrentar) y las imágenes "Figura del Problema 2" y "Figura del Problema 3", ilustraciones necesarias para resolver los problemas 2 y 3, respectivamente.
+1. Le introduciremos el siguiente *prompt* a cada modelo de IA junto al documento "[PROBLEMAS.pdf](/docs/la-ia-en-la-olimpiada-matematica/PROBLEMAS.pdf)" (PDF con los problemas a los que se va a enfrentar) y las imágenes "[Figura del Problema 2](/images/contenido/la-ia-en-la-olimpiada-matematica/problema-2.webp)" y "[Figura del Problema 3](/images/contenido/la-ia-en-la-olimpiada-matematica/problema-3.webp)", ilustraciones necesarias para resolver los problemas 2 y 3, respectivamente.
 
 > Actúa como un concursante de la Olimpiada Matemática. Resuelve los problemas adjuntos en el archivo "PROBLEMAS.pdf".
 > Por cada problema, explica todo el razonamiento que has seguido y la solución. Puedes usar dibujos y/o imágenes si lo consideras necesario.
@@ -76,13 +76,10 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
   <summary><strong>Problema 1</strong></summary>
 
   <div style="margin-left: 20px;">
-    Los profesores y alumnos de un instituto son entre todos 2025 personas (obviamente con más alumnos que profesores). En una excursión han de atravesar un río, para lo que disponen de una sola barca. La barca no puede llevar a la vez más de 100 kilos. Cada alumno pesa 50 kilos y cada profesor 100 (la sabiduría es muy pesada). Se necesitan como mínimo 4235 viajes para que pasen todos. (Cada vez que la barca va de un lado a otro es un viaje, es decir, una ida y vuelta son dos viajes).
-    <br/>
-    a) Explica cómo deben de hacer para cruzar en el menor número de viajes.
-    <br/>
-    b) Halla el número de profesores y el de alumnos.
-    <br/>
-    Nota: No valen trampas del tipo “<em>empujar a la barca para que cruce sola</em>”.
+    <p>Los profesores y alumnos de un instituto son entre todos 2025 personas (obviamente con más alumnos que profesores). En una excursión han de atravesar un río, para lo que disponen de una sola barca. La barca no puede llevar a la vez más de 100 kilos. Cada alumno pesa 50 kilos y cada profesor 100 (la sabiduría es muy pesada). Se necesitan como mínimo 4235 viajes para que pasen todos. (Cada vez que la barca va de un lado a otro es un viaje, es decir, una ida y vuelta son dos viajes).</p>
+    <p>a) Explica cómo deben de hacer para cruzar en el menor número de viajes.</p>
+    <p>b) Halla el número de profesores y el de alumnos.</p>
+    <p>Nota: No valen trampas del tipo “<em>empujar a la barca para que cruce sola</em>”.</p>
     <br/>
   </div>
 
@@ -112,7 +109,7 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
   <summary><strong>Problema 4</strong></summary>
 
   <div style="margin-left: 20px;">
-    Antes de realizar el último examen del curso, Cal-Culín pensó que si sacaba en dicho examen un 1,7 la nota media de todos los exámenes del curso sería de un 8, pero si sacaba un 9,2, la media sería de 8,5. ¿Cuántos exámenes hizo en este caso?
+    <p>Antes de realizar el último examen del curso, Cal-Culín pensó que si sacaba en dicho examen un 1,7 la nota media de todos los exámenes del curso sería de un 8, pero si sacaba un 9,2, la media sería de 8,5. </p><p>¿Cuántos exámenes hizo en este caso?</p>
   </div>
 
 </details>
@@ -120,104 +117,75 @@ Los problemas usados son los de la XXXII Olimpiada Matemática Regional de Casti
 ### Soluciones
 
 <details>
-  <summary><strong>Problema 1</strong></summary>
-
-  <div style="margin-left: 20px;">
-    a)	Para cruzar en el menor número de viajes hay que seguir los pasos:
-    <br/>
-	  1. Llevar a todos los adultos. Para ello, deberán cruzar 2 alumnos primero. De esos dos, uno devolverá la barca al inicio y cruzará un profesor. Traerá la barca al inicio el alumno que queda en el otro extremo. Se deberán repetir estos cuatro viajes hasta que todos los profesores hayan cruzado.
-    <br/>
-	  2. Llevar a todos los alumnos. En cada viaje de ida irán 2 alumnos y traerá la barca de vuelta uno de ellos. Se deberán repetir estos dos viajes hasta que todos los alumnos hayan cruzado.
-    <br/>
-    <br/>
-	  b) Para hallar el número de profesores y alumnos, volvemos a los pasos:
-    <br/>
-	  1. Para llevar a cada profesor son necesarios 4 viajes. Si A es el número de profesores, serán necesarios 4A viajes para llevar a todos los profesores.
-    <br/>
-	  2. Para llevar a cada alumno son necesarios 2 viajes. Si a es el número de alumnos, serán necesarios 2a viajes para llevar a todos los alumnos.	
-    <br/>
-	  Es importante aclarar que no será necesario traer la barca de vuelta en el último viaje de los alumnos, por tanto, se restará 1 al número de viajes total.
-	  <br/>
-    De esta forma se plantea la ecuación: 4A + 2a – 1 = 4235, siendo 4235 el número total de viajes realizados.
-    <br/>
-    De la ecuación A + a = 2025 (condición del problema) se obtiene que a = 2025 – A, luego: 4A + 2(2025 – A) – 1 = 4235  4A + 4050 – 2A – 1 = 4235  2A = 4235 – 4049 = 186  A = 93 profesores.
-	  <br/>
-    De esta forma, el número de alumnos será: a = 2025 – A = 2025 – 93 = 1932 alumnos.
-	  <br/>
-    SOLUCIÓN: Hay 93 profesores y 1932 alumnos.
-    <br/>
-    <br/>
-    <em>Solución de Julio Vivas.</em>
-  </div>
-
-</details>
+        <summary><strong>Problema 1</strong></summary>
+        <div style="margin-left: 20px;">
+            <p><strong>a)</strong> Para cruzar en el menor número de viajes hay que seguir los pasos:</p>
+            <p>1. Llevar a todos los adultos. Para ello, deberán cruzar 2 alumnos primero. De esos dos, uno devolverá la barca al inicio y cruzará un profesor. Traerá la barca al inicio el alumno que queda en el otro extremo. Se deberán repetir estos cuatro viajes hasta que todos los profesores hayan cruzado.</p>
+            <p>2. Llevar a todos los alumnos. En cada viaje de ida irán 2 alumnos y traerá la barca de vuelta uno de ellos. Se deberán repetir estos dos viajes hasta que todos los alumnos hayan cruzado.</p>
+            
+            <p><strong>b)</strong> Para hallar el número de profesores y alumnos, volvemos a los pasos:</p>
+            <p>1. Para llevar a cada profesor son necesarios 4 viajes. Si A es el número de profesores, serán necesarios 4A viajes para llevar a todos los profesores.</p>
+            <p>2. Para llevar a cada alumno son necesarios 2 viajes. Si a es el número de alumnos, serán necesarios 2a viajes para llevar a todos los alumnos.</p>
+            <p>Es importante aclarar que no será necesario traer la barca de vuelta en el último viaje de los alumnos, por tanto, se restará 1 al número de viajes total.</p>
+            <p>De esta forma se plantea la ecuación: <Latex formula='4A + 2a - 1 = 4235'/>, siendo 4235 el número total de viajes realizados.</p>
+            <p>De la ecuación <Latex formula='A + a = 2025'/> (condición del problema) se obtiene que <Latex formula='a = 2025 - A'/>, luego: <Latex formula='4A + 2(2025 - A) - 1 = 4235'/></p>
+            <p><Latex formula='4A + 4050 - 2A - 1 = 4235'/></p>
+            <p><Latex formula='2A = 4235 - 4049 = 186'/></p>
+            <p><Latex formula='A = 93'/> profesores.</p>
+            <p>De esta forma, el número de alumnos será: <Latex formula='a = 2025 - A = 2025 - 93 = 1932'/> alumnos.</p>
+            <p><strong>SOLUCIÓN: Hay 93 profesores y 1932 alumnos.</strong></p>
+            <p><em>Solución de Julio Vivas.</em></p>
+        </div>
+    </details>
 
 <details>
-  <summary><strong>Problema 2</strong></summary>
-
-  <div style="margin-left: 20px;">
-    Cada región puede dividirse en dos triángulos uniendo el vértice que comparten con el cuadrado (A, B, C o D) con el punto señalado P, originándose ocho triángulos.
-    <br/>
-	  Los triángulos adyacentes que comparten lado del cuadrado tienen dos características comunes: misma base (1/2 del lado del cuadrado) y misma altura (perpendicular al lado y hasta el punto señalado P.
-    <br/>
-	  De acuerdo con estas características, los triángulos, dos a dos, tienen la misma área. Esto se deduce de su fórmula: A = ½bh y de lo enunciado anteriormente: misma base (b) y misma altura (h).
-    <br/>
-	  De esto se obtiene el siguiente sistema de ecuaciones:
-    <br/>
-    a+b = 18  b = 18-a
-    <br/>
-    b+c = 9  c = 9 – b = 9 – 18 + a = a - 9
-    <br/>
-    c+d = 7  d = 7 – c = 7 – a + 9 = 16 – a
-    <br/>
-    d+a = x  x = 16 – a + a = 16
-    <br/>
-    Resolviendo el sistema para x obtenemos el área de la región sombreada.
-    <br/>
-    SOLUCIÓN: El área sombreada es de 16 cm^2.
-    <br/>
-    <br/>
-    <em>Solución de Darío Otero.</em>
-  </div>
-
-</details>
+        <summary><strong>Problema 2</strong></summary>
+        <div style="margin-left: 20px;">
+            <p>Cada región puede dividirse en dos triángulos uniendo el vértice que comparten con el cuadrado (<em>A</em>, <em>B</em>, <em>C</em> o <em>D</em>) con el punto señalado <em>P</em>, originándose ocho triángulos.</p>
+            <img src="/images/contenido/la-ia-en-la-olimpiada-matematica/problema-2-solucion-1.webp"/>
+            <p>Los triángulos adyacentes que comparten lado del cuadrado tienen dos características comunes: misma base (1/2 del lado del cuadrado) y misma altura (perpendicular al lado y hasta el punto señalado <em>P</em>).</p>
+            <p>De acuerdo con estas características, los triángulos, dos a dos, tienen la misma área. Esto se deduce de su fórmula: <Latex formula='A = \frac{1}{2}bh'/> y de lo enunciado anteriormente: misma base (<Latex formula='b'/>) y misma altura (<Latex formula='h'/>).</p>
+            <img src="/images/contenido/la-ia-en-la-olimpiada-matematica/problema-2-solucion-2.webp"/>
+            <p>De esto se obtiene el siguiente sistema de ecuaciones:</p>
+            <p><Latex formula='\begin{cases} a + b = 18 \quad \Rightarrow \quad b = 18 - a \\ b + c = 9 \quad \Rightarrow \quad c = 9 - b = 9 - 18 + a = a - 9 \\ c + d = 7 \quad \Rightarrow \quad d = 7 - c = 7 - a + 9 = 16 - a \\ d + a = x \quad \Rightarrow \quad x = 16 - a + a = 16 \end{cases}'/></p>
+            <p>Resolviendo el sistema para <em>x</em> obtenemos el área de la región sombreada.</p>
+            <p><strong>SOLUCIÓN: El área sombreada es de 16 cm².</strong></p>
+            <p><em>Solución de Darío Otero.</em></p>
+        </div>
+    </details>
 
 <details>
-  <summary><strong>Problema 3</strong></summary>
-
-  <div style="margin-left: 20px;">
-    Se definen los puntos O y P como los puntos medios de FD y MN respectivamente. El punto Q será la intersección de AN con EH.
-    <br/>
-	  El triángulo AOP tiene dos catetos: AO = 5/6AD y OP = ½CD.
-    <br/>
-	  Por Semejanza de Triángulos, el triángulo AEQ es semejante a AOP porque comparten el ángulo Â y el recto. De esta forma, mediante el Teorema de Tales:
-    <br/>
-	  AO/AE = OP/EQ  5/6AD / 1/3AD = 1/2CD / EQ  EQ = 1/5CD
-    <br/>
-	  Área de AEQ = AE · EQ / 2 = 1/3AD · 1/5CD / 2 = 1/30 · AD · CD
-    <br/>
-    Área de ABCD = AD · CD
-    <br/>
-    Proporción entre áreas = Área de AEQ / Área de ABCD = 1/30 · AB · CD / AD · CD = 1/30
-    <br/>
-    SOLUCIÓN: El área sombreada ocupa 1/30 del área del rectángulo ABCD.
-    <br/>
-    <br/>
-    <em>Solución de Darío Otero.</em>
-  </div>
-
-</details>
+        <summary><strong>Problema 3</strong></summary>
+        <div style="margin-left: 20px;">
+            <p>Se definen los puntos O y P como los puntos medios de FD y MN respectivamente. El punto Q será la intersección de AN con EH.</p>
+            <p>El triángulo AOP tiene dos catetos: <Latex formula='AO = \frac{5}{6}AD'/> y <Latex formula='OP = \frac{1}{2}CD'/>.</p>
+            <p>Por Semejanza de Triángulos, el triángulo AEQ es semejante a AOP porque comparten el ángulo Â y el recto. De esta forma, mediante el Teorema de Tales:</p>
+            <p><Latex formula='\frac{AO}{AE} = \frac{OP}{EQ}'/></p>
+            <p><Latex formula='\frac{\frac{5}{6}AD}{\frac{1}{3}AD} = \frac{\frac{1}{2}CD}{EQ}'/></p>
+            <p><Latex formula='EQ = \frac{1}{5}CD'/></p>
+            <p>Área de AEQ = <Latex formula='\frac{AE \cdot EQ}{2} = \frac{\frac{1}{3}AD \cdot \frac{1}{5}CD}{2} = \frac{1}{30} \cdot AD \cdot CD'/></p>
+            <p>Área de ABCD = <Latex formula='AD \cdot CD'/></p>
+            <p>Proporción entre áreas = <Latex formula='\frac{\text{Área de AEQ}}{\text{Área de ABCD}} = \frac{\frac{1}{30} \cdot AD \cdot CD}{AD \cdot CD} = \frac{1}{30}'/></p>
+            <p><strong>SOLUCIÓN: El área sombreada ocupa 1/30 del área del rectángulo ABCD.</strong></p>
+            <p><em>Solución de Darío Otero.</em></p>
+        </div>
+    </details>
 
 <details>
-  <summary><strong>Problema 4</strong></summary>
-
-  <div style="margin-left: 20px;">
-    
-    <em>Solución de Darío Otero</em>
-
-  </div>
-
-</details>
+        <summary><strong>Problema 4</strong></summary>
+        <div style="margin-left: 20px;">
+            <p>Durante el curso ha realizado <em>x</em> exámenes hasta ahora y la suma de las notas es <em>S</em>, luego la media se calculará como <Latex formula='\frac{S}{x}'/>.</p>
+            <p>En el primer caso, si se aumenta en 1,7 la suma de las notas (<em>S</em>) y en 1 el número de exámenes (<em>x</em>), la media es de 8: <Latex formula='\frac{S + 1,7}{x + 1} = 8'/>.</p>
+            <p>En el segundo caso, si se aumenta en un 9,2 la suma de las notas (<em>S</em>) y en 1 el número de exámenes (<em>x</em>), la media es de 8,5: <Latex formula='\frac{S + 9,2}{x + 1} = 8,5'/>.</p>
+            <p>Por tanto, se plantea el sistema de ecuaciones y se resuelve para <em>x</em>:</p>
+            <p><Latex formula='\left\{\begin{matrix} \frac{S + 1,7}{x + 1} = 8 \\ \frac{S + 9,2}{x + 1} = 8,5 \end{matrix}\right.'/></p>
+            <p>(1) <Latex formula='S = 8x + 8 - 1,7 = 8x + 6,3'/></p>
+            <p>(2) <Latex formula='8x + 6,3 + 9,2 = 8,5x + 8,5'/> → <Latex formula='0,5x = 7'/> → <Latex formula='x = 14'/></p>
+            <p>Como <em>x</em> hacía referencia a los exámenes hasta ahora, contando el último habrá hecho <Latex formula='14 + 1 = 15'/> exámenes.</p>
+            <p><strong>SOLUCIÓN: Hizo 15 exámenes en total.</strong></p>
+            <p><em>Solución de Darío Otero.</em></p>
+        </div>
+    </details>
 
 ### Respuestas
 
