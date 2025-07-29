@@ -18,7 +18,17 @@ const t = clientTranslations[lang];
 
 const { slug } = Astro.params;
 
-const page = (await getCollection('articles')).filter(({slug}) => slug.split('/')[2] == Astro.params.slug && slug.split('/')[0] == lang)[0];
+const pages = (await getCollection('articles')).filter(({slug}) => slug.split('/')[2] == Astro.params.slug);
+
+let page
+
+if (pages.length == 2) {
+    page = pages.filter(({slug}) => slug.split('/')[0] == lang);
+} else if (pages.length == 1) {
+    page = pages[0]
+} else {
+    return Astro.redirect('/404');
+}
 
 if (!page) {
     return Astro.redirect('/404');
