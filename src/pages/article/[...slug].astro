@@ -23,7 +23,7 @@ const pages = (await getCollection('articles')).filter(({slug}) => slug.split('/
 let page
 
 if (pages.length == 2) {
-    page = pages.filter(({slug}) => slug.split('/')[0] == lang);
+    page = pages.filter(({slug}) => slug.split('/')[0] == lang)[0];
 } else if (pages.length == 1) {
     page = pages[0]
 } else {
