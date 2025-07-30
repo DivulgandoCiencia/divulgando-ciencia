@@ -5,6 +5,7 @@ import { Picture } from 'astro:assets';
 // Tipos de props
 interface Props {
   src: ImageMetadata;
+  imageURL: string;
   alt: string;
   // Configuración de uso
   usage?: 'hero' | 'content' | 'thumbnail' | 'avatar' | 'background' | 'gallery';
@@ -33,6 +34,7 @@ const {
   customQuality,
   class: className,
   loading,
+  imageURL,
   ...htmlAttributes 
 } = Astro.props;
 
@@ -109,6 +111,19 @@ if (import.meta.env.DEV) {
     priority: finalPriority
   });
 }
+
+// try {
+//   const slug = page.slug.split('/')[2];
+//     try {
+//         image = await import(imageURL);
+//     } catch {
+//         image = await import(imageURL);
+//     }
+//   renderIMG = image.default;
+// } catch (error) {
+//   renderIMG = "/placeholder.svg";
+// }
+
 ---
 
 <Picture 

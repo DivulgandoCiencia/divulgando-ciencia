@@ -7,6 +7,7 @@ import Input from '../components/ui/Input.astro';
 import { ScienceList } from '../components/Science';
 import { calcReadTime } from '../components/readTime';
 import { clientTranslations } from '../i18n';
+import OptimizedPicture from '@/components/OptimizedPicture.astro';
 const { searchParams } = Astro.url;
 const lang = Astro.locals.lang;
 const t = clientTranslations[lang];
@@ -218,6 +219,13 @@ if (tagParam) pageFilters += `&tags=${tagParam}`;
                                 <p class="line-clamp-3 text-muted-foreground mb-4 flex-1">{article.description}</p>
                                 <div class="flex justify-between items-center mt-auto">
                                     <div class="flex items-center">
+                                        {/* <OptimizedPicture
+                                            imageURL={`/images/autores/${article.author[1]}.webp`}
+                                            alt={`Foto de perfil de ${article.author[0].name}`}
+                                            usage="avatar"
+                                            priority={true}
+                                            class="bg-principal-white h-6 w-6 rounded-full object-contain my-auto mr-2"
+                                        /> */}
                                         <img alt={"Foto de perfil de "+article.author[0].name} src={"/images/autores/"+article.author[1]+".webp"} class="bg-principal-white h-6 w-6 rounded-full object-contain my-auto mr-2"/>
                                         <div class="text-sm font-medium">
                                             {article.authors && article.authors.length > 0

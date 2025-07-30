@@ -1,8 +1,9 @@
 ---
 import { clientTranslations } from '../../i18n';
+import OptimizedPicture from '../OptimizedPicture.astro';
 const lang = Astro.locals.lang;
 const t = clientTranslations[lang];
-const { author, authorid } = Astro.props;
+const { author, authorid, authorIMG } = Astro.props;
 import Icon from '../ui/Icons.astro';
 
 let x = author.social_media !== undefined ? author.social_media.x : undefined;
@@ -16,11 +17,18 @@ let github = author.social_media !== undefined ? author.social_media.github : un
     <h3 class="text-lg font-semibold mb-4">{t.article.aboutAuthor}</h3>
     
     <div class="flex items-center gap-4 mb-4">
-        <img 
+        <OptimizedPicture 
+            src={authorIMG}
+            alt={author.name} 
+            usage="avatar"
+            priority={true}
+            class="w-64 rounded-full object-cover aspect-square"
+        />
+        <!-- <img 
             src={"/images/autores/" + authorid + ".webp" || "/placeholder.svg"}
             alt={author.name}
             class="h-16 w-16 rounded-full object-cover"
-        />
+        /> -->
         <div>
             <div class="text-3xl hidden"/>
             <div class={"font-medium text-" + (author.social_media === undefined ? 'xl' : 'base')}>{author.name}</div>

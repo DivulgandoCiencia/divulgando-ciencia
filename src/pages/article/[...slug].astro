@@ -75,6 +75,8 @@ if (author) {
 } else {
     authorImageURL = "/placeholder.svg";
 }
+
+
 ---
 
 <MainLayout title={article.title} description={article.description} image={'/images/contenido/'+page.slug.split('/')[2]+'/portada.webp'}>
@@ -107,7 +109,7 @@ if (author) {
                 ) : (
                     <div class="flex items-center gap-3">
                         <OptimizedPicture 
-                            src={authorImageURL} 
+                            src={authorImageURL}
                             alt={author.name} 
                             usage="avatar"
                             priority={true}
@@ -138,7 +140,6 @@ if (author) {
                     alt={article.title}
                     usage="hero"
                     priority={true}
-                    customWidths={[375, 768, 1024, 1440, 1920]}
                     class="w-full h-full object-cover rounded-xl"
                 />
             </div>
@@ -201,8 +202,6 @@ if (author) {
                                             />
                                             <div>
                                                 <div class="font-medium">{author[0].name}</div>
-                                                <div class="text-sm text-muted-foreground">title</div>
-                                                <div class="text-sm text-muted-foreground">institution</div>
                                                 {author.bio && <p class="text-sm text-muted-foreground mt-1">{author[0].bio}</p>}
                                             </div>
                                         </div>
@@ -210,7 +209,7 @@ if (author) {
                                 </div>
                             </div>
                         ) : (
-                            <ArticleAuthor author={author} authorid={article.author.id} />
+                            <ArticleAuthor author={author} authorid={article.author.id} authorIMG={authorImageURL}/>
                         )}
                         
                         <!-- Related Articles  -->
