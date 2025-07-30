@@ -13,8 +13,7 @@ const { searchParams } = Astro.url;
 const lang = Astro.locals.lang;
 const t = clientTranslations[lang];
 
-const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/contenido/*/portada.webp',
-  { eager: true });
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/contenido/**/portada.webp', { eager: true });
 const authorsImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/autores/*.webp', { eager: true });
 
 console.log(authorsImages);
@@ -204,8 +203,7 @@ if (tagParam) pageFilters += `&tags=${tagParam}`;
                                 <OptimizedPicture
                                     src={images['/src/assets/contenido/'+article.slug.split('/')[2]+'/portada.webp']?.default}
                                     alt={article.title}
-                                    usage="hero"
-                                    priority={true}
+                                    usage="content"
                                     class="h-full w-full object-cover rounded-t-xl transition-transform hover:scale-105 duration-700"
                                 />
                                 
@@ -236,7 +234,6 @@ if (tagParam) pageFilters += `&tags=${tagParam}`;
                                             src={authorsImages['/src/assets/autores/'+article.author[1]+'.webp']?.default}
                                             alt={`Foto de perfil de ${article.author[0].name}`}
                                             usage="avatar"
-                                            priority={true}
                                             class="bg-principal-white h-6 w-6 rounded-full object-contain my-auto mr-2"
                                         />
                                         <div class="text-sm font-medium">
