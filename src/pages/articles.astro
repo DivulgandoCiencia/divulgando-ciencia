@@ -7,16 +7,9 @@ import Input from '../components/ui/Input.astro';
 import { ScienceList } from '../components/Science';
 import { calcReadTime } from '../components/readTime';
 import { clientTranslations } from '../i18n';
-import OptimizedPicture from '@/components/OptimizedPicture.astro';
-import type { ImageMetadata } from 'astro';
 const { searchParams } = Astro.url;
 const lang = Astro.locals.lang;
 const t = clientTranslations[lang];
-
-const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/contenido/**/portada.webp', { eager: true });
-const authorsImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/autores/*.webp', { eager: true });
-
-console.log(authorsImages);
 
 
 // Get all articles
@@ -27,8 +20,6 @@ let articlesData = []
 articles.map(({data, slug, body}) => {
     let auths = []
     if (data.authors) data.authors.map((author) => {auths.push([authors.filter(({id}) => id==author.id)[0].data, author.id])}); else auths=undefined;
-
-    console.log(data.author.id)
     articlesData.push({
         title: data.title,
         author: [authors.filter(({id}) => id == data.author.id)[0].data, data.author.id],
@@ -44,8 +35,6 @@ articles.map(({data, slug, body}) => {
         id: slug.split('/')[2],
 		slug: slug,
     })
-
-    console.log(articlesData[0].author[1])
 })
 
 const articlesPerPage = 12;
@@ -199,16 +188,14 @@ if (tagParam) pageFilters += `&tags=${tagParam}`;
                     paginatedArticles.map((article) =>
                         <div class="overflow-hidden rounded-lg shadow-md dark:shadow-[#151515] bg-card text-card-foreground h-full flex flex-col transform hover:translate-y-[-5px] transition-all duration-300 hover:shadow-xl" transition:name={"article-card-"+article.slug.split('/')[2]}>
                             <div class="h-48 w-full relative overflow-hidden">
-                                <a href={"/article/"+article.slug.split('/')[2]}>
-                                <OptimizedPicture
-                                    src={images['/src/assets/contenido/'+article.slug.split('/')[2]+'/portada.webp']?.default}
+                                <a href={"/article/"+article.slug.split('/')[2]}><img
+                                    src={"/images/contenido/" + article.id + "/portada.webp" || "/placeholder.svg"}
                                     alt={article.title}
-                                    usage="content"
+                                    width="400"
+                                    height="225"
+                                    transition:name={"media-portrait-"+article.slug.split('/')[2]}
                                     class="h-full w-full object-cover rounded-t-xl transition-transform hover:scale-105 duration-700"
-                                    preload
-                                />
-                                
-                                </a>
+                                /></a>
                                 <div class="absolute top-2 left-2">
                                     <span class={"text-primary-foreground px-2 py-1 text-xs font-medium rounded-full shadow-md bg-color-"+article.science.color}>
                                         {t.sciences[article.science.name]}
@@ -231,12 +218,7 @@ if (tagParam) pageFilters += `&tags=${tagParam}`;
                                 <p class="line-clamp-3 text-muted-foreground mb-4 flex-1">{article.description}</p>
                                 <div class="flex justify-between items-center mt-auto">
                                     <div class="flex items-center">
-                                        <OptimizedPicture
-                                            src={authorsImages['/src/assets/autores/'+article.author[1]+'.webp']?.default}
-                                            alt={`Foto de perfil de ${article.author[0].name}`}
-                                            usage="avatar"
-                                            class="bg-principal-white h-6 w-6 rounded-full object-contain my-auto mr-2"
-                                        />
+                                        <img alt={"Foto de perfil de "+article.author[0].name} src={"/images/autores/"+article.author[1]+".webp"} class="bg-principal-white h-6 w-6 rounded-full object-contain my-auto mr-2"/>
                                         <div class="text-sm font-medium">
                                             {article.authors && article.authors.length > 0
                                                 ? article.authors[0].name + (article.authors.length > 1 ? ` +${article.authors.length - 1}` : '')

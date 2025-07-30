@@ -13,7 +13,6 @@ import ShareMenu from '../../components/ui/ShareMenu.astro';
 import { clientTranslations } from '../../i18n';
 import { supabase } from '../../lib/supabase';
 import { RenderTemplateResult } from 'astro/runtime/server/render/astro/render-template.js';
-import OptimizedPicture from '@/components/OptimizedPicture.astro';
 const lang = Astro.locals.lang;
 const t = clientTranslations[lang];
 
@@ -46,37 +45,6 @@ let authors = [];
 if (hasMultipleAuthors) {article.authors?.map(async(a) => {authors.push([(await getEntry('authors', a.id)).data, a.id])})}
 const scienceData = ScienceList.filter(({id}) => page.slug.split('/')[1] == id)[0]
 if (!supabase === null) supabase.rpc('register_view', { page_slug: page.slug.split('/')[2] }).then((response)=>{});
-
-let coverImage;
-let coverImageURL;
-
-try {
-  const slug = page.slug.split('/')[2];
-    try {
-        coverImage = await import(`../../assets/contenido/${slug}/portada.webp`);
-    } catch {
-        coverImage = await import(`../../assets/contenido/${slug}/portada.jpg`);
-    }
-  coverImageURL = coverImage.default;
-} catch (error) {
-  coverImageURL = "/placeholder.svg";
-}
-
-let authorImage;
-let authorImageURL;
-
-if (author) {
-    try {
-        authorImage = await import(`../../assets/autores/${article.author.id}.webp`);
-    } catch {
-        authorImage = await import(`../../assets/autores/${article.author.id}.jpg`);
-    }
-    authorImageURL = authorImage.default;
-} else {
-    authorImageURL = "/placeholder.svg";
-}
-
-
 ---
 
 <MainLayout title={article.title} description={article.description} image={'/images/contenido/'+page.slug.split('/')[2]+'/portada.webp'}>
@@ -108,11 +76,9 @@ if (author) {
                     <AuthorsOverlap authors={article.authors} />
                 ) : (
                     <div class="flex items-center gap-3">
-                        <OptimizedPicture 
-                            src={authorImageURL}
-                            alt={author.name} 
-                            usage="avatar"
-                            priority={true}
+                        <img 
+                            src={"/images/autores/" + article.author.id + ".webp" || "/placeholder.svg"}
+                            alt={author.name}
                             class="h-12 w-12 rounded-full object-cover"
                         />
                         <div>
@@ -135,12 +101,12 @@ if (author) {
         <!-- Featured Image -->
         <div class="w-full max-w-5xl mx-auto px-4 mb-12">
             <div class="aspect-[16/9] relative rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
-                <OptimizedPicture
-                    src={coverImageURL}
+                <img 
+                    src={"/images/contenido/" + page.slug.split('/')[2] + "/portada.webp" || "/placeholder.svg"}
                     alt={article.title}
-                    usage="hero"
-                    priority={true}
                     class="w-full h-full object-cover rounded-xl"
+                    data-img-id="featured-image"
+                    transition:name={"media-portrait-"+page.slug.split('/')[2]}
                 />
             </div>
         </div>
@@ -202,6 +168,8 @@ if (author) {
                                             />
                                             <div>
                                                 <div class="font-medium">{author[0].name}</div>
+                                                <div class="text-sm text-muted-foreground">title</div>
+                                                <div class="text-sm text-muted-foreground">institution</div>
                                                 {author.bio && <p class="text-sm text-muted-foreground mt-1">{author[0].bio}</p>}
                                             </div>
                                         </div>
@@ -209,7 +177,7 @@ if (author) {
                                 </div>
                             </div>
                         ) : (
-                            <ArticleAuthor author={author} authorid={article.author.id} authorIMG={authorImageURL}/>
+                            <ArticleAuthor author={author} authorid={article.author.id} />
                         )}
                         
                         <!-- Related Articles  -->
