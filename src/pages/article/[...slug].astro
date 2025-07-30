@@ -53,7 +53,7 @@ let coverImageURL;
 try {
   const slug = page.slug.split('/')[2];
   // Dynamic import - this works!
-  coverImage = await import(`../../assets/content/${slug}/portada.jpg`);
+  coverImage = await import(`../../assets/contenido/${slug}/portada.webp`);
   coverImageURL = coverImage.default;
 } catch (error) {
   // Fallback if image doesn't exist
