@@ -29,5 +29,15 @@ export const onRequest = defineMiddleware(async (context, next) => {
     context.locals.lang = lang;
     context.locals.theme = cookiesTheme?.value ?? '';
 
-    return next();
+    // Esto lo he modificado yo, quitalo cuando lo necesites
+    const response = await next();
+
+    response.headers.set(
+        "Cache-Control",
+        "public, s-maxage=60, stale-while-revalidate=3600"
+    );
+
+    return response;
+
+    // Esto lo tenias tu. return next();
 });
