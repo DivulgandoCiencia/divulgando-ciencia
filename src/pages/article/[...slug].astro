@@ -13,6 +13,7 @@ import ShareMenu from '../../components/ui/ShareMenu.astro';
 import { clientTranslations } from '../../i18n';
 import { supabase } from '../../lib/supabase';
 import { RenderTemplateResult } from 'astro/runtime/server/render/astro/render-template.js';
+import OptimizedPicture from '@/components/OptimizedPicture.astro';
 const lang = Astro.locals.lang;
 const t = clientTranslations[lang];
 
@@ -45,6 +46,19 @@ let authors = [];
 if (hasMultipleAuthors) {article.authors?.map(async(a) => {authors.push([(await getEntry('authors', a.id)).data, a.id])})}
 const scienceData = ScienceList.filter(({id}) => page.slug.split('/')[1] == id)[0]
 if (!supabase === null) supabase.rpc('register_view', { page_slug: page.slug.split('/')[2] }).then((response)=>{});
+
+let coverImage;
+let coverImageURL;
+
+try {
+  const slug = page.slug.split('/')[2];
+  // Dynamic import - this works!
+  coverImage = await import(`../../assets/content/${slug}/portada.jpg`);
+  coverImageURL = coverImage.default;
+} catch (error) {
+  // Fallback if image doesn't exist
+  coverImageURL = "/placeholder.svg";
+}
 ---
 
 <MainLayout title={article.title} description={article.description} image={'/images/contenido/'+page.slug.split('/')[2]+'/portada.webp'}>
@@ -101,12 +115,18 @@ if (!supabase === null) supabase.rpc('register_view', { page_slug: page.slug.spl
         <!-- Featured Image -->
         <div class="w-full max-w-5xl mx-auto px-4 mb-12">
             <div class="aspect-[16/9] relative rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
-                <img 
-                    src={"/images/contenido/" + page.slug.split('/')[2] + "/portada.webp" || "/placeholder.svg"}
+                <OptimizedPicture
+                    src={coverImageURL}
                     alt={article.title}
+                    usage="hero"
+                    priority={true}
+                    customWidths={[375, 768, 1024, 1440, 1920]}
+                    customSizes="100vw"
+                    customFormats={['avif', 'webp', 'jpg']}
+                    customQuality="high"
                     class="w-full h-full object-cover rounded-xl"
-                    data-img-id="featured-image"
-                    transition:name={"media-portrait-"+page.slug.split('/')[2]}
+                    width={1920}
+                    height={1080}
                 />
             </div>
         </div>

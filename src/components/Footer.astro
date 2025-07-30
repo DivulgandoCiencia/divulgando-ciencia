@@ -2,6 +2,8 @@
 import { clientTranslations } from '../i18n';
 const lang = Astro.locals.lang;
 const t = clientTranslations[lang];
+
+import { Image } from 'astro:assets';
 ---
 
 <footer class="w-full py-6 md:py-0 relative z-10 bg-background shadow-[0_20px_40px_10px] shadow-[#000]/50 dark:shadow-[0_20px_40px_10px] dark:shadow-[#000]">
@@ -9,6 +11,19 @@ const t = clientTranslations[lang];
     <div class="flex items-center gap-2">
         <a href="/">
             <div class="flex items-center gap-2">
+                <Image
+                    src="/images/logo.webp"
+                    width={20}
+                    height={20}
+                    widths={[400, 800, 1200]} 
+                    formats={['avif', 'webp', 'jpeg']} 
+                    sizes="(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px"
+                    loading="lazy"
+                    decoding="async"
+                    alt="Logo de divulgandociencia.com"
+                    class="h-5 w-5 rounded-md"
+                    
+                />
                 <img src="/images/logo.webp" alt="Logo de divulgandociencia.com" class="h-5 w-5 rounded-md"/>
                 <span class="font-semibold">Divulgando Ciencia</span>
             </div>

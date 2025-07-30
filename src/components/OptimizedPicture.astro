@@ -1,0 +1,199 @@
+---
+// components/OptimizedPicture.astro
+import { Picture } from 'astro:assets';
+
+// Tipos de props
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  // Configuración de uso
+  usage?: 'hero' | 'content' | 'thumbnail' | 'avatar' | 'background' | 'gallery';
+  priority?: boolean;
+  // Personalización avanzada
+  customWidths?: number[];
+  customSizes?: string;
+  customFormats?: string[];
+  customQuality?: string | number;
+  // Props HTML adicionales
+  class?: string;
+  style?: string;
+  loading?: 'eager' | 'lazy';
+  [key: string]: any; // Para otros atributos HTML
+}
+
+// Extraer props
+const { 
+  src, 
+  alt, 
+  usage = 'content',
+  priority = false,
+  customWidths,
+  customSizes,
+  customFormats,
+  customQuality,
+  class: className,
+  loading,
+  ...htmlAttributes 
+} = Astro.props;
+
+// Configuraciones predefinidas por uso
+const usageConfig = {
+  hero: {
+    widths: [375, 768, 1024, 1440, 1920],
+    sizes: "100vw",
+    formats: ['avif', 'webp', 'jpg'],
+    quality: 'high',
+    priority: true,
+    cssClass: 'w-full h-auto object-cover'
+  },
+  content: {
+    widths: [320, 640, 1024],
+    sizes: "(max-width: 768px) 100vw, (max-width: 1024px) 75vw, 800px",
+    formats: ['avif', 'webp', 'jpg'],
+    quality: 'mid',
+    priority: false,
+    cssClass: 'w-full h-auto rounded-lg'
+  },
+  thumbnail: {
+    widths: [150, 300, 450],
+    sizes: "(max-width: 768px) 150px, (max-width: 1024px) 200px, 300px",
+    formats: ['avif', 'webp', 'jpg'],
+    quality: 65,
+    priority: false,
+    cssClass: 'w-full h-full object-cover'
+  },
+  avatar: {
+    widths: [80, 120, 160],
+    sizes: "120px",
+    formats: ['avif', 'webp', 'jpg'],
+    quality: 75,
+    priority: false,
+    cssClass: 'rounded-full w-full h-full object-cover'
+  },
+  background: {
+    widths: [768, 1024, 1440, 1920],
+    sizes: "100vw",
+    formats: ['avif', 'webp', 'jpg'],
+    quality: 60,
+    priority: true,
+    cssClass: 'absolute inset-0 w-full h-full object-cover -z-10'
+  },
+  gallery: {
+    widths: [200, 400, 600, 800],
+    sizes: "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw",
+    formats: ['avif', 'webp', 'jpg'],
+    quality: 'mid',
+    priority: false,
+    cssClass: 'w-full h-full object-cover transition-transform hover:scale-105'
+  }
+};
+
+// Obtener configuración
+const config = usageConfig[usage];
+
+// Valores finales (custom override defaults)
+const finalWidths = customWidths || config.widths;
+const finalSizes = customSizes || config.sizes;
+const finalFormats = customFormats || config.formats;
+const finalQuality = customQuality || config.quality;
+const finalPriority = priority || config.priority;
+const finalLoading = loading || (finalPriority ? 'eager' : 'lazy');
+const finalClass = className || config.cssClass;
+
+// Log de desarrollo (solo en dev)
+if (import.meta.env.DEV) {
+  console.log(`🖼️  OptimizedPicture [${usage}]:`, {
+    widths: finalWidths,
+    formats: finalFormats,
+    quality: finalQuality,
+    priority: finalPriority
+  });
+}
+---
+
+<Picture 
+  src={src}
+  alt={alt}
+  formats={finalFormats}
+  widths={finalWidths}
+  sizes={finalSizes}
+  quality={finalQuality}
+  loading={finalLoading}
+  decoding="async"
+  fetchpriority={finalPriority ? "high" : "auto"}
+  class={finalClass}
+  {...htmlAttributes}
+/>
+
+<!-- Estilos adicionales según el uso -->
+<style define:vars={{ usage }}>
+  /* Estilos específicos por tipo de uso */
+  :global(.optimized-picture) {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Hero específico */
+  :global(.hero-image) {
+    min-height: 400px;
+    object-position: center;
+  }
+  
+  /* Gallery específico */
+  :global(.gallery-image) {
+    aspect-ratio: 1;
+    cursor: pointer;
+  }
+  
+  /* Avatar específico */
+  :global(.avatar-image) {
+    border: 2px solid rgba(255, 255, 255, 0.1);
+  }
+</style>
+
+<!-- 
+EJEMPLOS DE USO:
+
+1. Hero simple:
+<OptimizedPicture 
+  src={heroImage} 
+  alt="Bienvenido" 
+  usage="hero" 
+/>
+
+2. Contenido de blog:
+<OptimizedPicture 
+  src={blogImage} 
+  alt="Artículo sobre Astro" 
+  usage="content" 
+/>
+
+3. Avatar con prioridad:
+<OptimizedPicture 
+  src={userAvatar} 
+  alt="Usuario Juan" 
+  usage="avatar"
+  priority={true}
+/>
+
+4. Personalizado completo:
+<OptimizedPicture 
+  src={customImage} 
+  alt="Imagen personalizada"
+  usage="content"
+  customWidths={[400, 800, 1200]}
+  customSizes="(max-width: 600px) 100vw, 50vw"
+  customFormats={['webp', 'jpg']}
+  customQuality={90}
+  class="custom-class"
+  onclick="handleClick()"
+/>
+
+5. Galería:
+<OptimizedPicture 
+  src={galleryImage} 
+  alt="Foto de la galería" 
+  usage="gallery"
+  data-lightbox="gallery1"
+/>
+-->
