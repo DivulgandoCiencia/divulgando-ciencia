@@ -52,12 +52,28 @@ let coverImageURL;
 
 try {
   const slug = page.slug.split('/')[2];
-  // Dynamic import - this works!
-  coverImage = await import(`../../assets/contenido/${slug}/portada.webp`);
+    try {
+        coverImage = await import(`../../assets/contenido/${slug}/portada.webp`);
+    } catch {
+        coverImage = await import(`../../assets/contenido/${slug}/portada.jpg`);
+    }
   coverImageURL = coverImage.default;
 } catch (error) {
-  // Fallback if image doesn't exist
   coverImageURL = "/placeholder.svg";
+}
+
+let authorImage;
+let authorImageURL;
+
+if (author) {
+    try {
+        authorImage = await import(`../../assets/autores/${article.author.id}.webp`);
+    } catch {
+        authorImage = await import(`../../assets/autores/${article.author.id}.jpg`);
+    }
+    authorImageURL = authorImage.default;
+} else {
+    authorImageURL = "/placeholder.svg";
 }
 ---
 
@@ -90,9 +106,11 @@ try {
                     <AuthorsOverlap authors={article.authors} />
                 ) : (
                     <div class="flex items-center gap-3">
-                        <img 
-                            src={"/images/autores/" + article.author.id + ".webp" || "/placeholder.svg"}
-                            alt={author.name}
+                        <OptimizedPicture 
+                            src={authorImageURL} 
+                            alt={author.name} 
+                            usage="avatar"
+                            priority={true}
                             class="h-12 w-12 rounded-full object-cover"
                         />
                         <div>
@@ -121,12 +139,7 @@ try {
                     usage="hero"
                     priority={true}
                     customWidths={[375, 768, 1024, 1440, 1920]}
-                    customSizes="100vw"
-                    customFormats={['avif', 'webp', 'jpg']}
-                    customQuality="high"
                     class="w-full h-full object-cover rounded-xl"
-                    width={1920}
-                    height={1080}
                 />
             </div>
         </div>
