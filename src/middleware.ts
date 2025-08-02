@@ -28,6 +28,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     
     context.locals.lang = lang;
     context.locals.theme = cookiesTheme?.value ?? '';
+    if (context.url.hostname === 'localhost') {context.locals.lang = 'es'; context.locals.theme = 'dark';}
 
     return next();
 });
