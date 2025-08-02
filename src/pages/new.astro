@@ -1,0 +1,42 @@
+---
+import Header from "@/components/Header.astro"
+import Menu from "@/components/Menu.astro"
+import Footer from "@/components/Footer.astro"
+import '../styles/global.css';
+---
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Divulgando Ciencia</title>
+        <link rel="icon" type="image/svg+xml" href="/images/logo.webp" />
+        <script>
+import { ContentSchemaContainsSlugError } from "node_modules/astro/dist/core/errors/errors-data";
+
+            document.addEventListener("click", async (e) => {
+                const link = e.target.closest("a");
+                if (!link || link.origin !== location.origin) return;
+                e.preventDefault();
+                const page = link.pathname.slice(1) || "home";
+                console.log(page)
+                const response = await (await fetch(`/page/home`)).text();
+                document.querySelector("main").innerHTML = response;
+                console.log(response);
+            });
+            
+        </script>
+    </head>
+    <body class="flex min-h-screen flex-col relative">
+        <Menu />
+        <div class={"fixed top-0 left-0 inset-0 science-pattern -z-10 "}></div>
+        
+        <Header />
+        
+        <main class="flex-1">
+            
+        </main>
+        
+        <Footer />
+    </body>
+</html>
