@@ -1,0 +1,249 @@
+---
+import Icon from "../../components/ui/Icons.astro";
+import Button from '../../components/ui/Button.astro';
+import { clientTranslations } from '../../i18n';
+const lang = Astro.locals.lang;
+const t = clientTranslations[lang];
+
+const team = [{
+    name: "Alejandra Martínez",
+    role: "Colaboradora",
+}, {
+    name: "Carolina Anocíbar",
+    role: "Coordinadora Tienda",
+}, {
+    name: "Darío Otero",
+    role: "Coordinador Exposición 14M",
+}, {
+    name: "Dorian Ruiz",
+    role: "Coordinador Innovación y Desarrollo Web",
+}, {
+    name: "Elvira Pelayo",
+    role: "Coordinadora de Librería Virtual",
+}, {
+    name: "Eric Manero",
+    role: "Coordinador de Ciencia POP",
+}, {
+    name: "Génesis",
+    role: "Colaboradora",
+}, {
+    name: "Helena Belloso",
+    role: "Coordinadora de Artículos",
+}, {
+    name: "Javier Mateos",
+    role: "Colaborador",
+}, {
+    name: "Juan",
+    role: "Colaborador",
+}, {
+    name: "Julio Vivas",
+    role: "Colaborador",
+}, {
+    name: "Leyre Velasco",
+    role: "Coordinadora Tienda",
+}, {
+    name: "Lucas Manero",
+    role: "Colaborador",
+}, {
+    name: "Marc Pujadas",
+    role: "Coordinador de Redes Sociales",
+}, {
+    name: "Marcos",
+    role: "Colaborador",
+}, {
+    name: "Nerea Álvarez",
+    role: "Coordinadora de Artículos",
+},{
+    name: "Paula Esteve",
+    role: "Colaboradora",
+}, {
+    name: "Sebas",
+    role: "Colaborador",
+}, {
+    name: "Sophie",
+    role: "Colaboradora",
+}, {
+    name: "Yousra Saidi",
+    role: "Colaboradora",
+}
+];
+---
+
+
+<div class="relative">
+    
+    <!-- Page Header -->
+    <header class="container px-4 py-8 md:py-12 relative z-10">
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+            {t.about.title}
+        </h1>
+        <p class="text-xl text-muted-foreground max-w-3xl mb-8">
+            {t.about.subtitle}
+        </p>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="container px-4 pb-16 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+                <h2 class="text-2xl font-bold mb-4">{t.about.mission.title}</h2>
+                <p class="text-muted-foreground mb-4">
+                    {t.about.mission.description.paragraph1}
+                </p>
+                <p class="text-muted-foreground mb-4">
+                    {t.about.mission.description.paragraph2}
+                </p>
+                <p class="text-muted-foreground mb-4">
+                    {t.about.mission.description.paragraph3}
+                </p>
+                <p class="text-muted-foreground mb-4">
+                    {t.about.mission.description.paragraph4}
+                </p>
+            </div>
+            <div class="rounded-xl overflow-hidden">
+                <img src="/images/landing-page/portada.webp" alt="Scientists collaborating in a laboratory" class="w-full h-auto blur-sm"/>
+            </div>
+        </div>
+        
+        <!-- Key Features -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-center">{t.about.offer.title}</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-card rounded-xl p-6 border">
+                    <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                        <Icon icon="book-open" className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">{t.about.offer.card1.title}</h3>
+                    <p class="text-muted-foreground">
+                        {t.about.offer.card1.description}
+                    </p>
+                </div>
+                <div class="bg-card rounded-xl p-6 border">
+                    <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                        <Icon icon="beaker" className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">{t.about.offer.card2.title}</h3>
+                    <p class="text-muted-foreground">
+                        {t.about.offer.card2.description}
+                    </p>
+                </div>
+                <div class="bg-card rounded-xl p-6 border">
+                    <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                        <Icon icon="users" className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">{t.about.offer.card3.title}</h3>
+                    <p class="text-muted-foreground">
+                        {t.about.offer.card3.description}
+                    </p>
+                </div>
+                <div class="bg-card rounded-xl p-6 border">
+                    <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                        <Icon icon="globe" className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">{t.about.offer.card4.title}</h3>
+                    <p class="text-muted-foreground">
+                        {t.about.offer.card4.description}
+                    </p>
+                </div>
+                <div class="bg-card rounded-xl p-6 border">
+                    <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                        <Icon icon="shop" className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">{t.about.offer.card5.title}</h3>
+                    <p class="text-muted-foreground">
+                        {t.about.offer.card5.description}
+                    </p>
+                </div>
+                <div class="bg-card rounded-xl p-6 border">
+                    <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                        <Icon icon="mail" className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">{t.about.offer.card6.title}</h3>
+                    <p class="text-muted-foreground">
+                        {t.about.offer.card6.description}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Team Section -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 text-center">{t.about.team.title}</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 my-2">
+                {team.slice(0,4).map((member) => (
+                    <div class="text-center">
+                        <div class="h-32 w-32 mx-auto rounded-full overflow-hidden mb-4">
+                            <div class="absolute bg-[#fff] h-32 w-32 -z-10 rounded-full shadow-md shadow-foreground dark:shadow-[#000]"/>
+                            <img src="/images/jovenes-cientificos/default.webp" alt="Caricatura de persona" class="w-full h-full object-cover"/>
+                        </div>
+                        <h3 class="font-semibold">{member.name}</h3>
+                        <p class="text-sm text-muted-foreground">{member.role}</p>
+                    </div>
+                ))}
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 my-2">
+                {team.slice(4,8).map((member) => (
+                    <div class="text-center">
+                        <div class="h-32 w-32 mx-auto rounded-full overflow-hidden mb-4">
+                            <div class="absolute bg-[#fff] h-32 w-32 -z-10 rounded-full shadow-md shadow-foreground dark:shadow-[#000]"/>
+                            <img src="/images/jovenes-cientificos/default.webp" alt="Caricatura de persona" class="w-full h-full object-cover"/>
+                        </div>
+                        <h3 class="font-semibold">{member.name}</h3>
+                        <p class="text-sm text-muted-foreground">{member.role}</p>
+                    </div>
+                ))}
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 my-2">
+                {team.slice(8,12).map((member) => (
+                    <div class="text-center">
+                        <div class="h-32 w-32 mx-auto rounded-full overflow-hidden mb-4">
+                            <div class="absolute bg-[#fff] h-32 w-32 -z-10 rounded-full shadow-md shadow-foreground dark:shadow-[#000]"/>
+                            <img src="/images/jovenes-cientificos/default.webp" alt="Caricatura de persona" class="w-full h-full object-cover"/>
+                        </div>
+                        <h3 class="font-semibold">{member.name}</h3>
+                        <p class="text-sm text-muted-foreground">{member.role}</p>
+                    </div>
+                ))}
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 my-2">
+                {team.slice(12,16).map((member) => (
+                    <div class="text-center">
+                        <div class="h-32 w-32 mx-auto rounded-full overflow-hidden mb-4">
+                            <div class="absolute bg-[#fff] h-32 w-32 -z-10 rounded-full shadow-md shadow-foreground dark:shadow-[#000]"/>
+                            <img src="/images/jovenes-cientificos/default.webp" alt="Caricatura de persona" class="w-full h-full object-cover"/>
+                        </div>
+                        <h3 class="font-semibold">{member.name}</h3>
+                        <p class="text-sm text-muted-foreground">{member.role}</p>
+                    </div>
+                ))}
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 my-2">
+                {team.slice(16).map((member) => (
+                    <div class="text-center">
+                        <div class="h-32 w-32 mx-auto rounded-full overflow-hidden mb-4">
+                            <div class="absolute bg-[#fff] h-32 w-32 -z-10 rounded-full shadow-md shadow-foreground dark:shadow-[#000]"/>
+                            <img src="/images/jovenes-cientificos/default.webp" alt="Caricatura de persona" class="w-full h-full object-cover"/>
+                        </div>
+                        <h3 class="font-semibold">{member.name}</h3>
+                        <p class="text-sm text-muted-foreground">{member.role}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+        
+        <!-- Contact Section -->
+        <div class="bg-card rounded-xl p-8 border text-center">
+            <h2 class="text-2xl font-bold mb-4">{t.about.contact.title}</h2>
+            <p class="text-muted-foreground mb-6 max-w-2xl mx-auto">
+                {t.about.contact.description}
+            </p>
+            <a href="/contact">
+                <Button>
+                    <Icon icon="mail" className="mr-2 h-4 w-4" />
+                    {t.about.contact.contact_us}
+                </Button>
+            </a>
+        </div>
+    </div>
+</div>
+

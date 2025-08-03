@@ -20,9 +20,8 @@ import { ContentSchemaContainsSlugError } from "node_modules/astro/dist/core/err
                 e.preventDefault();
                 const page = link.pathname.slice(1) || "home";
                 console.log(page)
-                const response = await (await fetch(`/page/home`)).text();
+                const response = await (await fetch(`/page/${page}`)).text();
                 document.querySelector("main").innerHTML = response;
-                console.log(response);
             });
             
         </script>
