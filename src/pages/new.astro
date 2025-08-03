@@ -14,13 +14,21 @@ const cookieTheme = Astro.locals.theme;
         <title>Divulgando Ciencia</title>
         <link rel="icon" type="image/svg+xml" href="/images/logo.webp" />
         <script>
+            const loadPage = async (page) => {
+                const storaged = localStorage.getItem(`page-${page}`);
+                if (storaged) return storaged;
+                const response = await fetch(`/page/${page}`);
+                const text = await response.text();
+                if (response.ok) localStorage.setItem(`page-${page}`, text);
+                return text;
+            }
             document.addEventListener("click", async (e) => {
                 const link = e.target.closest("a");
                 if (!link || link.origin !== location.origin) return;
                 e.preventDefault();
                 const page = link.pathname.slice(1) || "home";
                 console.log(page)
-                const response = await (await fetch(`/page/${page}`)).text();
+                const response = await loadPage(page);
                 document.querySelector("main").innerHTML = response;
                 window.history.pushState({}, "", link.href);
                 document.title = link.textContent + "| Divulgando Ciencia";
@@ -43,9 +51,7 @@ const cookieTheme = Astro.locals.theme;
                     if (typeof localStorage !== "undefined") { return localStorage.getItem(THEME_KEY); }
                     return window.matchMedia("(prefers-color-scheme: dark)").matches ? DARK_CLASS : LIGHT_CLASS; };
                 const isDark = getThemePreference() === DARK_CLASS;
-
                 document.documentElement.classList[isDark ? "add" : "remove"](DARK_CLASS);
-
                 if (typeof localStorage !== "undefined") {
                     // Watch the document element and persist user preference when it changes.
                     const observer = new MutationObserver(() => {
@@ -65,13 +71,10 @@ const cookieTheme = Astro.locals.theme;
     <body class="flex min-h-screen flex-col relative">
         <Menu />
         <div class={"fixed top-0 left-0 inset-0 science-pattern -z-10 "}></div>
-        
         <Header />
-        
         <main class="flex-1">
             
         </main>
-        
         <Footer />
     </body>
 </html>
