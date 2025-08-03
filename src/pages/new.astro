@@ -22,6 +22,8 @@ import { ContentSchemaContainsSlugError } from "node_modules/astro/dist/core/err
                 console.log(page)
                 const response = await (await fetch(`/page/${page}`)).text();
                 document.querySelector("main").innerHTML = response;
+                window.history.pushState({}, "", link.href);
+                document.title = link.textContent + "| Divulgando Ciencia";
             });
             
         </script>
