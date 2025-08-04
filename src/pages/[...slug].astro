@@ -26,6 +26,7 @@ const cookieTheme = Astro.locals.theme;
                 const link = e.target.closest("a");
                 if (!link || link.origin !== location.origin) return;
                 e.preventDefault();
+                if (link.href == location.href) return;
                 const page = link.pathname.slice(1) || "home";
                 console.log(page)
                 const response = await loadPage(page);
@@ -40,6 +41,7 @@ const cookieTheme = Astro.locals.theme;
                 document.querySelector("main").innerHTML = response;
                 document.title = document.querySelector("h1").textContent + "| Divulgando Ciencia";
             });
+            document.querySelector("main").innerHTML = await loadPage(location.pathname.slice(1) || "home");
         </script>
         <script is:inline define:vars={{cookieTheme}}>
             const setTheme = () => {
