@@ -1,0 +1,136 @@
+---
+import { getCollection, render, getEntry } from 'astro:content';
+import ArticleAuthor from '../../components/articles/ArticleAuthor.astro';
+import AuthorsOverlap from '../../components/articles/AuthorsOverlap.astro';
+import RelatedArticles from '../../components/articles/RelatedArticles.astro';
+import ImageLightbox from '../../components/articles/ImageLightbox.astro';
+import Icon from '../../components/ui/Icons.astro';
+import Button from '../../components/ui/Button.astro';
+import { ScienceList } from "../../components/Science"
+import { calcReadTime } from '../../components/readTime';
+import ShareMenu from '../../components/ui/ShareMenu.astro';
+import { clientTranslations } from '../../i18n';
+import { supabase } from '../../lib/supabase';
+const lang = Astro.locals.lang;
+const t = clientTranslations[lang];
+
+const { slug } = Astro.params;
+
+const pages = (await getCollection('articles')).filter(({slug}) => slug.split('/')[2] == Astro.params.slug);
+
+let page
+
+if (pages.length == 2) {
+    page = pages.filter(({slug}) => slug.split('/')[0] == lang)[0];
+} else if (pages.length == 1) {
+    page = pages[0]
+} else {
+    return Astro.redirect('/404');
+}
+
+if (!page) {
+    return Astro.redirect('/404');
+}
+
+// Get the article data from the collection
+const { Content } = await render(page);
+const article = page.data;
+
+// Get authors data - handle both single author and multiple authors
+const author = article.author ? (await getEntry('authors', article.author.id)).data : undefined;
+const hasMultipleAuthors = article.authors?.length > 1;
+let authors = [];
+if (hasMultipleAuthors) {article.authors?.map(async(a) => {authors.push([(await getEntry('authors', a.id)).data, a.id])})}
+const scienceData = ScienceList.filter(({id}) => page.slug.split('/')[1] == id)[0]
+if (!supabase === null) supabase.rpc('register_view', { page_slug: page.slug.split('/')[2] }).then((response)=>{});
+---
+
+<div class="relative">
+    <!-- Article Header -->
+    <header class="container px-4 py-8 md:py-12 relative z-10">
+        <div class="flex items-center gap-2 mb-4">
+            <a href={'/articles?page=1&science=[[scienceData.id]]'} class={`text-sm font-medium color-[[scienceData.color]] hover:underline flex items-center`}>
+                <Icon icon='[[scienceData.icon]]' className="mr-1 h-4 w-4 mt-0.5" />
+                [[scienceData.name]]
+            </a>
+            <span class="text-muted-foreground">•</span>
+            <span class="text-sm text-muted-foreground flex items-center">
+                <Icon icon="clock" className="mr-1 h-4 w-4 mt-0.5" />
+                [[readTimeNum]] {t.articles.readTime}.
+            </span>
+        </div>
+        
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+            [[article.title]]
+        </h1>
+        
+        <p class="text-xl text-muted-foreground max-w-3xl mb-8">
+            [[article.description]]
+        </p>
+        
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-8">
+            [[authorsHeader]]
+            
+            <div class="flex items-center gap-2">
+                <Button variant="outline" size="sm">
+                    <Icon icon="bookmarkplus" className="mr-2 h-4 w-4" />
+                    {t.common.save}
+                </Button>
+                <ShareMenu menuStyle="right: -4px;">
+            </div>
+        </div>
+    </header>
+    
+    <!-- Featured Image -->
+    <div class="w-full max-w-5xl mx-auto px-4 mb-12">
+        <div class="aspect-[16/9] relative rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
+            <img 
+                src="[[portrait]]"
+                alt="[[article.title]]"
+                class="w-full h-full object-cover rounded-xl"
+                data-img-id="featured-image"
+            />
+        </div>
+    </div>
+    
+    <!-- Article Content -->
+    <div class="container px-4 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <!-- Main Content -->
+            <div class={"lg:col-span-8 "}>
+                <article class="prose dark:prose-invert prose-lg max-w-none">
+                    [[contentHTML]]
+                </article>
+                
+                <!-- Tags -->
+                <div class="mt-8 mb-12">
+                    <h3 class="text-lg font-semibold mb-3 [[hasTagsHiddenText]]">Tags</h3>
+                    <div class="flex flex-wrap gap-2">
+                        [[tagList]]
+                    </div>
+                </div>
+                
+                <!-- References -->
+                <div class={"mb-12 [[hasReferencesHiddenText]]"}>
+                    <h3 class="text-lg font-semibold mb-3">References</h3>
+                    <ul class="space-y-3 text-sm">
+                        [[referenceList]]
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="lg:col-span-4">
+                <div class="sticky top-24 space-y-8 mb-6">
+                    <!-- Author Info -->
+                    [[authors]]
+                    
+                    <!-- Related Articles  -->
+                    <RelatedArticles slug={slug} tags={article.tags} science={scienceData} />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ImageLightbox />
+

@@ -1,0 +1,27 @@
+---
+import Button from '../../components/ui/Button.astro';
+import Icon from "../../components/ui/Icons.astro";
+import { getCollection } from 'astro:content';
+let slugs = [];
+(await getCollection('articles')).map(({slug}) => slugs.push(slug.split('/')[2]));
+if (slugs.includes(Astro.url.pathname.substring(1))) {return Astro.redirect('/article'+Astro.url.pathname);}
+import { clientTranslations } from '../../i18n';
+const lang = Astro.locals.lang;
+const t = clientTranslations[lang];
+---
+<div class="container flex flex-col items-center !justify-center min-h-[70vh] py-16 text-center">
+    <h1 class="text-6xl font-bold mb-4">404</h1>
+    <h2 class="text-2xl font-semibold mb-6">{t.notFound.title}</h2>
+    <p class="text-muted-foreground max-w-md mb-8">
+        {t.notFound.message}
+    </p>
+    <Button id="back-button">
+        <Icon icon="arrowleft" className="mr-2 h-4 w-4" />
+        {t.common.back}
+    </Button>
+</div>
+<script is:inline data-astro-rerun>
+    document.getElementById('back-button').addEventListener('click', function() {
+        window.history.back();
+    });
+</script>

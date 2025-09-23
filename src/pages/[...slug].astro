@@ -3,6 +3,7 @@ import Header from "@/components/Header.astro"
 import Menu from "@/components/Menu.astro"
 import Footer from "@/components/Footer.astro"
 import '../styles/global.css';
+import Manifest from '../json/manifest.astro';
 
 const cookieTheme = Astro.locals.theme;
 ---
@@ -13,13 +14,30 @@ const cookieTheme = Astro.locals.theme;
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Divulgando Ciencia</title>
         <link rel="icon" type="image/svg+xml" href="/images/logo.webp" />
+        <Manifest/>
         <script>
+            const manifest = JSON.parse(document.getElementById("manifest").textContent)
+            const isValidPage = (page) => manifest.pages.slugs.includes(page) || manifest.articles.slugs.includes(page.split('/')[0]);
             const loadPage = async (page) => {
+                page = page.split('?')[0].split('#')[0];
+                let dynContent = {};
+                if (!isValidPage(page)) page = "404";
+                if (manifest.articles.slugs.includes(page.split('/')[0])) {
+                    dynContent = await loadDynContent(page);
+                    page = Object.keys(dynContent).length === 0 ? "404" : "article"
+                };
                 const storaged = localStorage.getItem(`page-${page}`);
                 if (storaged) return storaged;
                 const response = await fetch(`/page/${page}`);
-                const text = await response.text();
+                let text = await response.text();
                 if (response.ok) localStorage.setItem(`page-${page}`, text);
+                if (manifest.pages.data[page].type === "dynamic") {
+                    dynContent = await loadDynContent("article/" + page.split('/')[1]);
+                    text = renderDynContent(text, dynContent);
+                }
+                if (manifest.articles.slugs.includes(page.split('/')[0]) && Object.keys(dynContent).length === 0) {
+                    text = renderDynContent(text, dynContent);
+                }
                 return text;
             }
             const loadDynContent = async (page) => {
@@ -29,7 +47,7 @@ const cookieTheme = Astro.locals.theme;
                 catch (error) {return {};}
             }
             const renderDynContent = (template, data) => {
-                return template.replace(/\{\{(\w+)\}\}/g, (_, tag) => {
+                return template.replace(/\[\[(\w+)\]\]/g, (_, tag) => {
                     return data[tag] ?? `{{${tag}}}`;
                 });
             }
@@ -39,20 +57,19 @@ const cookieTheme = Astro.locals.theme;
                 e.preventDefault();
                 if (link.href == location.href) return;
                 const page = link.pathname.slice(1) || "home";
-                console.log(page)
                 const response = await loadPage(page);
                 document.querySelector("main").innerHTML = response;
                 window.history.pushState({}, "", link.href);
                 document.title = link.textContent + "| Divulgando Ciencia";
             });
-            document.addEventListener("popstate", async (e) => {
+            window.addEventListener("popstate", async() => {
                 const page = location.pathname.slice(1) || "home";
-                console.log(location.pathname)
-                const response = await (await fetch(`/page/${page}`)).text();
+                const response = await loadPage(page);
                 document.querySelector("main").innerHTML = response;
-                document.title = document.querySelector("h1").textContent + "| Divulgando Ciencia";
+                document.title = page + "| Divulgando Ciencia";
             });
             document.querySelector("main").innerHTML = await loadPage(location.pathname.slice(1) || "home");
+            window.history.replaceState({}, "", location.href);
         </script>
         <script is:inline define:vars={{cookieTheme}}>
             const setTheme = () => {
