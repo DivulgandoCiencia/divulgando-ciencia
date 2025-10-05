@@ -5,7 +5,7 @@ import { ScienceList } from "../Science";
 import { calcReadTime } from "../readTime";
 import { getEntry } from "astro:content";
 import { clientTranslations } from '../../i18n';
-const lang = Astro.locals.lang;
+const lang = 'es';
 const t = clientTranslations[lang];
 
 const { title, description, author, authors, date, slug, body } = Astro.props;

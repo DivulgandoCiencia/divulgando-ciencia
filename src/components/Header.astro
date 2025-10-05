@@ -65,10 +65,13 @@ const t = clientTranslations[lang];
                 // Submit the form when Enter key is pressed
                 searchInput.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter') {
+                        e.preventDefault();
                         if (searchInput.value.trim() !== '') {
-                            searchForm.submit();
-                        } else {
-                            e.preventDefault(); // Prevent submitting empty search
+                            const url = new URL('/articles', window.location.origin);
+                            url.searchParams.set('search', searchInput.value.trim());
+                            url.searchParams.set('page', '1');
+                            console.log(url.toString());
+                            window.pfresa.dispatchEvent(new CustomEvent('navigate', { detail: { url: url.toString() } }) );
                         }
                     }
                 });

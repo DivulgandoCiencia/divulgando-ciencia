@@ -1,8 +1,5 @@
 ---
 import { getCollection, render, getEntry } from 'astro:content';
-import ArticleAuthor from '../../components/articles/ArticleAuthor.astro';
-import AuthorsOverlap from '../../components/articles/AuthorsOverlap.astro';
-import RelatedArticles from '../../components/articles/RelatedArticles.astro';
 import ImageLightbox from '../../components/articles/ImageLightbox.astro';
 import Icon from '../../components/ui/Icons.astro';
 import Button from '../../components/ui/Button.astro';
@@ -16,42 +13,18 @@ const t = clientTranslations[lang];
 
 const { slug } = Astro.params;
 
-const pages = (await getCollection('articles')).filter(({slug}) => slug.split('/')[2] == Astro.params.slug);
+//const pages = (await getCollection('articles')).filter(({slug}) => slug.split('/')[2] == Astro.params.slug);
 
-let page
-
-if (pages.length == 2) {
-    page = pages.filter(({slug}) => slug.split('/')[0] == lang)[0];
-} else if (pages.length == 1) {
-    page = pages[0]
-} else {
-    return Astro.redirect('/404');
-}
-
-if (!page) {
-    return Astro.redirect('/404');
-}
-
-// Get the article data from the collection
-const { Content } = await render(page);
-const article = page.data;
-
-// Get authors data - handle both single author and multiple authors
-const author = article.author ? (await getEntry('authors', article.author.id)).data : undefined;
-const hasMultipleAuthors = article.authors?.length > 1;
-let authors = [];
-if (hasMultipleAuthors) {article.authors?.map(async(a) => {authors.push([(await getEntry('authors', a.id)).data, a.id])})}
-const scienceData = ScienceList.filter(({id}) => page.slug.split('/')[1] == id)[0]
-if (!supabase === null) supabase.rpc('register_view', { page_slug: page.slug.split('/')[2] }).then((response)=>{});
+//if (!supabase === null) supabase.rpc('register_view', { page_slug: page.slug.split('/')[2] }).then((response)=>{});
 ---
 
 <div class="relative">
     <!-- Article Header -->
     <header class="container px-4 py-8 md:py-12 relative z-10">
         <div class="flex items-center gap-2 mb-4">
-            <a href={'/articles?page=1&science=[[scienceData.id]]'} class={`text-sm font-medium color-[[scienceData.color]] hover:underline flex items-center`}>
-                <Icon icon='[[scienceData.icon]]' className="mr-1 h-4 w-4 mt-0.5" />
-                [[scienceData.name]]
+            <a href={'/articles?page=1&science=[[scienceDataId]]'} class={`text-sm font-medium color-[[scienceDataColor]] hover:underline flex items-center`}>
+                <Icon icon='[[scienceDataIcon]]' className="mr-1 h-4 w-4 mt-0.5" />
+                [[scienceDataName]]
             </a>
             <span class="text-muted-foreground">•</span>
             <span class="text-sm text-muted-foreground flex items-center">
@@ -61,11 +34,11 @@ if (!supabase === null) supabase.rpc('register_view', { page_slug: page.slug.spl
         </div>
         
         <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
-            [[article.title]]
+            [[articleTitle]]
         </h1>
         
         <p class="text-xl text-muted-foreground max-w-3xl mb-8">
-            [[article.description]]
+            [[articleDescription]]
         </p>
         
         <div class="flex items-center justify-between flex-wrap gap-4 mb-8">
@@ -86,7 +59,7 @@ if (!supabase === null) supabase.rpc('register_view', { page_slug: page.slug.spl
         <div class="aspect-[16/9] relative rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
             <img 
                 src="[[portrait]]"
-                alt="[[article.title]]"
+                alt="[[articleTitle]]"
                 class="w-full h-full object-cover rounded-xl"
                 data-img-id="featured-image"
             />
@@ -104,7 +77,6 @@ if (!supabase === null) supabase.rpc('register_view', { page_slug: page.slug.spl
                 
                 <!-- Tags -->
                 <div class="mt-8 mb-12">
-                    <h3 class="text-lg font-semibold mb-3 [[hasTagsHiddenText]]">Tags</h3>
                     <div class="flex flex-wrap gap-2">
                         [[tagList]]
                     </div>
@@ -126,7 +98,7 @@ if (!supabase === null) supabase.rpc('register_view', { page_slug: page.slug.spl
                     [[authors]]
                     
                     <!-- Related Articles  -->
-                    <RelatedArticles slug={slug} tags={article.tags} science={scienceData} />
+                    [[relatedArticles]]
                 </div>
             </div>
         </div>

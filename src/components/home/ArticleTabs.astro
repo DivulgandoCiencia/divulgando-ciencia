@@ -40,11 +40,7 @@ articles.map((data) => {
         
         <div class="tab-content" id="recent">
             <div class="space-y-4">
-                {articles.slice(0,6).map((article) => (
-                    <ArticleCard
-                        {...article}
-                    />
-                ))}
+                [[recentArticles]]
             </div>
         </div>
         
@@ -60,18 +56,14 @@ articles.map((data) => {
         
         <div class="tab-content hidden" id="trending">
             <div class="space-y-4">
-                {articles.slice(0,6).map((article) => (
-                    <ArticleCard
-                        {...article}
-                    />
-                ))}
+                [[recentArticles]]
             </div>
         </div>
     </div>
 </div>
 
 <script is:inline define:vars={{trendingArticles,t}}>
-    document.addEventListener('astro:page-load', () => {
+    window.pfresa.addEventListener('page-load', () => {
         const tabButtons = document.querySelectorAll('[data-tab]');
         const tabContents = document.querySelectorAll('.tab-content');
         
@@ -102,7 +94,7 @@ articles.map((data) => {
         });
     });
 
-    document.addEventListener('astro:page-load', async() => {
+    window.pfresa.addEventListener('page-load', async() => {
         const buttons = document.getElementById('articles-tabs-buttons');
         const trendingArticlesCards = document.querySelectorAll('#trending.tab-content')[0].children[0];
         const slugs = [];

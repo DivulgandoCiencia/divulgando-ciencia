@@ -18,8 +18,8 @@ import ShareMenu from "../ui/ShareMenu.astro"
     </div>
 </div>
 
-<script is:inline data-astro-rerun>
-    document.addEventListener('astro:page-load', () => {
+<script is:inline>
+    window.pfresa.addEventListener('page-load', () => {
         const lightbox = document.getElementById('image-lightbox');
         const lightboxImage = document.getElementById('lightbox-image');
         const lightboxCaption = document.getElementById('lightbox-caption');
@@ -96,19 +96,13 @@ import ShareMenu from "../ui/ShareMenu.astro"
         // Close lightbox when clicking the close button
         lightboxClose.addEventListener('click', closeLightbox);
         
-        // Close lightbox when clicking outside the image
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                closeLightbox();
-            }
-        });
+        // Close lightbox when clicking outside the 
+        const lightboxCloseHandler = (e) => {if (e.target === lightbox) {closeLightbox();}}
+        lightbox.addEventListener('click', (e) => lightboxCloseHandler(e));
         
         // Close lightbox when pressing Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !lightbox.classList.contains('pointer-events-none')) {
-                closeLightbox();
-            }
-        });
+        const lightboxExitHandler = (e) => {if (e.key === 'Escape' && !lightbox.classList.contains('pointer-events-none')) {closeLightbox();}}
+        document.addEventListener('keydown', (e) => lightboxExitHandler(e));
         
         // Check if URL has an image hash on page load
         if (window.location.hash && window.location.hash.startsWith('#image-')) {
@@ -136,5 +130,10 @@ import ShareMenu from "../ui/ShareMenu.astro"
                 }
             }
         }
+
+        window.pfresa.addEventListener('before-swap', () => {
+            document.removeEventListener('keydown', lightboxExitHandler);
+            lightbox.removeEventListener('click', lightboxCloseHandler);
+        });
     });
 </script>

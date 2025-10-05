@@ -25,17 +25,7 @@ const { articles = [] } = Astro.props;
     </div>
 
     <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 relative z-10">
-        {articles.map(article => (
-            <FeaturedArticleCard
-                slug={article.slug}
-                body={article.body}
-                title={article.title}
-                description={article.description}
-                author={article.author}
-                authors={article.authors}
-                date={article.date}
-            />
-        ))}
+        [[featuredArticles]]
     </div>
 </section>
 

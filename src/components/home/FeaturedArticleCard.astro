@@ -10,7 +10,7 @@ const scienceData = ScienceList.filter(({id}) => id == slug.split('/')[1])[0];
 const authorData = (await getEntry("authors", author?.id || authors[0]?.id)).data;
 
 import { clientTranslations } from '../../i18n';
-const lang = Astro.locals.lang;
+const lang = 'es';
 const t = clientTranslations[lang];
 
 const authorName = authors !== undefined ? `${authorData.name} ${t.common.and} ${(authors.lenght - 1).toString} ${t.common.more}` : authorData.name;

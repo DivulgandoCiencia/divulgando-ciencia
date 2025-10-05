@@ -16,60 +16,175 @@ const cookieTheme = Astro.locals.theme;
         <link rel="icon" type="image/svg+xml" href="/images/logo.webp" />
         <Manifest/>
         <script>
+            //PFresa - A simple client-side router
+            //Declaration
+            declare global {
+                interface Window { pfresa: EventTarget; }
+            }
+            window.pfresa = new EventTarget();
+
+            //Manifest
             const manifest = JSON.parse(document.getElementById("manifest").textContent)
+            let language = manifest.languages[0]; // Default language
+
+            //Utils
             const isValidPage = (page) => manifest.pages.slugs.includes(page) || manifest.articles.slugs.includes(page.split('/')[0]);
-            const loadPage = async (page) => {
+            const clearScripts = () => {document.querySelector("main").querySelectorAll("script").forEach(script => script.remove());}
+
+            // Memory handlers
+            // Cookie functions
+            const getCookie = (name: string) => {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                return match ? match[2] : null;
+            }
+            const setCookie = (name: string, value: string, days = 30) => {
+                const date = new Date();
+                date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+                const hostname = window.location.hostname; // Detect enviroment
+                const isLocal = hostname === 'localhost' || hostname.endsWith('.local');
+                const domain = isLocal ? '' : '.divulgandociencia.com';
+                const cookie = [`${name}=${value}`, 'path=/', `max-age=${days * 86400}`, 'SameSite=None', 'Secure', domain ? `domain=${domain}` : ''].filter(Boolean).join('; ');
+                document.cookie = cookie;
+            }
+
+            // Language handlers
+            const detectLanguage = () => {
+                const languages = manifest.languages;
+                const host = window.location.hostname;
+                const subdomain = host.split('.')[0];
+                const cookieLang = getCookie('divciencia-lang');
+                const browserLang = navigator.language.split('-')[0];
+                
+                let lang = languages[0]; // Default to first language in the list
+                
+                if (cookieLang && languages.includes(cookieLang as any)) {
+                    lang = cookieLang;
+                } else if (languages.includes(subdomain as any)) {
+                    lang = subdomain;
+                } else if (languages.includes(browserLang as any)) {
+                    lang = browserLang;
+                }
+                setCookie('divciencia-lang', lang, 365);
+                return lang;
+            }
+
+            //Core functions
+            // Load page content
+            const loadPage = async (page, href, lang) => {
+                // Get URL
+                const params = Object.fromEntries((new URL(href).searchParams || {}) as any);
                 page = page.split('?')[0].split('#')[0];
                 let dynContent = {};
                 if (!isValidPage(page)) page = "404";
+
+                // Load dynamic article content if applicable
                 if (manifest.articles.slugs.includes(page.split('/')[0])) {
-                    dynContent = await loadDynContent(page);
+                    dynContent = await loadDynContent(page, lang, params);
                     page = Object.keys(dynContent).length === 0 ? "404" : "article"
                 };
-                const storaged = localStorage.getItem(`page-${page}`);
-                if (storaged) return storaged;
-                const response = await fetch(`/page/${page}`);
-                let text = await response.text();
-                if (response.ok) localStorage.setItem(`page-${page}`, text);
-                if (manifest.pages.data[page].type === "dynamic") {
-                    dynContent = await loadDynContent("article/" + page.split('/')[1]);
+
+                // Load page template
+                //const storaged = localStorage.getItem(`page-${page}`);
+                const storaged = null;
+                let text = "";
+                if (storaged) {
+                    text = storaged;
+                } else {
+                    const response = await fetch(`/page/${page}`);
+                    text = await response.text();
+                    if (response.ok) localStorage.setItem(`page-${page}`, text);
+                }
+
+                // Render dynamic content if applicable
+                if (Object.keys(manifest.pages.data).includes(page)) { if (manifest.pages.data[page].type === "dynamic") {
+                    dynContent = await loadDynContent(page, lang, params, manifest.pages.dynPOST.includes(page));
+                    text = renderDynContent(text, dynContent);
+                }}
+                if (manifest.articles.slugs.includes(page.split('/')[0]) && Object.keys(dynContent).length !== 0) {
                     text = renderDynContent(text, dynContent);
                 }
-                if (manifest.articles.slugs.includes(page.split('/')[0]) && Object.keys(dynContent).length === 0) {
-                    text = renderDynContent(text, dynContent);
-                }
+
+                // Return final HTML
                 return text;
             }
-            const loadDynContent = async (page) => {
-                const response = await fetch(`/api/content/${page}`);
+
+            // Load dynamic content via API
+            const loadDynContent = async (page, lang, params = {}, usePOST = false) => {
+                let response;
+                // If params are provided and usePOST is true, use POST; otherwise, use GET
+                if (params && usePOST) response = await fetch(`/api/content/${page}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(params)});
+                else response = await fetch(`/api/content/${page}`, {method: 'GET'});
                 if (!response.ok) return {};
                 try {return await response.json();} 
                 catch (error) {return {};}
             }
+
+            // Render dynamic content into template
             const renderDynContent = (template, data) => {
                 return template.replace(/\[\[(\w+)\]\]/g, (_, tag) => {
-                    return data[tag] ?? `{{${tag}}}`;
+                    return data[tag] ?? `[[${tag}]]`;
                 });
             }
+
+            // Removes old content and inyects new one
+            const inyectMain = (html) => {
+                window.pfresa.dispatchEvent(new CustomEvent('before-swap'));
+                const main = document.querySelector("main");
+                clearScripts();
+                window.pfresa = new EventTarget();
+                window.pfresa.addEventListener('navigate', navigateEventHandler);
+                main.innerHTML = html;
+                main.querySelectorAll("script").forEach((oldScript) => {
+                    const newScript = document.createElement("script");
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                        newScript.defer = true;
+                    } else {
+                        newScript.textContent = oldScript.textContent;
+                    }
+                    [...oldScript.attributes].forEach((attr) => {
+                        newScript.setAttribute(attr.name, attr.value);
+                    });
+                    oldScript.replaceWith(newScript);
+                });
+            }
+
+            // Event listeners for navigation
+            const navigateEventHandler = async (e) => {
+                const url = new URL(e.detail.url);
+                const page = url.pathname.slice(1) || "home";
+                const response = await loadPage(page, url.href.slice(1), language);
+                inyectMain(response);
+                document.title = page + "| Divulgando Ciencia";
+                window.history.replaceState({}, "", url.href);
+                window.pfresa.dispatchEvent(new CustomEvent('page-load'));
+            }
             document.addEventListener("click", async (e) => {
-                const link = e.target.closest("a");
+                const link = (e.target as any).closest("a");
                 if (!link || link.origin !== location.origin) return;
                 e.preventDefault();
                 if (link.href == location.href) return;
                 const page = link.pathname.slice(1) || "home";
-                const response = await loadPage(page);
-                document.querySelector("main").innerHTML = response;
+                const response = await loadPage(page, link.href.slice(1), language);
+                inyectMain(response);
                 window.history.pushState({}, "", link.href);
                 document.title = link.textContent + "| Divulgando Ciencia";
+                window.pfresa.dispatchEvent(new CustomEvent('page-load'));
             });
             window.addEventListener("popstate", async() => {
                 const page = location.pathname.slice(1) || "home";
-                const response = await loadPage(page);
-                document.querySelector("main").innerHTML = response;
+                const response = await loadPage(page, location.href.slice(1), language);
+                inyectMain(response);
                 document.title = page + "| Divulgando Ciencia";
+                window.pfresa.dispatchEvent(new CustomEvent('page-load'));
             });
-            document.querySelector("main").innerHTML = await loadPage(location.pathname.slice(1) || "home");
+
+            // Initial load
+            language = detectLanguage();
+            inyectMain(await loadPage(location.pathname.slice(1) || "home", location.href.slice(1), language))
             window.history.replaceState({}, "", location.href);
+            window.pfresa.addEventListener('navigate', navigateEventHandler);
+            window.pfresa.dispatchEvent(new CustomEvent('page-load'));
         </script>
         <script is:inline define:vars={{cookieTheme}}>
             const setTheme = () => {
