@@ -2,23 +2,33 @@ import { getCollection } from "astro:content";
 import { experimental_AstroContainer } from "astro/container";
 import { getContainerRenderer as mdxContainerRenderer } from "@astrojs/mdx";
 import { loadRenderers } from "astro:container";
+import { clientTranslations } from "../../../../../i18n";
 
 const articles = await getCollection("articles");
 const authorCollection = await getCollection("authors");
 const renderers = await loadRenderers([mdxContainerRenderer()]);
 const container = experimental_AstroContainer.create({renderers});
 
-import { ScienceList } from "../../../../components/Science"
-import { calcReadTime } from '../../../../components/readTime';
+import { ScienceList } from "../../../../../components/Science"
+import { calcReadTime } from '../../../../../components/readTime';
 
 export const prerender = true;
 
 export function getStaticPaths() {
-    return articles.map((article) => ({ params: { slug: article.slug.split('/')[2] } }));
+    let paths = [];
+    for (const lang of ['es','en']) {
+        for (const article of articles) {
+            if (article.slug.split('/')[0] === lang) {
+                paths.push({ params: { lang: lang, slug: article.slug.split('/')[2] } });
+            }
+        }
+    } 
+    return paths;
 }
 
 export const GET = async ({ params }) => {
-    const { slug } = params;
+    const { slug, lang } = params;
+    const t = clientTranslations[lang];
 
     const article = articles.find(a => a.slug.split('/')[2] === slug);
 
@@ -59,7 +69,7 @@ export const GET = async ({ params }) => {
                     </div>`
                 )}
             </div>
-            <div class="ml-4"><span class="text-sm font-medium">${authors.length === 1 ? authors[0].name : authors.length === 2 ? `${authors[0].name} t.commond.and ${authors[1].name}`: `${authors[0].name} t.commond.and ${authors.length - 1} t.common.more`}</span></div>
+            <div class="ml-4"><span class="text-sm font-medium">${authors.length === 1 ? authors[0].name : authors.length === 2 ? `${authors[0].name} ${t.common.and} ${authors[1].name}`: `${authors[0].name} ${t.common.and} ${authors.length - 1} ${t.common.more}`}</span></div>
         </div>
         <style>
             .author-tooltip {
@@ -103,13 +113,13 @@ export const GET = async ({ params }) => {
         </div>`
     ) : (
         `<div class="rounded-xl border bg-card p-6">
-            <h3 class="text-lg font-semibold mb-4">t.article.aboutAuthor</h3>
+            <h3 class="text-lg font-semibold mb-4">${t.article.aboutAuthor}</h3>
             <div class="flex items-center gap-4 mb-4">
                 <img src=${"/images/autores/" + article.data.author.id + ".webp" || "/placeholder.svg"} alt=${author.name} class="h-16 w-16 rounded-full object-cover"/>
                 <div>
                     <div class="text-3xl hidden"></div>
                     <div class=${"font-medium text-" + (author.social_media === undefined ? 'xl' : 'base')}>${author.name}</div>
-                    <div class="text-sm text-muted-foreground">${author.bio || "t.articles.defaultBio"}</div>    
+                    <div class="text-sm text-muted-foreground">${author.bio || t.articles.defaultBio}</div>    
                 </div>
             </div>
         </div>`
@@ -143,7 +153,7 @@ export const GET = async ({ params }) => {
 
     const relatedArticles = `
     <div class="rounded-xl border bg-card p-6">
-        <h3 class="text-lg font-semibold mb-4">t.article.relatedArticles</h3>
+        <h3 class="text-lg font-semibold mb-4">${t.article.relatedArticles}</h3>
         <div class="space-y-4">
             ${articlesL.slice(0,3).map(article => (
                 `<div class="group">
@@ -156,14 +166,14 @@ export const GET = async ({ params }) => {
                                 ${article.data.title}
                             </h4>
                             <p class="text-xs text-muted-foreground mt-1">
-                                ${article.data.author !== undefined ? authorCollection.filter(({id}) => article.data.author.id === id)[0].data.name : authorCollection.filter(({id}) => article.data.authors[0].id === id)[0].data.name + ` t.common.and ${(article.data.authors.length - 1).toString()} t.common.more` } • ${calcReadTime(article.body) + ' ' + 't.articles.readTime'}
+                                ${article.data.author !== undefined ? authorCollection.filter(({id}) => article.data.author.id === id)[0].data.name : authorCollection.filter(({id}) => article.data.authors[0].id === id)[0].data.name + ` ${t.common.and} ${(article.data.authors.length - 1).toString()} ${t.common.more}` } • ${calcReadTime(article.body) + ' ' + t.articles.readTime}
                             </p>
                         </div>
                     </a>
                 </div>`
             )).join('\n')}
         </div>
-        <a href="/articles" class="block mt-4 text-sm text-primary hover:underline">t.article.viewMoreArticles</a>
+        <a href="/articles" class="block mt-4 text-sm text-primary hover:underline">${t.article.viewMoreArticles}</a>
     </div>`
 
     return new Response(

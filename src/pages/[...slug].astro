@@ -90,7 +90,7 @@ const cookieTheme = Astro.locals.theme;
                 if (storaged) {
                     text = storaged;
                 } else {
-                    const response = await fetch(`/page/${page}`);
+                    const response = await fetch(`/page/${lang}/${page}`);
                     text = await response.text();
                     if (response.ok) localStorage.setItem(`page-${page}`, text);
                 }
@@ -112,8 +112,8 @@ const cookieTheme = Astro.locals.theme;
             const loadDynContent = async (page, lang, params = {}, usePOST = false) => {
                 let response;
                 // If params are provided and usePOST is true, use POST; otherwise, use GET
-                if (params && usePOST) response = await fetch(`/api/content/${page}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(params)});
-                else response = await fetch(`/api/content/${page}`, {method: 'GET'});
+                if (params && usePOST) response = await fetch(`/api/content/${lang}/${page}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(params)});
+                else response = await fetch(`/api/content/${lang}/${page}`, {method: 'GET'});
                 if (!response.ok) return {};
                 try {return await response.json();} 
                 catch (error) {return {};}

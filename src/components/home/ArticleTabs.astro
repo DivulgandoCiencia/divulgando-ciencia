@@ -1,14 +1,11 @@
 ---
-import Icon from '../ui/Icons.astro';
-import Button from '../ui/Button.astro';
-import ArticleCard from './ArticleCard.astro';
 import { getCollection } from 'astro:content'
 import { ScienceList } from '../Science';
 import { calcReadTime } from '../readTime';
 const { articles } = Astro.props;
 articles.sort((a, b) => b.date.getTime() - a.date.getTime())
 import { clientTranslations } from '../../i18n';
-const lang = Astro.locals.lang;
+const {lang} = Astro.props;
 const t = clientTranslations[lang];
 const authors = await getCollection('authors');
 const trendingArticles = []

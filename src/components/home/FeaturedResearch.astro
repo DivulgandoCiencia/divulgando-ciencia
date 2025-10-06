@@ -1,9 +1,7 @@
 ---
-import Icon from "../ui/Icons.astro";
 import Button from '../ui/Button.astro';
-import FeaturedArticleCard from './FeaturedArticleCard.astro';
 import { clientTranslations } from '../../i18n';
-const lang = Astro.locals.lang;
+const {lang} = Astro.props;
 const t = clientTranslations[lang];
 
 const { articles = [] } = Astro.props;

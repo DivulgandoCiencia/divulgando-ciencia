@@ -1,7 +1,7 @@
 ---
 import Icon from './Icons.astro';
 import { clientTranslations } from '../../i18n';
-const lang = Astro.locals.lang;
+const {lang} = Astro.props;
 const t = clientTranslations[lang];
 
 const { id, title = "Share this content", className = "", display="text+icon", menuDisplay="text+icon", buttonIconClass = "h-4 w-4", menuStyle="right:0;" } = Astro.props;

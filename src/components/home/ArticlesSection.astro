@@ -1,10 +1,9 @@
 ---
 import CategoryList from './CategoryList.astro';
 import ArticleTabs from './ArticleTabs.astro';
-import Particles from './Particles.astro';
 const { articles } = Astro.props;
 import { clientTranslations } from '../../i18n';
-const lang = Astro.locals.lang;
+const {lang} = Astro.props;
 const t = clientTranslations[lang];
 ---
 
@@ -18,11 +17,11 @@ const t = clientTranslations[lang];
         <div class="md:w-1/4 max-sm:hidden">
             <div class="sticky top-24">
                 <h2 class="text-2xl font-semibold mb-4">{t.home.articles.sciences}</h2>
-                <CategoryList />
+                <CategoryList lang={lang} />
             </div>
         </div>
         <div class="md:w-3/4">
-            <ArticleTabs articles={articles}/>
+            <ArticleTabs lang={lang} articles={articles}/>
         </div>
     </div>
 </section>

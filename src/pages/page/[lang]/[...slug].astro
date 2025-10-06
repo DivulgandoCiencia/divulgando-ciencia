@@ -1,12 +1,12 @@
 ---
-import Button from '../../components/ui/Button.astro';
-import Icon from "../../components/ui/Icons.astro";
+import Button from '../../../components/ui/Button.astro';
+import Icon from "../../../components/ui/Icons.astro";
 import { getCollection } from 'astro:content';
 let slugs = [];
 (await getCollection('articles')).map(({slug}) => slugs.push(slug.split('/')[2]));
 if (slugs.includes(Astro.url.pathname.substring(1))) {return Astro.redirect('/article'+Astro.url.pathname);}
-import { clientTranslations } from '../../i18n';
-const lang = Astro.locals.lang;
+import { clientTranslations } from '../../../i18n';
+const lang = ['es','en'].includes(Astro.url.pathname.split('/')[1]) ? Astro.url.pathname.split('/')[1] : 'en';
 const t = clientTranslations[lang];
 ---
 <div class="container flex flex-col items-center !justify-center min-h-[70vh] py-16 text-center">

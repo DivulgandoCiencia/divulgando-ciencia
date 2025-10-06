@@ -1,17 +1,15 @@
 ---
-import { getCollection, render, getEntry } from 'astro:content';
-import ImageLightbox from '../../components/articles/ImageLightbox.astro';
-import Icon from '../../components/ui/Icons.astro';
-import Button from '../../components/ui/Button.astro';
-import { ScienceList } from "../../components/Science"
-import { calcReadTime } from '../../components/readTime';
-import ShareMenu from '../../components/ui/ShareMenu.astro';
-import { clientTranslations } from '../../i18n';
-import { supabase } from '../../lib/supabase';
-const lang = Astro.locals.lang;
-const t = clientTranslations[lang];
+import ImageLightbox from '../../../components/articles/ImageLightbox.astro';
+import Icon from '../../../components/ui/Icons.astro';
+import Button from '../../../components/ui/Button.astro';
+import ShareMenu from '../../../components/ui/ShareMenu.astro';
+import { clientTranslations } from '../../../i18n';
+import { supabase } from '../../../lib/supabase';
 
-const { slug } = Astro.params;
+export const prerender = true;
+export async function getStaticPaths() {return ['es','en'].map((lang) => ({params: { lang },}));}
+const { lang } = Astro.params;
+const t = clientTranslations[lang];
 
 //const pages = (await getCollection('articles')).filter(({slug}) => slug.split('/')[2] == Astro.params.slug);
 
@@ -49,7 +47,7 @@ const { slug } = Astro.params;
                     <Icon icon="bookmarkplus" className="mr-2 h-4 w-4" />
                     {t.common.save}
                 </Button>
-                <ShareMenu menuStyle="right: -4px;">
+                <ShareMenu menuStyle="right: -4px;" lang={lang}>
             </div>
         </div>
     </header>
@@ -104,5 +102,5 @@ const { slug } = Astro.params;
         </div>
     </div>
 </div>
-<ImageLightbox />
+<ImageLightbox lang={lang}/>
 

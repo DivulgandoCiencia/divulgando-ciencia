@@ -1,9 +1,8 @@
 import { getCollection } from "astro:content";
-import { calcReadTime } from "../../../components/readTime";
-import { ScienceList } from "../../../components/Science";
+import { calcReadTime } from "../../../../components/readTime";
+import { ScienceList } from "../../../../components/Science";
+import { clientTranslations } from "../../../../i18n";
 
-
-const lang = 'es';
 const articlesCollection = await getCollection('articles');
 const authors = await getCollection('authors');
 let articlesDataES = []
@@ -47,8 +46,9 @@ articlesCollection.filter(({slug}) => slug.split('/')[0] === 'es').sort((a, b) =
     })
 })
 
-const handler = async (body) => {
+const handler = async (body, lang = 'en') => {;
     let articlesData = lang === 'es' ? articlesDataES.slice() : articlesDataEN.slice();
+    const t = clientTranslations[lang];
 
     const articlesPerPage = 12;
     let currentPage = parseInt(body['page'] || "1");
@@ -149,7 +149,7 @@ const handler = async (body) => {
                     <a href=${"/article/"+article.slug.split('/')[2]}><img src=${"/images/contenido/" + article.id + "/portada.webp" || "/placeholder.svg"} alt=${article.title} width="400" height="225" class="h-full w-full object-cover rounded-t-xl transition-transform hover:scale-105 duration-700"/></a>
                     <div class="absolute top-2 left-2">
                         <span class=${"text-primary-foreground px-2 py-1 text-xs font-medium rounded-full shadow-md bg-color-"+article.science.color}>
-                            {t.sciences[article.science.name]}
+                            ${t.sciences[article.science.name]}
                         </span>
                     </div>
                 </div>
@@ -163,7 +163,7 @@ const handler = async (body) => {
                         <div class="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                             <span>${article.dateName}</span>
                             <span>•</span>
-                            <span>${article.readTime} {t.articles.readTime}</span>
+                            <span>${article.readTime} ${t.articles.readTime}</span>
                         </div>
                     </div>
                     <p class="line-clamp-3 text-muted-foreground mb-4 flex-1">${article.description}</p>
@@ -179,7 +179,7 @@ const handler = async (body) => {
                         <a href=${"/article/"+article.slug.split('/')[2]}>
                             <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-3 hover:scale-105 transition-transform">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-4 w-4"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                                {t.common.readArticle}
+                                ${t.common.readArticle}
                             </button>
                         </a>
                     </div>
@@ -188,7 +188,7 @@ const handler = async (body) => {
         ).join('')}
         </div>
         <div id="no-articles-message" class="text-center py-12" style=${paginatedArticles.length !== 0 ? 'display: none;' : ''}>
-            <p class="text-muted-foreground">{t.articles.noArticlesFound}</p>
+            <p class="text-muted-foreground">${t.articles.noArticlesFound}</p>
         </div>
     `
     const paginationHTML = `
@@ -214,10 +214,10 @@ const handler = async (body) => {
     `
     const scienceSelectorHTML = `
         <select id="science-filter" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:w-[200px]">
-            <option value="">{t.sciences.all}</option>
+            <option value="">${t.sciences.all}</option>
             ${ScienceList.map(science => {
-                if (science.id === scienceParam) {return `<option value=${science.id} selected>t.sciences${science.name}</option>`}
-                else {return `<option value=${science.id}>t.sciences${science.name}</option>`}
+                if (science.id === scienceParam) {return `<option value=${science.id} selected>${t.sciences[science.name]}}</option>`}
+                else {return `<option value=${science.id}>${t.sciences[science.name]}</option>`}
             })}
         </select>
     `
@@ -237,7 +237,7 @@ const handler = async (body) => {
 export const POST = async ({ params, request }) => {
     let body = {};
     if (request.headers.get("Content-Type") === "application/json") body = await request.json();
-    const response = await handler(body);
+    const response = await handler(body, ['es','en'].includes(request.url.pathname.split('/')[1]) ? request.url.pathname.split('/')[1] : 'en');
     return new Response(
         response,
         {
@@ -248,7 +248,7 @@ export const POST = async ({ params, request }) => {
 
 export const GET = async ({ params, request }) => {
     let body = {};
-    const response = await handler(body);
+    const response = await handler(body, ['es','en'].includes(request.url.pathname.split('/')[1]) ? request.url.pathname.split('/')[1] : 'en');
     return new Response(
         response,
         {

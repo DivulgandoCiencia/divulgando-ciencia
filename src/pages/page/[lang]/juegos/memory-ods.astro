@@ -1,4 +1,7 @@
 ---
+export const prerender = true;
+export async function getStaticPaths() {return ['es','en'].map((lang) => ({params: { lang },}));}
+const { lang } = Astro.params;
 ---
 
 <div class="container px-4 py-8 md:py-12 relative z-10">

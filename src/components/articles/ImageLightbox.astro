@@ -1,11 +1,12 @@
 ---
+const { lang } = Astro.props;
 import ShareMenu from "../ui/ShareMenu.astro"
 ---
 
 <div id="image-lightbox" class="fixed inset-0 z-50 flex items-center justify-center bg-[#000]/70 opacity-0 pointer-events-none transition-opacity duration-300">
     <div class="relative max-w-4xl max-h-[90vh] mx-4">
         <div class="flex items-center"> 
-            <ShareMenu id="lightbox-share-menu" className="text-foreground -top-10" display="icon" menuDisplay="icon" buttonIconClass="h-6 w-6" menuStyle="top:-0.9rem; right:-280px; border-radius:50px; height:2.25rem"/>
+            <ShareMenu id="lightbox-share-menu" lang={lang} className="text-foreground -top-10" display="icon" menuDisplay="icon" buttonIconClass="h-6 w-6" menuStyle="top:-0.9rem; right:-280px; border-radius:50px; height:2.25rem"/>
             <button id="lightbox-close" class="absolute -top-10 right-0 text-principal-white hover:text-primary transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                 <span class="sr-only">Close</span>

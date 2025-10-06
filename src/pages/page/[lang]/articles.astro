@@ -1,13 +1,12 @@
 ---
-import { getCollection, getEntry } from 'astro:content';
-import Icon from '../../components/ui/Icons.astro'
-import Button from '../../components/ui/Button.astro';
-import Input from '../../components/ui/Input.astro';
-import { ScienceList } from '../../components/Science';
-import { calcReadTime } from '../../components/readTime';
-import { clientTranslations } from '../../i18n';
-const { searchParams } = Astro.url;
-const lang = Astro.locals.lang;
+import Icon from '../../../components/ui/Icons.astro'
+import Button from '../../../components/ui/Button.astro';
+import Input from '../../../components/ui/Input.astro';
+import { clientTranslations } from '../../../i18n';
+
+export const prerender = true;
+export async function getStaticPaths() {return ['es','en'].map((lang) => ({params: { lang },}));}
+const { lang } = Astro.params;
 const t = clientTranslations[lang];
 
 ---
