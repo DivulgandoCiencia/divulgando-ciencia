@@ -15,4 +15,3 @@ Disallow: /test/
 # Sitemap locations (important for SEO)
 Sitemap: https://www.divulgandociencia.com/sitemap.xml
 Sitemap: https://en.divulgandociencia.com/sitemap.xml
-Sitemap: http://localhost:4321/sitemap.xml
