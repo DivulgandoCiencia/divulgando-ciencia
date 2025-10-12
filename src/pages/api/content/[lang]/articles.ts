@@ -23,7 +23,7 @@ articlesCollection.filter(({slug}) => slug.split('/')[0] === 'es').sort((a, b) =
         date: data.date,
         dateName: data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }),
         science: ScienceList.filter(({id}) => id == slug.split('/')[1])[0],
-        readTime: calcReadTime(body),
+        readTime: data.readTime || calcReadTime(body),
         id: slug.split('/')[2],
         slug: slug,
     })
@@ -42,7 +42,7 @@ articlesCollection.filter(({slug}) => slug.split('/')[0] === 'en').sort((a, b) =
         date: data.date,
         dateName: data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }),
         science: ScienceList.filter(({id}) => id == slug.split('/')[1])[0],
-        readTime: calcReadTime(body),
+        readTime: data.readTime ? data.readTime.toString() : calcReadTime(body),
         id: slug.split('/')[2],
         slug: slug,
     })

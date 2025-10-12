@@ -27,6 +27,7 @@ const articles = defineCollection({
     author: reference('authors').optional(),
     date: z.date(),
     tags: z.array(z.string()).optional(),
+    readTime: z.number().optional(),
     references: z.array(z.object({
       title: z.string(),
       authors: z.string(),

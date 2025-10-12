@@ -6,7 +6,7 @@ import { calcReadTime } from "../readTime";
 import { getEntry } from "astro:content";
 import { clientTranslations } from '../../i18n';
 
-const { title, description, author, authors, date, slug, body, lang } = Astro.props;
+const { title, description, author, authors, date, slug, body, lang, readTime } = Astro.props;
 const t = clientTranslations[lang];
 const scienceData = ScienceList.filter(({id}) => id == slug.split('/')[1])[0];
 const authorData = (await getEntry("authors", author?.id || authors[0]?.id)).data;
@@ -21,7 +21,7 @@ const authorName = authors !== undefined ? `${authorData.name} ${t.common.and} $
                 <span class={"bg-principal-black bg-opacity-20 backdrop-blur-sm px-2 py-1 rounded-full color-"+scienceData.color}>{t.sciences[scienceData.name]}</span>
                 <span>{date.toLocaleDateString(t.articles.timeStamp, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 <span>•</span>
-                <span>{calcReadTime(body)} {t.articles.readTime}</span>
+                <span>{readTime ? readTime.toString() : calcReadTime(body)} {t.articles.readTime}</span>
             </div>
         </div>
         <p class="text-muted-foreground mb-4 line-clamp-3">{description}</p>

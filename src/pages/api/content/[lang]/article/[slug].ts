@@ -125,7 +125,7 @@ export const GET = async ({ params }) => {
         </div>`
     )
 
-    const tags = article.data.tags ? article.data.tags.map(tag => (`<a href={"/articles?page=1&tags=${tag.toLowerCase().replace(/\s+/g, '-')}"} class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm hover:bg-primary/20 transition-all hover:scale-105">${tag}</a>`)).join("\n") : "<div/>"
+    const tags = article.data.tags ? article.data.tags.map(tag => (`<a href=${`/articles?page=1&tags=${tag.toLowerCase().replace(/\s+/g, '-')}`} class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm hover:bg-primary/20 transition-all hover:scale-105">${tag}</a>`)).join("\n") : "<div/>"
     const references = article.data.references ? article.data.references.map(ref => (
         `<li class="border-l-2 border-primary/30 pl-4 py-1 hover:border-primary transition-colors">
             <p class="font-medium">${ref.title}</p>
@@ -166,7 +166,7 @@ export const GET = async ({ params }) => {
                                 ${article.data.title}
                             </h4>
                             <p class="text-xs text-muted-foreground mt-1">
-                                ${article.data.author !== undefined ? authorCollection.filter(({id}) => article.data.author.id === id)[0].data.name : authorCollection.filter(({id}) => article.data.authors[0].id === id)[0].data.name + ` ${t.common.and} ${(article.data.authors.length - 1).toString()} ${t.common.more}` } • ${calcReadTime(article.body) + ' ' + t.articles.readTime}
+                                ${article.data.author !== undefined ? authorCollection.filter(({id}) => article.data.author.id === id)[0].data.name : authorCollection.filter(({id}) => article.data.authors[0].id === id)[0].data.name + ` ${t.common.and} ${(article.data.authors.length - 1).toString()} ${t.common.more}` } • ${article.data.readTime ? article.data.readTime.toString() : calcReadTime(article.body) + ' ' + t.articles.readTime}
                             </p>
                         </div>
                     </a>

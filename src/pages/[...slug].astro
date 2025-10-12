@@ -27,19 +27,16 @@ if (Astro.url.host.includes('localhost')){redirect='';}
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <Seo title={(cf.title ? cf.title + ' | ' : '') + 'Divulgando Ciencia'} description={cf.description === "" ? clientTranslations[serverLang].common.description : cf.description} image='' altIMG={cf.alt ? cf.alt : ''} lang={serverLang} robots={is404} />
+        <Seo title={(cf.title ? cf.title + ' | ' : '') + 'Divulgando Ciencia'} description={cf.description == "" || !cf.description ? clientTranslations[serverLang].common.description : cf.description} image='' altIMG={cf.alt ? cf.alt : ''} lang={serverLang} robots={is404} />
         <link rel="icon" type="image/svg+xml" href="/images/logo.webp" />
-        <script is:inline define:vars={{redirect}}>if (redirect !== ''){window.location.href = redirect;}</script>
         <Manifest/>
-        <script id="serverVars" define:vars={{serverLang, frontmatter}}>
-            function getServer() { return {lang: serverLang, frontmatter: frontmatter} }
+        <link rel="manifest" href="/manifest.json">
+        <script id="serverVars" define:vars={{serverLang, frontmatter, redirect}}>
+            function getServer() { return {lang: serverLang, frontmatter: frontmatter, redirect: redirect} }
             window.servervars = getServer();
         </script>
         <script>
             //PFresa - A simple client-side router
-
-import { timerMessage } from "node_modules/astro/dist/core/logger/core";
-
             //Declaration
             declare global {
                 interface Window { pfresa: EventTarget; servervars: any; setTheme: Function }
@@ -157,6 +154,7 @@ import { timerMessage } from "node_modules/astro/dist/core/logger/core";
                     if(localStorageAvaiability) {
                         if(getFromLocalStorage('pfresalang') !== lang){
                             const keys = getLocalStorageKeys();
+                            deleteFromLocalStorage('pfresaversion')
                             for (const key of keys) {if (key.startsWith('page-')) deleteFromLocalStorage(key);}
                             writeToLocalStorage('pfresalang', lang);
                         }
@@ -178,7 +176,7 @@ import { timerMessage } from "node_modules/astro/dist/core/logger/core";
 
             const getPage = async(page, lang, version) => {
                 if(checkClientStorageAvaiability()) {
-                    const res = await getFromStorage(`${page}:${lang}`, `page-${lang}`)
+                    const res = await getFromStorage(`${page}:${lang}`, `page-${page}`)
                     if (!res[0] && res[1]) {
                         if(getFromLocalStorage('pfresalang') == lang) {
                             const lsv = getFromLocalStorage('pfresaversion')
@@ -186,7 +184,7 @@ import { timerMessage } from "node_modules/astro/dist/core/logger/core";
                             try{
                                 const lsvj = await JSON.parse(lsv)
                                 if (lsvj[page]){
-                                    if(parseFloat(lsvj[page]) >= version) return ["ls", res[1]];
+                                    if(parseFloat(lsvj[page]) >= version) return ["ls", res[1], lsvj[page]];
                                     else return null;
                                 }
                                 else return null
@@ -194,7 +192,7 @@ import { timerMessage } from "node_modules/astro/dist/core/logger/core";
                         }
                         return null;
                     } else if(res[0]) {
-                        if(res[0].metadata.version >= version) return [res[1] ? "idb+ls" : "idb", res[0].content];
+                        if(res[0].metadata.version >= version) return [res[1] ? "idb+ls" : "idb", res[0].content, res[0].metadata.version];
                         else return null;
                     }
                     return null
@@ -269,7 +267,7 @@ import { timerMessage } from "node_modules/astro/dist/core/logger/core";
                 let text = "";
                 if (storaged) {
                     text = storaged[1];
-                    if(storaged[0] !== "idb+ls") await savePage(page, lang, text, version);
+                    if(storaged[0] !== "idb+ls") await savePage(page, lang, text, storaged[2]);
                 } else {
                     const response = await fetch(`/page/${lang}/${page}`);
                     text = await response.text();
@@ -373,6 +371,7 @@ import { timerMessage } from "node_modules/astro/dist/core/logger/core";
             // Initial load
             document.querySelector('main').innerHTML = '';
             language = detectLanguage();
+            if (server.redirect !== ''){window.location.href = server.redirect;}
             await inyectMain((await loadPage(location.pathname.slice(1) || "home", location.href.slice(1), language))[0])
             window.history.replaceState({}, "", location.href);
             window.pfresa.addEventListener('navigate', navigateEventHandler);
