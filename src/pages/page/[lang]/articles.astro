@@ -1,0 +1,116 @@
+---
+import Icon from '../../../components/ui/Icons.astro'
+import Button from '../../../components/ui/Button.astro';
+import Input from '../../../components/ui/Input.astro';
+import { clientTranslations } from '../../../i18n';
+
+export const prerender = true;
+export async function getStaticPaths() {return ['es','en'].map((lang) => ({params: { lang },}));}
+const { lang } = Astro.params;
+const t = clientTranslations[lang];
+
+---
+<head>
+    <meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+    <div class="relative">
+        <div class="absolute inset-0 blue-pattern opacity-20"></div>
+
+        <!-- Page Header -->
+        <header class="container px-4 py-8 md:py-10 relative z-10">
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+                {t.articles.title}
+            </h1>
+            <p class="text-xl text-muted-foreground max-w-4xl mb-8">
+                {t.articles.subtitle}
+                <span id="page-indicator" class="font-light" style='[[stylePageIndicator]]'>- {t.articles.page} [[currentPage]]</span>
+            </p>
+
+            <!-- Search and Filter -->
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="relative flex-1">
+                    <Icon icon="search" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                        type="search" 
+                        id="search-input"
+                        placeholder={t.articles.searchPlaceholder}
+                        className="pl-10 w-full"
+                        value='[[searchParam]]'
+                    />
+                </div>
+                <div class="flex gap-2">
+                    [[scienceSelector]]
+                    <Button variant="outline" id="filter-button" className="btn-hover-effect">
+                        <Icon icon="filter" className="mr-2 h-4 w-4" />
+                        {t.articles.filter}
+                    </Button>
+                    <Button variant="outline" id="tags-filter" className="btn-hover-effect" style={"[[hideTags]]"} >
+                        <Icon icon="searchx" className="mr-2 min-w-4 h-4 w-4" />
+                        <p class="max-md:hidden">{t.articles.removeTags}</p><p class="md:hidden">{t.articles.tags}</p>
+                    </Button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Articles Grid -->
+        <div class="container px-4 pb-16 relative z-10">
+            [[paginatedArticles]]
+
+            <!-- Pagination -->
+            <div id="pagination-container" class="flex justify-center mt-12">
+                <nav class="flex items-center gap-1" aria-label="Pagination" id="pagination-nav">
+                    [[pagination]]
+                </nav>
+            </div>
+
+            <!-- Current page indicator -->
+            <div id="page-info" class="text-center mt-4 text-sm text-muted-foreground"></div>
+        </div>
+    </div>
+
+    <script is:inline>
+        window.pfresa.addEventListener('page-load', () => {
+            function applyFilters() {
+                const scienceFilter = document.getElementById('science-filter').value;
+                const searchInput = document.getElementById('search-input').value;
+                let currentPage = 1;
+
+                // Update URL
+                const url = new URL(window.location.toString());
+                url.searchParams.set('page', currentPage.toString());
+                if (scienceFilter) {
+                    url.searchParams.set('science', scienceFilter);
+                } else {
+                    url.searchParams.delete('science');
+                }
+                if (searchInput) {
+                    url.searchParams.set('search', searchInput);
+                } else {
+                    url.searchParams.delete('search');
+                }
+                //window.history.pushState({}, '', url);
+                // Display updated articles
+                window.pfresa.dispatchEvent(new CustomEvent('navigate', { detail: { url: url.href.toString() } }));
+            }
+            // Event listeners for filters
+            document.getElementById('filter-button').addEventListener('click', applyFilters);
+            document.getElementById('science-filter').addEventListener('change', applyFilters);
+
+            // Search on Enter key
+            document.getElementById('search-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    applyFilters();
+                }
+            });
+
+            document.getElementById('tags-filter').addEventListener('click', (e) => {
+                const url = new URL(window.location.toString());
+                url.searchParams.delete('tags');
+                window.history.pushState({}, '', url);
+                document.getElementById('tags-filter').style.display = 'none';
+                applyFilters();
+            });
+        });
+    </script>
+</body>

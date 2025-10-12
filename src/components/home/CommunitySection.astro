@@ -1,10 +1,8 @@
 ---
-import Button from "../ui/Button.astro";
-import Input from "../ui/Input.astro";
 import Particles from "./Particles.astro";
 import JoinForm from "./JoinForm.astro";
 import { clientTranslations } from '../../i18n';
-const lang = Astro.locals.lang;
+const {lang} = Astro.props;
 const t = clientTranslations[lang];
 ---
 

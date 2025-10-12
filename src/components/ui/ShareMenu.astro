@@ -1,7 +1,7 @@
 ---
 import Icon from './Icons.astro';
 import { clientTranslations } from '../../i18n';
-const lang = Astro.locals.lang;
+const {lang} = Astro.props;
 const t = clientTranslations[lang];
 
 const { id, title = "Share this content", className = "", display="text+icon", menuDisplay="text+icon", buttonIconClass = "h-4 w-4", menuStyle="right:0;" } = Astro.props;
@@ -62,7 +62,7 @@ const { id, title = "Share this content", className = "", display="text+icon", m
 </div>
 
 <script is:inline define:vars={{ id }}>
-document.addEventListener('astro:page-load', () => {
+window.pfresa.addEventListener('page-load', () => {
     const trigger = document.getElementById(`share-trigger-${id}`);
     const menu = document.getElementById(`share-menu-${id}`);
     

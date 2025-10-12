@@ -4,13 +4,12 @@ import Button from '../ui/Button.astro';
 import { ScienceList } from "../Science";
 import { calcReadTime } from "../readTime";
 import { getEntry } from "astro:content";
-const { slug, body, title, description, author, authors, date, className = "" } = Astro.props;
+const { slug, body, title, description, author, authors, date, className = "",lang, readTime } = Astro.props;
 
 const scienceData = ScienceList.filter(({id}) => id == slug.split('/')[1])[0];
 const authorData = (await getEntry("authors", author?.id || authors[0]?.id)).data;
 
 import { clientTranslations } from '../../i18n';
-const lang = Astro.locals.lang;
 const t = clientTranslations[lang];
 
 const authorName = authors !== undefined ? `${authorData.name} ${t.common.and} ${(authors.lenght - 1).toString} ${t.common.more}` : authorData.name;
@@ -23,7 +22,7 @@ const authorName = authors !== undefined ? `${authorData.name} ${t.common.and} $
             alt={title}
             width="400"
             height="225"
-            transition:name={"media-portrait-"+slug.split('/')[2]}
+            style={`view-transition-name:${slug.split('/')[2]}-portrait;`}
             class="h-full w-full object-cover rounded-t-xl transition-transform hover:scale-105"
         /></a>
         <div class="absolute top-2 left-2">
@@ -42,7 +41,7 @@ const authorName = authors !== undefined ? `${authorData.name} ${t.common.and} $
             <div class="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                 <span>{date.toLocaleDateString(t.articles.timeStamp, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 <span>•</span>
-                <span>{calcReadTime(body)} {t.articles.readTime}</span>
+                <span>{readTime? readTime.toString() : calcReadTime(body)} {t.articles.readTime}</span>
             </div>
         </div>
         <p class="line-clamp-3 text-muted-foreground mb-4 flex-1">{description}</p>

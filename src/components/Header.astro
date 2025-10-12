@@ -37,27 +37,27 @@ const t = clientTranslations[lang];
     </div>
     <div class="flex items-center gap-4">
         <form id="header-search-form" action="/articles" method="get" class="relative hidden lg:block">
-            <Icon icon="search" className="absolute left-2.5 top-2.5 mt-0.5 h-4 w-4 text-muted-foreground" />
+            <Icon icon="search" className="blue-border absolute left-2.5 top-2.5 mt-0.5 h-4 w-4 text-muted-foreground" />
             <Input
                 type="search"
                 name="search"
                 id="header-search-input"
                 placeholder={t.header.searchArticles}
-                className="w-[200px] lg:w-[300px] pl-8"
+                className="w-[200px] lg:w-[300px] pl-8 blue-border"
             />
             <input type="hidden" name="page" value="1" />
         </form>
-        <a href="/articles?page=1" class="flex h-9 w-9 items-center justify-center rounded-md border bg-background transition-colors hover:bg-muted lg:hidden">
+        <a href="/articles?page=1" class="blue-border flex h-9 w-9 items-center justify-center rounded-md border bg-background transition-colors hover:bg-muted lg:hidden">
             <Icon icon="search" className="left-2.5 top-2.5 h-4 w-4 text-foreground" />
         </a>
         <ThemeToggle />
         <LangSwitcher currentLang={lang}/>
-        <button id="menu-toggle" class="flex md:hidden h-9 w-9 items-center justify-center rounded-md border bg-background transition-colors hover:bg-muted" aria-label="Toggle theme">
+        <button id="menu-toggle" class="flex md:hidden h-9 w-9 items-center justify-center rounded-md border blue-border bg-background transition-colors hover:bg-muted" aria-label="Toggle theme">
             <Icon icon="menu" className="left-2.5 top-2.5 mt-0.5 h-4 w-4" />
         </button>
     </div>
     <script is:inline>
-        document.addEventListener('astro:page-load', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             const searchForm = document.getElementById('header-search-form');
             const searchInput = document.getElementById('header-search-input');
             
@@ -65,10 +65,13 @@ const t = clientTranslations[lang];
                 // Submit the form when Enter key is pressed
                 searchInput.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter') {
+                        e.preventDefault();
                         if (searchInput.value.trim() !== '') {
-                            searchForm.submit();
-                        } else {
-                            e.preventDefault(); // Prevent submitting empty search
+                            const url = new URL('/articles', window.location.origin);
+                            url.searchParams.set('search', searchInput.value.trim());
+                            url.searchParams.set('page', '1');
+                            console.log(url.toString());
+                            window.pfresa.dispatchEvent(new CustomEvent('navigate', { detail: { url: url.toString() } }) );
                         }
                     }
                 });

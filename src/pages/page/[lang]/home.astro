@@ -1,0 +1,38 @@
+---
+import HeroSection from '../../../components/home/HeroSection.astro';
+import ArticlesSection from '../../../components/home/ArticlesSection.astro';
+import CommunitySection from '../../../components/home/CommunitySection.astro';
+import FeaturedResearch from '../../../components/home/FeaturedResearch.astro';
+import { getCollection } from 'astro:content';
+import PScript from '../../../components/home/ParticlesScript.astro'
+import { clientTranslations } from '../../../i18n';
+
+export const prerender = true;
+export async function getStaticPaths() {return ['es','en'].map((lang) => ({params: { lang },}));}
+const { lang } = Astro.params;
+
+const t = clientTranslations[lang];
+
+// Get recent articles for the featured section
+const articles = (await getCollection('articles')).filter(({slug}) => slug.split('/')[0] === lang);
+const articlesData = articles.map(article => {
+    // Handle both author and authors fields
+    return {
+        slug: article.slug,
+        body: article.body,
+        ...article.data,
+    };
+});
+---
+
+<head>
+    <meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+    <link rel="preload" as="image" href="/images/landing-page/portada.webp" imagesrcset="/images/landing-page/portada-320w.webp 320w, /images/landing-page/portada-480w.webp 480w, /images/landing-page/portada-800w.webp 800w" imagesizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px">
+    <HeroSection lang={lang} />
+    <FeaturedResearch lang={lang} articles={articlesData.sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0,3)} />
+    <ArticlesSection lang={lang} articles={articlesData} />
+    <CommunitySection lang={lang} />
+    <PScript/>
+</body>

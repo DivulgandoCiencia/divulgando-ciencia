@@ -5,7 +5,7 @@ import jsonLDGenerator from "../js/jsonLD";
 
 const {
     title,
-    description,
+    description = '',
     url = Astro.url,
     image,
     frontmatter,
@@ -27,7 +27,7 @@ const jsonLD = jsonLDGenerator({
 ---
 
 <!-- SEO -->
-
+<title>{title}</title>
 <link rel="canonical" href={actualURL} />
 
 <!-- HTML Meta Tags -->

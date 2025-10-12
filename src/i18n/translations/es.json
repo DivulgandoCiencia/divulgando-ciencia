@@ -162,6 +162,7 @@
     "contact": {
         "title": "Contáctanos",
         "description": "Si tienes preguntas, sugerencias o simplemente quieres charlar sobre ciencia, no dudes en ponerte en contacto con nosotros. ¡Nos encantaría saber de ti!",
+        "sendamessage": "Mándanos un mensaje",
         "form": {
             "name": "Nombre",
             "email": "Email",

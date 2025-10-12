@@ -3,7 +3,7 @@ import Icon from "../ui/Icons.astro";
 import "astro/jsx-runtime"
 import { ScienceList } from "../Science"
 import { clientTranslations } from '../../i18n';
-const lang = Astro.locals.lang;
+const {lang} = Astro.props;
 const t = clientTranslations[lang];
 ---
 

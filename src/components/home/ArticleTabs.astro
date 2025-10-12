@@ -1,14 +1,11 @@
 ---
-import Icon from '../ui/Icons.astro';
-import Button from '../ui/Button.astro';
-import ArticleCard from './ArticleCard.astro';
 import { getCollection } from 'astro:content'
 import { ScienceList } from '../Science';
 import { calcReadTime } from '../readTime';
 const { articles } = Astro.props;
 articles.sort((a, b) => b.date.getTime() - a.date.getTime())
 import { clientTranslations } from '../../i18n';
-const lang = Astro.locals.lang;
+const {lang} = Astro.props;
 const t = clientTranslations[lang];
 const authors = await getCollection('authors');
 const trendingArticles = []
@@ -31,7 +28,7 @@ articles.map((data) => {
 <div class="w-full">
     <div class="tabs">
         <div class="flex items-center justify-between mb-4" id="articles-tabs-buttons">
-            <div class="flex border rounded-lg overflow-hidden">
+            <div class="flex blue-border border rounded-lg overflow-hidden">
                 <button class="px-4 py-2 bg-primary text-primary-foreground" data-tab="recent">{t.home.articles.recent}</button>
                 <!-- <button class="px-4 py-2 hover:bg-muted" data-tab="popular">{t.home.articles.popular}</button> -->
                 <button class="px-4 py-2 hover:bg-muted" data-tab="trending">{t.home.articles.trending}</button>
@@ -40,11 +37,7 @@ articles.map((data) => {
         
         <div class="tab-content" id="recent">
             <div class="space-y-4">
-                {articles.slice(0,6).map((article) => (
-                    <ArticleCard
-                        {...article}
-                    />
-                ))}
+                [[recentArticles]]
             </div>
         </div>
         
@@ -60,18 +53,14 @@ articles.map((data) => {
         
         <div class="tab-content hidden" id="trending">
             <div class="space-y-4">
-                {articles.slice(0,6).map((article) => (
-                    <ArticleCard
-                        {...article}
-                    />
-                ))}
+                [[recentArticles]]
             </div>
         </div>
     </div>
 </div>
 
 <script is:inline define:vars={{trendingArticles,t}}>
-    document.addEventListener('astro:page-load', () => {
+    window.pfresa.addEventListener('page-load', () => {
         const tabButtons = document.querySelectorAll('[data-tab]');
         const tabContents = document.querySelectorAll('.tab-content');
         
@@ -102,7 +91,7 @@ articles.map((data) => {
         });
     });
 
-    document.addEventListener('astro:page-load', async() => {
+    window.pfresa.addEventListener('page-load', async() => {
         const buttons = document.getElementById('articles-tabs-buttons');
         const trendingArticlesCards = document.querySelectorAll('#trending.tab-content')[0].children[0];
         const slugs = [];

@@ -168,6 +168,7 @@
     "contact": {
         "title": "Contact Us",
         "description": "Do you have questions, suggestions, or want to collaborate with us? We would love to hear from you!",
+        "sendamessage": "Send us a message",
         "form": {
             "name": "Name",
             "email": "Email",

@@ -1,0 +1,17 @@
+# robots.txt for DivulgandoCiencia.com
+
+User-agent: *
+Allow: /
+
+# Block API routes, dynamic content, and dev paths
+Disallow: /api/
+Disallow: /page/
+Disallow: /manifest.json
+Disallow: /_astro/
+Disallow: /admin/
+Disallow: /drafts/
+Disallow: /test/
+
+# Sitemap locations (important for SEO)
+Sitemap: https://www.divulgandociencia.com/sitemap.xml
+Sitemap: https://en.divulgandociencia.com/sitemap.xml

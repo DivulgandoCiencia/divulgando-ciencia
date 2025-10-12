@@ -13,7 +13,7 @@ const { currentLang, className = "" } = Astro.props;
 <div class={`relative ${className}`}>
     <button 
         id="language-switcher-button" 
-        class="flex items-center gap-1 px-2 h-9 rounded-md border border-input bg-background hover:bg-accent transition-colors text-sm"
+        class="flex items-center gap-1 px-2 h-9 rounded-md blue-border border border-input bg-background hover:bg-accent transition-colors text-sm"
         aria-haspopup="true" 
         aria-expanded="false"
     >
@@ -26,7 +26,7 @@ const { currentLang, className = "" } = Astro.props;
     
     <div 
         id="language-dropdown" 
-        class="absolute right-0 mt-1 w-40 rounded-md border bg-card shadow-md z-50 hidden"
+        class="absolute right-0 mt-1 w-40 rounded-md blue-border border bg-card shadow-md z-50 hidden"
         role="menu"
     >
         <div class="py-1">
@@ -43,7 +43,7 @@ const { currentLang, className = "" } = Astro.props;
 </div>
 
 <script>
-    document.addEventListener('astro:page-load', () => {
+    document.addEventListener('DOMContentLoaded', () => {
         const button = document.getElementById('language-switcher-button');
         const dropdown = document.getElementById('language-dropdown');
         

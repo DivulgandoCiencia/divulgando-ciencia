@@ -1,11 +1,12 @@
 ---
+const { lang } = Astro.props;
 import ShareMenu from "../ui/ShareMenu.astro"
 ---
 
 <div id="image-lightbox" class="fixed inset-0 z-50 flex items-center justify-center bg-[#000]/70 opacity-0 pointer-events-none transition-opacity duration-300">
     <div class="relative max-w-4xl max-h-[90vh] mx-4">
         <div class="flex items-center"> 
-            <ShareMenu id="lightbox-share-menu" className="text-foreground -top-10" display="icon" menuDisplay="icon" buttonIconClass="h-6 w-6" menuStyle="top:-0.9rem; right:-280px; border-radius:50px; height:2.25rem"/>
+            <ShareMenu id="lightbox-share-menu" lang={lang} className="text-foreground -top-10" display="icon" menuDisplay="icon" buttonIconClass="h-6 w-6" menuStyle="top:-0.9rem; right:-280px; border-radius:50px; height:2.25rem"/>
             <button id="lightbox-close" class="absolute -top-10 right-0 text-principal-white hover:text-primary transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                 <span class="sr-only">Close</span>
@@ -18,8 +19,8 @@ import ShareMenu from "../ui/ShareMenu.astro"
     </div>
 </div>
 
-<script is:inline data-astro-rerun>
-    document.addEventListener('astro:page-load', () => {
+<script is:inline>
+    window.pfresa.addEventListener('page-load', () => {
         const lightbox = document.getElementById('image-lightbox');
         const lightboxImage = document.getElementById('lightbox-image');
         const lightboxCaption = document.getElementById('lightbox-caption');
@@ -34,7 +35,9 @@ import ShareMenu from "../ui/ShareMenu.astro"
             lightboxCaption.textContent = imgAlt;
             
             // Update URL hash
-            window.location.hash = `image-${imgId}`;
+            const url = new URL(window.location.href);
+            url.hash = `image-${imgId}`;
+            window.history.replaceState({}, "", url.href);
             
             // Show lightbox
             lightbox.classList.remove('opacity-0', 'pointer-events-none');
@@ -96,19 +99,13 @@ import ShareMenu from "../ui/ShareMenu.astro"
         // Close lightbox when clicking the close button
         lightboxClose.addEventListener('click', closeLightbox);
         
-        // Close lightbox when clicking outside the image
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                closeLightbox();
-            }
-        });
+        // Close lightbox when clicking outside the 
+        const lightboxCloseHandler = (e) => {if (e.target === lightbox) {closeLightbox();}}
+        lightbox.addEventListener('click', (e) => lightboxCloseHandler(e));
         
         // Close lightbox when pressing Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !lightbox.classList.contains('pointer-events-none')) {
-                closeLightbox();
-            }
-        });
+        const lightboxExitHandler = (e) => {if (e.key === 'Escape' && !lightbox.classList.contains('pointer-events-none')) {closeLightbox();}}
+        document.addEventListener('keydown', (e) => lightboxExitHandler(e));
         
         // Check if URL has an image hash on page load
         if (window.location.hash && window.location.hash.startsWith('#image-')) {
@@ -136,5 +133,10 @@ import ShareMenu from "../ui/ShareMenu.astro"
                 }
             }
         }
+
+        window.pfresa.addEventListener('before-swap', () => {
+            document.removeEventListener('keydown', lightboxExitHandler);
+            lightbox.removeEventListener('click', lightboxCloseHandler);
+        });
     });
 </script>

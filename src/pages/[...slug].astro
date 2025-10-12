@@ -1,0 +1,419 @@
+---
+import Header from "@/components/Header.astro"
+import Menu from "@/components/Menu.astro"
+import Footer from "@/components/Footer.astro"
+import { clientTranslations } from "@/i18n";
+import Seo from "@/components/Seo.astro";
+import '../styles/global.css';
+import Manifest from '../json/manifest.astro';
+import {frontmatter} from '../json/frontmatter';
+
+const cookieTheme = Astro.locals.theme;
+const serverLang = Astro.locals.lang;
+let cf = frontmatter[serverLang];
+let is404 = false;
+if (!cf) {cf = frontmatter['en']}
+console.log(Astro.url.pathname.slice(1))
+if (Object.keys(cf).includes(Astro.url.pathname.slice(1)) || Astro.url.pathname == '/') {cf = Astro.url.pathname == '/' ? cf['home'] : cf[Astro.url.pathname.slice(1)]}
+else {cf = cf['404']; is404 = true}
+let redirect = '';
+if (['es','en'].includes(Astro.url.host.split('.')[0])){
+    redirect=`https://zxiocu.divulgandociencia.com${Astro.url.pathname}`;
+}
+if (Astro.url.host.includes('localhost')){redirect='';}
+---
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <Seo title={(cf.title ? cf.title + ' | ' : '') + 'Divulgando Ciencia'} description={cf.description == "" || !cf.description ? clientTranslations[serverLang].common.description : cf.description} image='' altIMG={cf.alt ? cf.alt : ''} lang={serverLang} robots={is404} />
+        <link rel="icon" type="image/svg+xml" href="/images/logo.webp" />
+        <Manifest/>
+        <link rel="manifest" href="/manifest.json">
+        <script id="serverVars" define:vars={{serverLang, frontmatter, redirect}}>
+            function getServer() { return {lang: serverLang, frontmatter: frontmatter, redirect: redirect} }
+            window.servervars = getServer();
+        </script>
+        <script>
+            //PFresa - A simple client-side router
+            //Declaration
+            declare global {
+                interface Window { pfresa: EventTarget; servervars: any; setTheme: Function }
+            }
+            window.pfresa = new EventTarget();
+
+            //Manifest
+            const manifest = JSON.parse(document.getElementById("manifest").textContent)
+            const server = window.servervars;
+            const frontmatter = server.frontmatter;
+            let language = manifest.languages[0]; // Default language
+
+            //Utils
+            const isValidPage = (page) => manifest.pages.slugs.includes(page) || manifest.articles.slugs.includes(page.split('/')[0]);
+            const clearScripts = () => {document.querySelector("main").querySelectorAll("script").forEach(script => script.remove());}
+
+            //Memory handlers
+            //Definitions
+            const dbName = "pfresaDB";
+            let dbVersion = 1;
+            const objectStoreName = "pages";
+            
+            //Client Storage 
+
+            //IndexedDB Handlers
+            const checkIndexedDBAvaiability = () => {
+                return 'indexedDB' in window;
+            }
+            const openDB = () => {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(dbName, dbVersion);
+                    request.onupgradeneeded = () => {
+                        const db = request.result;
+                        if (!db.objectStoreNames.contains(objectStoreName)) {
+                            db.createObjectStore(objectStoreName, { keyPath: 'id' });
+                        }
+                    };
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                })
+            }
+            const getFromDB = async (key) => {
+                const db = await openDB() as IDBDatabase;
+                const tx = db.transaction(objectStoreName, 'readonly');
+                const store = tx.objectStore(objectStoreName);
+                const req = store.get(key);
+                return new Promise((resolve, reject) => {
+                    req.onsuccess = () => {db.close(); resolve(req.result ? req.result.content : null);};
+                    req.onerror = () => {db.close(); reject(null);};
+                });
+            }
+            const writeToDB = async (key, content) => {
+                const db = await openDB() as IDBDatabase;
+                const tx = db.transaction(objectStoreName, 'readwrite');
+                const store = tx.objectStore(objectStoreName);
+                store.put({ id: key, content: content });
+                return new Promise((resolve, reject) => {
+                    tx.oncomplete = () => {db.close(); resolve(true);};
+                    tx.onerror = () => {db.close(); reject(false);};
+                });
+            }
+
+            //Local Storage Handlers
+            const checkLocalStorageAvaiability = () => {
+                try {
+                    const testKey = '__test__';
+                    localStorage.setItem(testKey, testKey);
+                    localStorage.removeItem(testKey);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+            const localStorageAvaiability = checkLocalStorageAvaiability();
+            const getFromLocalStorage = (key) => {
+                return localStorage.getItem(key);
+            }
+            const writeToLocalStorage = (key, content) => {
+                try {
+                    localStorage.setItem(key, content);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+            const deleteFromLocalStorage = (key) => {
+                localStorage.removeItem(key);
+            }
+            const getLocalStorageKeys = () => {
+                let keys = [];
+                for (var i = 0, len = localStorage.length; i < len; i++) keys.push(localStorage.key(i));
+                return keys;
+            }
+
+            //Storage Handlers
+            const checkClientStorageAvaiability = () => {
+                return checkIndexedDBAvaiability() || localStorageAvaiability;
+            }
+            const getFromStorage = async (idbkey, lskey) => {
+                let idbr, lsr = null;
+                if (checkIndexedDBAvaiability()) {idbr = await getFromDB(idbkey);} 
+                if (localStorageAvaiability) {lsr = getFromLocalStorage(lskey);}
+                return [idbr, lsr]
+            }
+            const writeToStorage = async (idbkey, lskey, idbcontent, lscontent) => {
+                let idbr, lsr = false;
+                if (checkIndexedDBAvaiability()) {idbr = await writeToDB(idbkey, idbcontent);}
+                if (localStorageAvaiability) {lsr = writeToLocalStorage(lskey, lscontent);}
+                return [idbr, lsr]
+            }
+
+            //Page Storage Handler
+            const savePage = async(page, lang, content, version) => {
+                if(checkClientStorageAvaiability()){
+                    if(localStorageAvaiability) {
+                        if(getFromLocalStorage('pfresalang') !== lang){
+                            const keys = getLocalStorageKeys();
+                            deleteFromLocalStorage('pfresaversion')
+                            for (const key of keys) {if (key.startsWith('page-')) deleteFromLocalStorage(key);}
+                            writeToLocalStorage('pfresalang', lang);
+                        }
+                    }
+                    const idbContent = {
+                        "metadata":{"version":version, "lang":lang, "updatedAt":Date.now()},
+                        "content": content
+                    }
+                    await writeToStorage(`${page}:${lang}`, `page-${page}`, idbContent, content)
+                    let versions = {};
+                    try {
+                        const raw = getFromLocalStorage('pfresaversion');
+                        if (raw) versions = JSON.parse(raw);
+                    } catch (e) {}
+                    versions[page] = version;
+                    writeToLocalStorage('pfresaversion', await JSON.stringify(versions));
+                }
+            }
+
+            const getPage = async(page, lang, version) => {
+                if(checkClientStorageAvaiability()) {
+                    const res = await getFromStorage(`${page}:${lang}`, `page-${page}`)
+                    if (!res[0] && res[1]) {
+                        if(getFromLocalStorage('pfresalang') == lang) {
+                            const lsv = getFromLocalStorage('pfresaversion')
+                            if(!lsv) return null
+                            try{
+                                const lsvj = await JSON.parse(lsv)
+                                if (lsvj[page]){
+                                    if(parseFloat(lsvj[page]) >= version) return ["ls", res[1], lsvj[page]];
+                                    else return null;
+                                }
+                                else return null
+                            } catch(e) {return null};
+                        }
+                        return null;
+                    } else if(res[0]) {
+                        if(res[0].metadata.version >= version) return [res[1] ? "idb+ls" : "idb", res[0].content, res[0].metadata.version];
+                        else return null;
+                    }
+                    return null
+                }
+            }
+
+            //Cookie functions
+            const getCookie = (name: string) => {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                return match ? match[2] : null;
+            }
+            const setCookie = (name: string, value: string, days = 30) => {
+                const date = new Date();
+                date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+                const hostname = window.location.hostname; // Detect enviroment
+                const isLocal = hostname === 'localhost' || hostname.endsWith('.local');
+                const domain = isLocal ? '' : '.divulgandociencia.com';
+                const cookie = [`${name}=${value}`, 'path=/', `max-age=${days * 86400}`, 'SameSite=None', 'Secure', domain ? `domain=${domain}` : ''].filter(Boolean).join('; ');
+                document.cookie = cookie;
+            }
+
+            // Language handlers
+            const detectLanguage = () => {
+                const languages = manifest.languages;
+                const host = window.location.hostname;
+                const subdomain = host.split('.')[0];
+                const cookieLang = getCookie('divciencia-lang');
+                const browserLang = navigator.language.split('-')[0];
+
+                if (host === 'localhost' || host.endsWith('.local')) { return 'es' };
+                
+                let lang = languages[0]; // Default to first language in the list
+                
+                if (cookieLang && languages.includes(cookieLang as any)) {
+                    lang = cookieLang;
+                } else if (languages.includes(subdomain as any)) {
+                    lang = subdomain;
+                } else if (languages.includes(browserLang as any)) {
+                    lang = browserLang;
+                }
+                if (lang !== server.lang) {lang = server.lang}
+
+                setCookie('divciencia-lang', lang, 365);
+                return lang;
+            }
+
+            //Core functions
+            // Load page content
+            const loadPage = async (page, href, lang) => {
+                // Get URL
+                const params = Object.fromEntries((new URL(href).searchParams || {}) as any);
+                page = page.split('?')[0].split('#')[0];
+                let dynContent = {};
+                if (!isValidPage(page)) page = "404";
+
+                let cf = frontmatter[lang];
+                if (!cf) {cf = frontmatter['en']}
+                if (Object.keys(cf).includes(page)) {cf = cf[page]}
+                else {cf = cf['404']}
+
+                // Load dynamic article content if applicable
+                if (manifest.articles.slugs.includes(page.split('/')[0])) {
+                    dynContent = await loadDynContent(page, lang, params);
+                    page = Object.keys(dynContent).length === 0 ? "404" : "article"
+                };
+
+                // Load page template
+                let version = 1;
+                if(page == 'article') version = manifest.articles.version;
+                else version = manifest.pages.data[page].version;
+                const storaged = await getPage(page, lang, version);
+                let text = "";
+                if (storaged) {
+                    text = storaged[1];
+                    if(storaged[0] !== "idb+ls") await savePage(page, lang, text, storaged[2]);
+                } else {
+                    const response = await fetch(`/page/${lang}/${page}`);
+                    text = await response.text();
+                    text = text.replace(/<meta[^>]*name=["']robots["'][^>]*>/gi, '');
+                    if (response.ok) await savePage(page, lang, text, version);
+                }
+
+                // Render dynamic content if applicable
+                if (Object.keys(manifest.pages.data).includes(page)) { if (manifest.pages.data[page].type === "dynamic") {
+                    dynContent = await loadDynContent(page, lang, params, manifest.pages.dynPOST.includes(page));
+                    text = renderDynContent(text, dynContent);
+                }}
+                if (manifest.articles.slugs.includes(page.split('/')[0]) && Object.keys(dynContent).length !== 0) {
+                    text = renderDynContent(text, dynContent);
+                }
+                // Return final HTML
+                return [text, cf];
+            }
+
+            // Load dynamic content via API
+            const loadDynContent = async (page, lang, params = {}, usePOST = false) => {
+                let response;
+                // If params are provided and usePOST is true, use POST; otherwise, use GET
+                if (params && usePOST) response = await fetch(`/api/content/${lang}/${page}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(params)});
+                else response = await fetch(`/api/content/${lang}/${page}`, {method: 'GET'});
+                if (!response.ok) return {};
+                try {return await response.json();} 
+                catch (error) {return {};}
+            }
+
+            // Render dynamic content into template
+            const renderDynContent = (template, data) => {
+                return template.replace(/\[\[(\w+)\]\]/g, (_, tag) => {
+                    return data[tag] ?? `[[${tag}]]`;
+                });
+            }
+
+            // Removes old content and inyects new one
+            const inyectMain = async (html) => {
+                window.pfresa.dispatchEvent(new CustomEvent('before-swap'));
+                const main = document.querySelector("main");
+                clearScripts();
+                window.pfresa = new EventTarget();
+                window.pfresa.addEventListener('navigate', navigateEventHandler);
+                if (document.startViewTransition) {
+                    await document.startViewTransition(async () => {
+                        main.innerHTML = html;
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                    }).finished;
+                } else {
+                    main.innerHTML = html;
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+                main.querySelectorAll("script").forEach((oldScript) => {
+                    const newScript = document.createElement("script");
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                        newScript.defer = true;
+                    } else {
+                        newScript.textContent = oldScript.textContent;
+                    }
+                    [...oldScript.attributes].forEach((attr) => {
+                        newScript.setAttribute(attr.name, attr.value);
+                    });
+                    oldScript.replaceWith(newScript);
+                });
+                window.pfresa.dispatchEvent(new CustomEvent('after-swap'));
+            }
+
+            // Event listeners for navigation
+            const navigateEventHandler = async (e) => {
+                const url = new URL(e.detail.url);
+                const page = url.pathname.slice(1) || "home";
+                const response = await loadPage(page, url.href.slice(1), language);
+                await inyectMain(response[0]);
+                document.title = (response[1].title ? response[1].title + ' | ' : '') + "Divulgando Ciencia";
+                window.history.replaceState({}, "", url.href);
+                window.pfresa.dispatchEvent(new CustomEvent('page-load'));
+            }
+            document.addEventListener("click", async (e) => {
+                const link = (e.target as any).closest("a");
+                if (!link || link.origin !== location.origin) return;
+                e.preventDefault();
+                if (link.href == location.href) return;
+                const page = link.pathname.slice(1) || "home";
+                const response = await loadPage(page, link.href.slice(1), language);
+                await inyectMain(response[0]);
+                window.history.pushState({}, "", link.href);
+                document.title = (response[1].title ? response[1].title + ' | ' : '') + "Divulgando Ciencia";
+                window.pfresa.dispatchEvent(new CustomEvent('page-load'));
+            });
+            window.addEventListener("popstate", async() => {
+                const page = location.pathname.slice(1) || "home";
+                const response = await loadPage(page, location.href.slice(1), language);
+                await inyectMain(response[0]);
+                document.title = (response[1].title ? response[1].title + ' | ' : '') + "Divulgando Ciencia";
+                window.pfresa.dispatchEvent(new CustomEvent('page-load'));
+            });
+
+            // Initial load
+            document.querySelector('main').innerHTML = '';
+            language = detectLanguage();
+            if (server.redirect !== ''){window.location.href = server.redirect;}
+            await inyectMain((await loadPage(location.pathname.slice(1) || "home", location.href.slice(1), language))[0])
+            window.history.replaceState({}, "", location.href);
+            window.pfresa.addEventListener('navigate', navigateEventHandler);
+            window.pfresa.dispatchEvent(new CustomEvent('page-load'));
+        </script>
+        <script define:vars={{cookieTheme}}>
+            const setTheme = () => {
+                const THEME_KEY = "theme";
+                const DARK_CLASS = "dark";
+                const LIGHT_CLASS = "light";
+                const getThemePreference = () => {
+                    if (cookieTheme !== '' || !cookieTheme) { return cookieTheme; }
+                    if (typeof localStorage !== "undefined") { return localStorage.getItem(THEME_KEY); }
+                    return window.matchMedia("(prefers-color-scheme: dark)").matches ? DARK_CLASS : LIGHT_CLASS; 
+                };
+                const isDark = getThemePreference() === DARK_CLASS;
+                document.documentElement.classList[isDark ? "add" : "remove"](DARK_CLASS);
+                if (typeof localStorage !== "undefined") {
+                    // Watch the document element and persist user preference when it changes.
+                    const observer = new MutationObserver(() => {
+                        const isDark = document.documentElement.classList.contains(DARK_CLASS);
+                        localStorage.setItem(THEME_KEY, isDark ? DARK_CLASS : LIGHT_CLASS);
+                    });
+                    observer.observe(document.documentElement, {
+                        attributes: true,
+                        attributeFilter: ["class"],
+                    });
+                }
+            };
+            setTheme();
+            window.setTheme = setTheme;
+        </script>
+    </head>
+    <body class="flex min-h-screen flex-col relative">
+        <Menu />
+        <div class={"fixed top-0 left-0 inset-0 science-pattern -z-10 "}></div>
+        <Header />
+        <main class="flex-1">
+            <div class="content-center w-full flex flex-col mt-5 gap-1">
+                <h1 class="text-center font-bold text-2xl">This website uses JavaScript to be rendered.</h1>
+                <h2 class="text-center font-semibold text-xl">Please activate JavaScript on your browser.</h2>
+            </div>
+        </main>
+        <Footer />
+    </body>
+</html>
