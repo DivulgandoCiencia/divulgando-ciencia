@@ -187,7 +187,7 @@ export const GET = async ({ params }) => {
             scienceDataName: t.sciences[science.id],
             scienceDataColor: science.color,
             scienceDataIcon: science.icon,
-            readTimeNum: calcReadTime(article.body),
+            readTimeNum: article.data.readTime ? article.data.readTime.toString() : calcReadTime(article.body),
 
             authorsHeader: authorsHeaderHTML,
             authors: authorsHTML,

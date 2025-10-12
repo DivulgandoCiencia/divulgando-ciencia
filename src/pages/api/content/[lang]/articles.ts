@@ -160,7 +160,7 @@ const handler = async (body, lang = 'en') => {;
         ${paginatedArticles.map((article) =>
             `<div class="overflow-hidden rounded-lg shadow-md dark:shadow-[#151515] bg-card text-card-foreground h-full flex flex-col transform hover:translate-y-[-5px] transition-all duration-300 hover:shadow-xl">
                 <div class="h-48 w-full relative overflow-hidden">
-                    <a href=${"/article/"+article.slug.split('/')[2]}><img src=${"/images/contenido/" + article.id + "/portada.webp" || "/placeholder.svg"} alt=${article.title} width="400" height="225" class="h-full w-full object-cover rounded-t-xl transition-transform hover:scale-105 duration-700"/></a>
+                    <a href=${"/article/"+article.slug.split('/')[2]}><img src=${"/images/contenido/" + article.id + "/portada.webp" || "/placeholder.svg"} alt=${article.title} width="400" height="225" class="h-full w-full object-cover rounded-t-xl transition-transform hover:scale-105 duration-700" style="view-transition-name:${article.slug.split('/')[2]}-portrait;"/></a>
                     <div class="absolute top-2 left-2">
                         <span class="${"text-primary-foreground px-2 py-1 text-xs font-medium rounded-full shadow-md bg-color-"+article.science.color}">
                             ${t.sciences[article.science.name]}
@@ -183,7 +183,7 @@ const handler = async (body, lang = 'en') => {;
                     <p class="line-clamp-3 text-muted-foreground mb-4 flex-1">${article.description}</p>
                     <div class="flex justify-between items-center mt-auto">
                         <div class="flex items-center">
-                            <img style="view-transition-name:${article.slug.split('/')[2]}-portrait;" alt=${"Foto de perfil de "+article.author[0].name} src=${"/images/autores/"+article.author[1]+".webp"} class="bg-principal-white h-6 w-6 rounded-full object-contain my-auto mr-2"/>
+                            <img alt=${"Foto de perfil de "+article.author[0].name} src=${"/images/autores/"+article.author[1]+".webp"} class="bg-principal-white h-6 w-6 rounded-full object-contain my-auto mr-2"/>
                             <div class="text-sm font-medium">
                                 ${article.authors && article.authors.length > 0
                                     ? article.authors[0].name + (article.authors.length > 1 ? ` +${article.authors.length - 1}` : '')
