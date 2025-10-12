@@ -6,32 +6,37 @@ export async function getStaticPaths() {return ['es','en'].map((lang) => ({param
 const { lang } = Astro.params;
 const t = clientTranslations[lang];
 ---
-<div class="relative flex flex-col h-full bg-background text-foreground px-16 py-4">
-    <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">{t.terms.title}</h1>
-    <p class="text-muted-foreground pb-2">
-        {t.terms.date}
-    </p>
-    <p>{t.terms.subtitle}</p>
-    <h2 class="text-2xl font-bold my-3">{t.terms.paragraph1.title}</h2>
-    <p>
-        <strong>{t.terms.paragraph1.p1}</strong> Darío Otero {t.common.and} Dorian Ruiz
-    </p>
-    <p>
-        <strong>{t.terms.paragraph1.p2}</strong> <a href="mailto:support@divulgandociencia.com">support@divulgandociencia.com</a>
-    </p>
-    <p>
-        <strong>{t.terms.paragraph1.p3}</strong> {t.terms.paragraph1.p4}
-    </p>
-    <h2 class="text-2xl font-bold my-3">{t.terms.paragraph2.title}</h2>
-    <p>{t.terms.paragraph2.description}</p>
-    <h2 class="text-2xl font-bold my-3">{t.terms.paragraph3.title}</h2>
-    <p>{t.terms.paragraph3.description}</p>
-    <h2 class="text-2xl font-bold my-3">{t.terms.paragraph4.title}</h2>
-    <p>{t.terms.paragraph4.description}</p>
-    <h2 class="text-2xl font-bold my-3">{t.terms.paragraph5.title}</h2>
-    <p>{t.terms.paragraph5.description}</p>
-    <h2 class="text-2xl font-bold my-3">{t.terms.paragraph6.title}</h2>
-    <p>{t.terms.paragraph6.description}</p>
-    <h2 class="text-2xl font-bold my-3">{t.terms.paragraph7.title}</h2>
-    <p>{t.terms.paragraph7.description}</p/>
-</div>
+<head>
+    <meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+    <div class="relative flex flex-col h-full bg-background text-foreground px-16 py-4">
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">{t.terms.title}</h1>
+        <p class="text-muted-foreground pb-2">
+            {t.terms.date}
+        </p>
+        <p>{t.terms.subtitle}</p>
+        <h2 class="text-2xl font-bold my-3">{t.terms.paragraph1.title}</h2>
+        <p>
+            <strong>{t.terms.paragraph1.p1}</strong> Darío Otero {t.common.and} Dorian Ruiz
+        </p>
+        <p>
+            <strong>{t.terms.paragraph1.p2}</strong> <a href="mailto:support@divulgandociencia.com">support@divulgandociencia.com</a>
+        </p>
+        <p>
+            <strong>{t.terms.paragraph1.p3}</strong> {t.terms.paragraph1.p4}
+        </p>
+        <h2 class="text-2xl font-bold my-3">{t.terms.paragraph2.title}</h2>
+        <p>{t.terms.paragraph2.description}</p>
+        <h2 class="text-2xl font-bold my-3">{t.terms.paragraph3.title}</h2>
+        <p>{t.terms.paragraph3.description}</p>
+        <h2 class="text-2xl font-bold my-3">{t.terms.paragraph4.title}</h2>
+        <p>{t.terms.paragraph4.description}</p>
+        <h2 class="text-2xl font-bold my-3">{t.terms.paragraph5.title}</h2>
+        <p>{t.terms.paragraph5.description}</p>
+        <h2 class="text-2xl font-bold my-3">{t.terms.paragraph6.title}</h2>
+        <p>{t.terms.paragraph6.description}</p>
+        <h2 class="text-2xl font-bold my-3">{t.terms.paragraph7.title}</h2>
+        <p>{t.terms.paragraph7.description}</p/>
+    </div>
+</body>

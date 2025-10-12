@@ -136,6 +136,10 @@ html {
     scroll-behavior: smooth;
 }
 
+.blue-border {
+    border-color: hsl(var(--border));
+}
+
 /* Article styles */
 .prose {
     max-width: 65ch;

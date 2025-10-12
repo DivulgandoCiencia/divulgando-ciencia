@@ -22,7 +22,7 @@ const authorName = authors !== undefined ? `${authorData.name} ${t.common.and} $
             alt={title}
             width="400"
             height="225"
-            transition:name={"media-portrait-"+slug.split('/')[2]}
+            style={`view-transition-name:${slug.split('/')[2]}-portrait;`}
             class="h-full w-full object-cover rounded-t-xl transition-transform hover:scale-105"
         /></a>
         <div class="absolute top-2 left-2">

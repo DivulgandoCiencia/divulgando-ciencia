@@ -1,0 +1,22 @@
+{
+    "es": {
+        "404": {"title": "Página No Encontrada"},
+        "about": {"title": "Acerca de"},
+        "articles": {"title": "Artículos"},
+        "contact": {"title": "Contacto"},
+        "home": {"title": "Inicio"},
+        "terms": {"title": "Términos y Condiciones"},
+        "juegos/los-superpoderes-del-deporte": {"title": "Soluciones Los Superpoderes del Deporte", "description": "Juego de memoria sobre los beenficios del deporte", "alt": "Juego de mesa sobre los beneficios del deporte"},
+        "juegos/memory-ods": {"title": "Soluciones Rumbo a 2030", "description": "Juego de memoria sobre los ODS", "alt": "Juego de memoria sobre los ODS"}
+    },
+    "en": {
+        "404": {"title": "Page Not Found"},
+        "about": {"title": "About Us"},
+        "articles": {"title": "Articles"},
+        "contact": {"title": "Contact Us"},
+        "home": {"title": "Home"},
+        "terms": {"title": "Terms of Service"},
+        "juegos/los-superpoderes-del-deporte": {"title": "Soluciones Los Superpoderes del Deporte", "description": "Juego de memoria sobre los beenficios del deporte", "alt": "Juego de mesa sobre los beneficios del deporte"},
+        "juegos/memory-ods": {"title": "Soluciones Rumbo a 2030", "description": "Juego de memoria sobre los ODS", "alt": "Juego de memoria sobre los ODS"}
+    }
+}

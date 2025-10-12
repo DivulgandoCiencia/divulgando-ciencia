@@ -30,7 +30,7 @@ export const GET = async ({ params }) => {
     const { slug, lang } = params;
     const t = clientTranslations[lang];
 
-    const article = articles.find(a => a.slug.split('/')[2] === slug);
+    const article = articles.find(a => a.slug.split('/')[2] === slug && a.slug.split('/')[0] === lang);
 
     if (!article) {
         return new Response(JSON.stringify({ error: "Not found" }), { status: 404 });
@@ -91,7 +91,7 @@ export const GET = async ({ params }) => {
     )
 
     const authorsHTML = article.data.authors?.length > 1 ? (
-        `<div class="rounded-xl border bg-card p-6 shadow-md hover:shadow-lg transition-all duration-300">
+        `<div class="rounded-xl border blue-border bg-card p-6 shadow-md hover:shadow-lg transition-all duration-300">
             <h3 class="text-lg font-semibold mb-4">About the Authors</h3>
             <div class="space-y-6">
                 ${authors.map(author => (
@@ -112,7 +112,7 @@ export const GET = async ({ params }) => {
             </div>
         </div>`
     ) : (
-        `<div class="rounded-xl border bg-card p-6">
+        `<div class="rounded-xl border blue-border bg-card p-6">
             <h3 class="text-lg font-semibold mb-4">${t.article.aboutAuthor}</h3>
             <div class="flex items-center gap-4 mb-4">
                 <img src=${"/images/autores/" + article.data.author.id + ".webp" || "/placeholder.svg"} alt=${author.name} class="h-16 w-16 rounded-full object-cover"/>
@@ -148,18 +148,18 @@ export const GET = async ({ params }) => {
         });
     }
 
-    if (article.data.tags !== undefined) { pushIfNotIncluded(articles.filter(a => { return a.data.tags !== undefined ? a.data.tags.some(tag => article.data.tags.includes(tag)) : false; })); }
-    if (science !== undefined) { pushIfNotIncluded(articles.filter(a => { return a.slug.split('/')[1] === science.id})); }
+    if (article.data.tags !== undefined) { pushIfNotIncluded(articles.filter(a => { return a.data.tags !== undefined && a.slug !== article.slug && a.slug.split('/')[0] === article.slug.split('/')[0] ? a.data.tags.some(tag => article.data.tags.includes(tag)) : false; })); }
+    if (science !== undefined) { pushIfNotIncluded(articles.filter(a => { return a.slug.split('/')[1] === science.id && a.slug !== article.slug && a.slug.split('/')[0] === article.slug.split('/')[0]})); }
 
     const relatedArticles = `
-    <div class="rounded-xl border bg-card p-6">
+    <div class="rounded-xl border blue-border bg-card p-6">
         <h3 class="text-lg font-semibold mb-4">${t.article.relatedArticles}</h3>
         <div class="space-y-4">
             ${articlesL.slice(0,3).map(article => (
                 `<div class="group">
                     <a href=${`/article/${article.slug.split('/')[2]}`} class="flex gap-3">
                         <div class="h-16 w-16 rounded-md overflow-hidden flex-shrink-0">
-                            <img src=${'/images/contenido/'+article.slug.split('/')[2]+'/portada.webp' || "/placeholder.svg"} alt=${article.data.title}class="h-full w-full object-cover rounded-md transition-transform group-hover:scale-105"/>
+                            <img style="view-transition-name:${article.slug.split('/')[2]}-portrait;" src=${'/images/contenido/'+article.slug.split('/')[2]+'/portada.webp' || "/placeholder.svg"} alt=${article.data.title} class="h-full w-full object-cover rounded-md transition-transform group-hover:scale-105"/>
                         </div>
                         <div>
                             <h4 class="text-sm font-medium line-clamp-2 group-hover:text-primary transition-colors">
@@ -181,9 +181,10 @@ export const GET = async ({ params }) => {
             articleTitle: article.data.title,
             articleDescription: article.data.description,
             portrait:"/images/contenido/" + article.slug.split('/')[2] + "/portada.webp" || "/placeholder.svg",
+            portraitTransition: article.slug.split('/')[2] + "-portrait",
 
             scienceDataId: science.id,
-            scienceDataName: science.name,
+            scienceDataName: t.sciences[science.id],
             scienceDataColor: science.color,
             scienceDataIcon: science.icon,
             readTimeNum: calcReadTime(article.body),

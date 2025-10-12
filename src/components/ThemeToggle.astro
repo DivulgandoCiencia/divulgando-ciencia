@@ -2,14 +2,14 @@
 import Icon from './ui/Icons.astro';
 ---
 
-<button id="theme-toggle" class="flex h-9 w-9 items-center justify-center rounded-md border bg-background transition-colors hover:bg-muted" aria-label="Toggle theme">
+<button id="theme-toggle" class="blue-border flex h-9 w-9 items-center justify-center rounded-md border bg-background transition-colors hover:bg-muted" aria-label="Toggle theme">
     <Icon icon="sun" className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
     <Icon icon="moon" className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
     <span class="sr-only">Toggle theme</span>
 </button>
 
 <script is:inline>
-    document.addEventListener('astro:page-load', () => {
+    document.addEventListener('DOMContentLoaded', () => {
         const handleToggleClick = () => {
             const element = document.documentElement;
             element.classList.toggle("dark");
