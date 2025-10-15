@@ -58,7 +58,7 @@ if (Astro.url.host.includes('localhost')){redirect='';}
                 return 'unknown';
             }
 
-            if ("serviceWorker" in navigator && getPWADisplayMode() == 'standalone') {
+            if ("serviceWorker" in navigator) {
                 window.addEventListener("load", () => {
                     navigator.serviceWorker.register("/sw.js")
                     .then(() => console.log("Service Worker registrado ✅"))
