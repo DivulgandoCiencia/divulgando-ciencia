@@ -66,6 +66,7 @@ Nuestra web está construida con **Astro**, **Tailwind CSS** y **JavaScript**. E
 
 ### [Estructura para publicar en Markdown](docs/Estructura-Markdown.md)
 ### [Nuestro *Modus operandi*](docs/Modus-Operandi.md)
+### [Sistema de Enrutado - Proyecto Fresa](docs/PFresa.md)
 ### [Próximamente](docs/Proximamente.md)
 
 
