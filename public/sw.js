@@ -1,6 +1,6 @@
 // === CONFIGURACIÓN ===
 const PREFIX = 'divulgandociencia-cache';
-const CURRENT_VERSION = '1.0.1';
+const CURRENT_VERSION = '1.0.2';
 const CURRENT_CACHE = `${PREFIX}-v${CURRENT_VERSION}`;
 const urlsToCache = ["/", "/page/es/article", "/page/en/article", "/manifest.webmanifest", "/favicon.ico"];
 
