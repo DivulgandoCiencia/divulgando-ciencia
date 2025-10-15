@@ -335,8 +335,7 @@ if (Astro.url.host.includes('localhost')){redirect='';}
                 let version = 1;
                 if(page == 'article') version = manifest.articles.version;
                 else version = manifest.pages.data[page].version;
-                //const storaged = await getPage(page, lang, version);
-                const storaged = null
+                const storaged = await getPage(page, lang, version);
                 let text = "";
                 if (storaged) {
                     text = storaged[1];
