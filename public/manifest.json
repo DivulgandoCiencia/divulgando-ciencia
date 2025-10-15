@@ -7,6 +7,7 @@
     "theme_color": "#222222",
     "description": "Explora el universo 🌌 desde tu dispositivo: ciencia 🧪, curiosidad 👀 y descubrimiento en una app rápida, gratuita y sin límites 🚀. \n\n⚠️ Aplicación en fase beta: puede contener errores, pero se actualizará automáticamente.",
     "id": "https://www.divulgandociencia.com",
+    "iarc_rating_id": "500ef89b-0b97-4cf8-840b-d66f798c28d5",
     "scope": "https://www.divulgandociencia.com/myapp/",
     "scope_extensions": [
         { "type": "origin", "origin": "https://divulgandociencia.com"},
