@@ -455,7 +455,7 @@ if (Astro.url.host.includes('localhost')){redirect='';}
                 const DARK_CLASS = "dark";
                 const LIGHT_CLASS = "light";
                 const getThemePreference = () => {
-                    if (cookieTheme !== '' || !cookieTheme) { return cookieTheme; }
+                    if (!(cookieTheme == '' || !cookieTheme)) { return cookieTheme; }
                     if (typeof localStorage !== "undefined") { return localStorage.getItem(THEME_KEY); }
                     return window.matchMedia("(prefers-color-scheme: dark)").matches ? DARK_CLASS : LIGHT_CLASS; 
                 };
@@ -472,9 +472,9 @@ if (Astro.url.host.includes('localhost')){redirect='';}
                         attributeFilter: ["class"],
                     });
                 }
+                console.log('cht')
             };
             setTheme();
-            window.setTheme = setTheme;
         </script>
     </head>
     <body class="flex min-h-screen flex-col relative">
