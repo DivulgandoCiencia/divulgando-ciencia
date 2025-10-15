@@ -2,5 +2,5 @@
 
 Estas son algunas de las cosas que tenemos pensadas añadir en un futuro no muy lejano.
 
-- [ ] Artículos colaborativos
-- [ ] Traducción de artículos
+- [x] Artículos colaborativos
+- [x] Traducción de artículos
