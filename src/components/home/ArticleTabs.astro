@@ -30,7 +30,7 @@ articles.map((data) => {
         <div class="flex items-center justify-between mb-4" id="articles-tabs-buttons">
             <div class="flex blue-border border rounded-lg overflow-hidden">
                 <button class="px-4 py-2 bg-primary text-primary-foreground" data-tab="recent">{t.home.articles.recent}</button>
-                <!-- <button class="px-4 py-2 hover:bg-muted" data-tab="popular">{t.home.articles.popular}</button> -->
+                <button class="px-4 py-2 hover:bg-muted" style="display: none;" id="cached-articles" data-tab="cached-articles-section">{t.home.articles.saved}</button>
                 <button class="px-4 py-2 hover:bg-muted" data-tab="trending">{t.home.articles.trending}</button>
             </div>
         </div>
@@ -41,15 +41,11 @@ articles.map((data) => {
             </div>
         </div>
         
-        <!-- <div class="tab-content hidden" id="popular">
+        <div class="tab-content hidden" id="cached-articles-section">
             <div class="space-y-4">
-                {articles.slice(0,6).map((article) => (
-                    <ArticleCard
-                        {...article}
-                    />
-                ))}
+                [[savedArticles]]
             </div>
-        </div> -->
+        </div>
         
         <div class="tab-content hidden" id="trending">
             <div class="space-y-4">

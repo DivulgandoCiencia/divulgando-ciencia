@@ -11,6 +11,8 @@ Disallow: /_astro/
 Disallow: /admin/
 Disallow: /drafts/
 Disallow: /test/
+Disallow: /articles?
+Allow: /articles
 
 # Sitemap locations (important for SEO)
 Sitemap: https://www.divulgandociencia.com/sitemap.xml

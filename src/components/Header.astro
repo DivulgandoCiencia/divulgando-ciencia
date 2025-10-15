@@ -11,7 +11,7 @@ const t = clientTranslations[lang];
 
 <header class="sticky top-0 z-50 w-full shadow-lg bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
 <div class="container flex h-16 items-center justify-between py-4 px-4">
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 mr-6">
         <a href="/">
             <div class="flex items-center gap-2">
                 <img src="/images/logo.webp" alt="Logo de divulgandociencia.com" class="h-8 w-8 rounded-md"/>
@@ -19,7 +19,7 @@ const t = clientTranslations[lang];
             </div>
         </a>
     </div>
-    <div class="hidden md:flex items-center gap-6">
+    <div class="hidden md:flex items-center gap-6 mx-4">
         <nav class="flex items-center gap-6">
             <a href="/" class="text-sm font-medium hover:underline underline-offset-4">
                 {t.common.home}
@@ -54,6 +54,10 @@ const t = clientTranslations[lang];
         <LangSwitcher currentLang={lang}/>
         <button id="menu-toggle" class="flex md:hidden h-9 w-9 items-center justify-center rounded-md border blue-border bg-background transition-colors hover:bg-muted" aria-label="Toggle theme">
             <Icon icon="menu" className="left-2.5 top-2.5 mt-0.5 h-4 w-4" />
+        </button>
+        <button class="hidden md:flex gap-2 h-9 min-w-9 items-center justify-center rounded-full blue-border bg-primary px-2 lg:px-3 md:hidden" id="header-download">
+            <Icon icon="download" className="left-2.5 top-2.5 mt-0.5 h-4 w-4" />
+            <p class="hidden lg:block">{t.common.download}</p>
         </button>
     </div>
     <script is:inline>

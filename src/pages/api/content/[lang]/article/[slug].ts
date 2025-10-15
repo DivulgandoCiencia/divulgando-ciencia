@@ -182,6 +182,9 @@ export const GET = async ({ params }) => {
             articleDescription: article.data.description,
             portrait:"/images/contenido/" + article.slug.split('/')[2] + "/portada.webp" || "/placeholder.svg",
             portraitTransition: article.slug.split('/')[2] + "-portrait",
+            authorData: [author.name, article.data.author.id],
+            date: article.data.date.toLocaleDateString(t.timeStamp, { year: 'numeric', month: 'long', day: 'numeric' }),
+            slug: article.slug,
 
             scienceDataId: science.id,
             scienceDataName: t.sciences[science.id],

@@ -36,18 +36,90 @@ if (Astro.url.host.includes('localhost')){redirect='';}
             window.servervars = getServer();
         </script>
         <script>
+            //Manifest
+            const manifest = JSON.parse(document.getElementById("manifest").textContent)
+            const server = window.servervars;
+            const frontmatter = server.frontmatter;
+            let language = manifest.languages[0];
+
+            //PWA
+            let installPrompt = null;
+            const headeribut = document.getElementById('header-download')
+            const menuibut = document.getElementById('menu-download')
+            const menuibox = document.getElementById('menu-download-box')
+
+            function getPWADisplayMode() {
+                if (document.referrer.startsWith('android-app://')) return 'twa';
+                if (window.matchMedia('(display-mode: browser)').matches) return 'browser';
+                if (window.matchMedia('(display-mode: standalone)').matches) return 'standalone';
+                if (window.matchMedia('(display-mode: minimal-ui)').matches) return 'minimal-ui';
+                if (window.matchMedia('(display-mode: fullscreen)').matches) return 'fullscreen';
+                if (window.matchMedia('(display-mode: window-controls-overlay)').matches) return 'window-controls-overlay';
+                return 'unknown';
+            }
+
+            if ("serviceWorker" in navigator && getPWADisplayMode() == 'standalone') {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker.register("/sw.js")
+                    .then(() => console.log("Service Worker registrado ✅"))
+                    .catch(err => console.error("Error registrando SW:", err));
+                });
+            }
+            const showAPPContent = () => {
+                if (getPWADisplayMode() == 'standalone') {
+                    try{document.getElementById("cached-articles").style.display = "block";} catch(e) {}
+                    try {
+                        document.getElementById("save-article").style.display = "flex";
+                        document.getElementById("save-article")?.addEventListener("click", async () => {
+                            if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+                                navigator.serviceWorker.controller.postMessage({
+                                    type: "CACHE_ARTICLE",
+                                    url: `/api/content/${language}/article/${window.location.pathname.split('/')[2]}`
+                                });
+                                alert("Artículo guardado para leer sin conexión ✅");
+                            }
+                        });
+                    } catch(e) {}
+                }
+            }
+            const disableInAppInstallPrompt = () => {
+                installPrompt = null;
+                headeribut.classList.toggle("md:hidden", true);
+                menuibox.classList.toggle("hidden", true);
+            }
+
+            headeribut.addEventListener("click", async () => {
+                if (!installPrompt) return;
+                const result = await installPrompt.prompt();
+                console.log(`Install prompt was: ${result.outcome}`);
+                disableInAppInstallPrompt();
+            });
+            menuibut.addEventListener("click", async () => {
+                if (!installPrompt) return;
+                const result = await installPrompt.prompt();
+                console.log(`Install prompt was: ${result.outcome}`);
+                disableInAppInstallPrompt();
+            });
+
+            window.addEventListener("appinstalled", () => {
+                disableInAppInstallPrompt();
+            });
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                installPrompt = e;
+                headeribut.classList.toggle("md:hidden", false);
+                menuibox.classList.toggle("hidden", false);
+            })
+
+//window.addEventListener('appinstalled', () => {hideInAppInstallPromotion();});
+
             //PFresa - A simple client-side router
             //Declaration
             declare global {
                 interface Window { pfresa: EventTarget; servervars: any; setTheme: Function }
             }
             window.pfresa = new EventTarget();
-
-            //Manifest
-            const manifest = JSON.parse(document.getElementById("manifest").textContent)
-            const server = window.servervars;
-            const frontmatter = server.frontmatter;
-            let language = manifest.languages[0]; // Default language
 
             //Utils
             const isValidPage = (page) => manifest.pages.slugs.includes(page) || manifest.articles.slugs.includes(page.split('/')[0]);
@@ -263,7 +335,8 @@ if (Astro.url.host.includes('localhost')){redirect='';}
                 let version = 1;
                 if(page == 'article') version = manifest.articles.version;
                 else version = manifest.pages.data[page].version;
-                const storaged = await getPage(page, lang, version);
+                //const storaged = await getPage(page, lang, version);
+                const storaged = null
                 let text = "";
                 if (storaged) {
                     text = storaged[1];
@@ -321,6 +394,7 @@ if (Astro.url.host.includes('localhost')){redirect='';}
                     main.innerHTML = html;
                     window.scrollTo({ top: 0, behavior: "smooth" });
                 }
+                showAPPContent()
                 main.querySelectorAll("script").forEach((oldScript) => {
                     const newScript = document.createElement("script");
                     if (oldScript.src) {

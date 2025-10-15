@@ -17,7 +17,8 @@
         "back": "Back",
         "and": "and",
         "more": "more",
-        "description": "Discover the power of open scientific outreach with us."
+        "description": "Discover the power of open scientific outreach with us.",
+        "download": "Download"
     },
     "titles": {
         "home": "Home",
@@ -51,7 +52,7 @@
         },
         "articles": {
             "recent": "Recent",
-            "popular": "Popular",
+            "saved": "Saved",
             "trending": "Trending",
             "by": "By",
             "sciences": "Sciences"

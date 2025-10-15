@@ -17,7 +17,8 @@
         "back": "Volver",
         "and": "y",
         "more": "más",
-        "description": "Descubre el poder de la divulgación científica abierta junto a nosotros."
+        "description": "Descubre el poder de la divulgación científica abierta junto a nosotros.",
+        "download": "Descargar"
     },
     "titles": {
         "home": "Inicio",
@@ -49,7 +50,7 @@
         },
         "articles": {
             "recent": "Reciente",
-            "popular": "Popular",
+            "saved": "Guardados",
             "trending": "Tendencias",
             "by": "Por",
             "sciences": "Ciencias"
