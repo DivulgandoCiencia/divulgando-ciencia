@@ -5,7 +5,7 @@
     "display": "standalone",
     "background_color": "#f5f5f5",
     "theme_color": "#222222",
-    "description": "Descubre el poder de la divulgación científica abierta.",
+    "description": "Explora el universo 🌌 desde tu dispositivo: ciencia 🧪, curiosidad 👀 y descubrimiento en una app rápida, gratuita y sin límites 🚀. \n\n⚠️ Aplicación en fase beta: puede contener errores, pero se actualizará automáticamente.",
     "icons": [
         {
             "src": "/images/pwa/icon-192.png",
@@ -26,7 +26,29 @@
             "form_factor": "wide"
         },
         {
+            "src": "/images/pwa/screenshots/articles-desktop.png",
+            "sizes": "1875x1004",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "/images/pwa/screenshots/article-desktop.png",
+            "sizes": "1875x1004",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
             "src": "/images/pwa/screenshots/home-mobile.png",
+            "sizes": "412x915",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/pwa/screenshots/articles-mobile.png",
+            "sizes": "412x915",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/pwa/screenshots/article-mobile.png",
             "sizes": "412x915",
             "type": "image/png"
         }
