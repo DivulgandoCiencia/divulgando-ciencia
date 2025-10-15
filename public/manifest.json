@@ -1,11 +1,19 @@
 {
     "name": "Divulgando Ciencia",
     "short_name": "DCiencia",
-    "start_url": "/",
+    "start_url": "https://www.divulgandociencia.com/",
     "display": "standalone",
     "background_color": "#f5f5f5",
     "theme_color": "#222222",
     "description": "Explora el universo 🌌 desde tu dispositivo: ciencia 🧪, curiosidad 👀 y descubrimiento en una app rápida, gratuita y sin límites 🚀. \n\n⚠️ Aplicación en fase beta: puede contener errores, pero se actualizará automáticamente.",
+    "id": "https://www.divulgandociencia.com",
+    "scope": "https://www.divulgandociencia.com/myapp/",
+    "scope_extensions": [
+        { "type": "origin", "origin": "https://divulgandociencia.com"},
+        { "type": "origin", "origin": "https://es.divulgandociencia.com"},
+        { "type": "origin", "origin": "https://en.divulgandociencia.com"}
+    ],
+    "orientation": "natural",
     "icons": [
         {
             "src": "/images/pwa/icon-192.png",
