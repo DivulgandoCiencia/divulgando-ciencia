@@ -15,6 +15,14 @@
         { "type": "origin", "origin": "https://en.divulgandociencia.com"}
     ],
     "orientation": "natural",
+    "prefer_related_applications": true,
+    "related_applications": [
+        {
+            "platform": "windows",
+            "id": "Neplod.DivulgandoCiencia",
+            "url": "https://apps.microsoft.com/detail/9N8VTKRSRGF2"
+        }
+    ],
     "icons": [
         {
             "src": "/images/pwa/icon-192.png",
