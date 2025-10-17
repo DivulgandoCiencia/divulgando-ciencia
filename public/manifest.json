@@ -15,7 +15,7 @@
         { "type": "origin", "origin": "https://en.divulgandociencia.com"}
     ],
     "orientation": "natural",
-    "prefer_related_applications": true,
+    "prefer_related_applications": false,
     "related_applications": [
         {
             "platform": "windows",
