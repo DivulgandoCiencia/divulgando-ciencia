@@ -74,8 +74,8 @@ const { currentLang, className = "" } = Astro.props;
                 // Set cookie
                 const expiryDate = new Date();
                 expiryDate.setFullYear(expiryDate.getFullYear() + 1);
-                document.cookie = `divciencia-lang=${lang}; SameSite=None; Secure; domain=.divulgandociencia.com`;
-
+                document.cookie = `divciencia-lang=${lang}; path=/; max-age=${365 * 86400}; SameSite=None; Secure; domain=.divulgandociencia.com`;
+                
                 // Set in localStorage
                 localStorage.setItem('language', lang);
                 

@@ -24,7 +24,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     
     lang = languages.includes(lang as any) ? lang : 'es';
 
-    context.cookies.set('divciencia-lang', lang, { domain: '.divulgandociencia.com', sameSite: 'none', secure: true });
+    context.cookies.set('divciencia-lang', lang, { domain: '.divulgandociencia.com', sameSite: 'none', secure: true, maxAge: 365 * 86400, path: '/' });
     
     context.locals.lang = lang;
     context.locals.theme = cookiesTheme?.value ?? '';
