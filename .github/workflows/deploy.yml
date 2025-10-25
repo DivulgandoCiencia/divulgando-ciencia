@@ -14,3 +14,10 @@ jobs:
           vercel-args: '--prod'
           vercel-org-id: ${{ secrets.ORG_ID}}
           vercel-project-id: ${{ secrets.PROJECT_ID}}
+      - name: Purge Cloudflare cache
+        run: |
+          curl https://api.cloudflare.com/client/v4/zones/${{secrets.CLOUDFLARE_ZONE_ID}}/purge_cache \
+          -H 'Content-Type: application/json' \
+          -H "X-Auth-Email: ${{secrets.CLOUDFLARE_EMAIL}}" \
+          -H "X-Auth-Key: ${{secrets.CLOUDFLARE_API_KEY}}" \
+          -d '{"purge_everything":true}'
