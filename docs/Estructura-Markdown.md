@@ -1,4 +1,3 @@
-
 # Estructura para publicar en Markdown
 
 ```
@@ -66,3 +65,8 @@ Sin foto de autor $\rightarrow$ "anonimo.svg"
 "13 de enero de 2024" $\rightarrow$ "2024-1-13"
 
 "25 de febrero de 2022" $\rightarrow$ "2022-2-25"
+
+## Otros Componentes
+
+Divulgando Ciencia ha hecho algunos componentes extra no incluidos en markdown, para ver más:
+[Componentes especiales en Markdown](docs/Componentes-Markdown.md)

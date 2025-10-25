@@ -2,9 +2,15 @@ import { defineConfig } from 'astro/config';
 
 import tailwind from "@astrojs/tailwind";
 import vercel from '@astrojs/vercel';
+import node from '@astrojs/node'
 import mdx from '@astrojs/mdx';
 
-// https://astro.build/config
+let adapter = vercel();
+
+if (process.argv[3] === "--node" || process.argv[4] === "--node") {
+  adapter = node({ mode: "standalone" });
+}
+
 export default defineConfig({
   output: 'server',
   integrations: [tailwind(), mdx()],
@@ -13,5 +19,5 @@ export default defineConfig({
     syntaxHighlight: false,
   },
 
-  adapter: vercel(),
+  adapter: adapter,
 });

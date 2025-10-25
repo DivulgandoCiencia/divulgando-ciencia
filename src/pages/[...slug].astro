@@ -36,6 +36,22 @@ if (Astro.url.host.includes('localhost')){redirect='';}
             window.servervars = getServer();
         </script>
         <script>
+            declare global {
+                interface Window { pfresa: EventTarget; 
+                    servervars: any; 
+                    setTheme: Function,
+                    screwdriver: {
+                        log: (message: string, type?: string) => void;
+                    }
+                }
+            }
+            //Screwdriver
+            const printer = (message: string, type="log") => {
+                (console as any)[type](`%cScrewDriver`, "background: linear-gradient(90deg, #31E87D 0%, #8DF04F 100%); color: white; padding-inline: 4px; border-radius: 2px; font-family: monospace;", message)
+            }
+            window.screwdriver = window.screwdriver || {} as any
+            window.screwdriver.log = printer
+
             //Manifest
             const manifest = JSON.parse(document.getElementById("manifest").textContent)
             const server = window.servervars;
@@ -116,9 +132,6 @@ if (Astro.url.host.includes('localhost')){redirect='';}
 
             //PFresa - A simple client-side router
             //Declaration
-            declare global {
-                interface Window { pfresa: EventTarget; servervars: any; setTheme: Function }
-            }
             window.pfresa = new EventTarget();
 
             //Utils

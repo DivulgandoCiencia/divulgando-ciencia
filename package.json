@@ -6,11 +6,13 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "build:node": "astro build ./build/ --node",
+    "preview": "astro preview --node",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.3",
+    "@astrojs/node": "^9.5.0",
     "@astrojs/tailwind": "^6.0.2",
     "@astrojs/vercel": "^8.2.5",
     "@supabase/supabase-js": "^2.49.4",

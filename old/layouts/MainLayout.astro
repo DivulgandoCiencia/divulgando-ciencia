@@ -1,10 +1,10 @@
 ---
-import '../styles/global.css';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import Menu from '../components/Menu.astro';
-import Seo from '../components/Seo.astro';
-import { languages, clientTranslations } from '../i18n/';
+import '@/styles/global.css';
+import Footer from '@/components/Footer.astro';
+import Header from '@/components/Header.astro';
+import Menu from '@/components/Menu.astro';
+import Seo from '@/components/Seo.astro';
+import { languages, clientTranslations } from '../../src/i18n/';
 import { ClientRouter } from "astro:transitions";
 
 const { title, description = "", pattern = true, image, altIMG } = Astro.props;

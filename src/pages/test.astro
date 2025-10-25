@@ -1,0 +1,14 @@
+---
+import Console from "@/components/screwdriver/console.astro";
+import MainLayout from "old/layouts/MainLayout.astro";
+const code = `print("Hello World")
+print(input())
+print(input())
+print(input())
+print(input())`
+---
+<MainLayout>
+    <Console code={code} stdin={["a","b","c"]}/>
+    <script src="/screwdriver/pyodide.js" type="module"/>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.28.3/full/pyodide.js"/>
+</MainLayout>
