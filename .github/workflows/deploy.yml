@@ -18,6 +18,5 @@ jobs:
         run: |
           curl https://api.cloudflare.com/client/v4/zones/${{secrets.CLOUDFLARE_ZONE_ID}}/purge_cache \
           -H 'Content-Type: application/json' \
-          -H "X-Auth-Email: ${{secrets.CLOUDFLARE_EMAIL}}" \
-          -H "X-Auth-Key: ${{secrets.CLOUDFLARE_API_KEY}}" \
+          -H "Authorization: Bearer ${{secrets.CLOUDFLARE_API_TOKEN}}" \
           -d '{"purge_everything":true}'
