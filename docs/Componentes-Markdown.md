@@ -60,10 +60,10 @@ Mira esta fórmula
 
 Mira este código
 
-<Console code=`print("¡Hola Mundo!")
+<Console code={`print("¡Hola Mundo!")
 a = input()
 b = input()
-print("Los argumentos stdin son ", a, b)` stdin=["123", "manzana"] language='python'/>
+print("Los argumentos stdin son ", a, b)`} stdin={["123", "manzana"]} language={'python'}/>
 ...
 
 Y este es todo el artículo.

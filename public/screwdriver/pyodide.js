@@ -37,14 +37,14 @@ async function runCode(addOutput, addLine, codeEditor, consoleElement, runButton
         if(!initializatorResponse) {addOutput('An error occurred while initializating Pyodide. For farther information please check console.', consoleElement); runButton.textContent = 'Ejecutar'; runButton.disabled = false; return}
         addOutput("Pyodide successfuly loaded.", consoleElement, 'success', true);
     }
-    addLine(consoleElement);
     try {
         let stdin = []
         try{
             stdin = await JSON.parse(codeEditor.getAttribute('data-stdin'))['stdin']
         } catch (e) {}
-		pyodide.setStdin(new StdinHandler(stdin));
-        const result = await pyodide.runPythonAsync(`
+        const runner = async(thisstdin) => {
+            pyodide.setStdin(new StdinHandler(thisstdin));
+            const result = await pyodide.runPythonAsync(`
 import sys
 from io import StringIO
 
@@ -63,11 +63,19 @@ finally:
 
 (output, errors)
         `);
-        const [stdout, stderr] = result.toJs();
-        if (stdout) {stdout.split('\n').forEach(line => {if (line) addOutput(line, consoleElement, 'output');});}
-        if (stderr) {stderr.split('\n').forEach(line => {if (line) addOutput(line, consoleElement, 'error');});}
-        if (!stdout && !stderr) {addOutput('Code executed without output.', consoleElement, 'info');}
+            const [stdout, stderr] = result.toJs();
+            if (stdout) {stdout.split('\n').forEach(line => {if (line) addOutput(line, consoleElement, 'output');});}
+            if (stderr) {stderr.split('\n').forEach(line => {if (line) addOutput(line, consoleElement, 'error');});}
+            if (!stdout && !stderr) {addOutput('Code executed without output.', consoleElement, 'info');}
+        }
+
+        if(stdin.length > 0){
+            if(typeof stdin[0] == typeof []) {
+                for (const s of stdin) {addLine(consoleElement); await runner(s)}
+            } else {addLine(consoleElement); await runner(stdin)}
+        } else{addLine(consoleElement); await runner(stdin)}
     } catch (error) {
+        addLine(consoleElement);
         window.screwdriver.log('Error while executing code: ' + error, "warn");
         addOutput(`An error occurred while executing code. For farther information please check console.`, consoleElement, 'error');
     } finally {
