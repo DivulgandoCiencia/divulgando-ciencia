@@ -178,7 +178,7 @@ export const GET = async ({ params }) => {
         <a href="/articles" class="block mt-4 text-sm text-primary hover:underline">${t.article.viewMoreArticles}</a>
     </div>`
 
-    registerView(article.slug, {title: article.data.title, author: article.data.author.id});
+    await registerView(article.slug.split('/')[2], {title: article.data.title, author: article.data.author.id});
 
     return new Response(
         JSON.stringify({
