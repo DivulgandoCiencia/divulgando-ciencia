@@ -1,12 +1,3 @@
----
-title: "Los efectos neurológicos de la falta de sueño"
-description: "Es común hoy en día postergar la hora a la que nos vamos a dormir, ya sea para ver solo "un episodio más" de una serie o para empezar a estudiar para el examen de mañana. Pero ¿qué ocurre dentro de nuestra cabeza cuando llevamos a cabo este tipo de rutinas?"
-authorId: "prueba"
-slug: "prueba"
-lang: "es"
-science: "biology"
----
-
 ## Los efectos neurológicos de la privación del sueño.
 
 Es común hoy en día postergar la hora a la que nos vamos a dormir, ya sea para ver solo "un episodio más" de una serie o para empezar a estudiar para el examen de mañana. Pero ¿qué ocurre dentro de nuestra cabeza cuando llevamos a cabo este tipo de rutinas?
@@ -17,9 +8,9 @@ En el siguiente artículo se abordará desde una perspectiva neurológica cómo 
 
 El sueño es una actividad cíclica regulada por sustancias bioquímicas, principalmente de estructuras hipotalámicas y mesopontinas, que modulan la corteza cerebral y el tálamo, y pueden ser afectadas por estímulos tanto intracorpóreos como extracorpóreos.
 
-![Imagen de las partes del cerebro.](/images/contenido/efectos-neurologicos-de-la-falta-de-sueno/1.webp)### Estímulos intracorpóreos:
+![Imagen de las partes del cerebro.](/images/contenido/prueba/1.webp)### Estímulos intracorpóreos:
 
-![](https://www.divulgandociencia.com/images/logo.webp)- Adenosina, que es el neurotransmisor encargado de reducir la actividad neuronal e inducir al sueño.
+![](/images/contenido/prueba/logo.webp)- Adenosina, que es el neurotransmisor encargado de reducir la actividad neuronal e inducir al sueño.
 - Los ritmos circadianos, son regulados por el núcleo supraquiasmático (NSQ), y sincronizan el ciclo sueño-vigilia con el ambiente.
 - Neurotransmisores como GABA y serotonina, esto son muy importantes en la iniciación del sueño, mientras que las orexinas favorecen la vigilia; su deficiencia se asocia con la narcolepsia (trastorno de somnolencia constante).
 
