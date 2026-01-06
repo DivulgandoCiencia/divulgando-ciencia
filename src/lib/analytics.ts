@@ -1,5 +1,19 @@
 import { supabaseService as supabase } from "./supabase";
 
+export async function registerArticle(slug: string, metadata?: {title: string, author: string}): Promise<void> {
+    if (!slug) return;
+
+    try {
+        const { data } = await supabase.from('articles').select('views').eq('slug', slug).maybeSingle();
+        if (!data) {
+            if (!metadata) return;
+            await supabase.from('articles').insert({ slug, views: 0, title: metadata.title, author_identifier: metadata.author });
+        }
+    } catch (e) {
+        console.log("Failed to register article", e);
+    }
+}
+
 export async function registerView(slug: string, metadata?: {title: string, author: string}): Promise<void> {
     if (!slug) return;
 

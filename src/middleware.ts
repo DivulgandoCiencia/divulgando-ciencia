@@ -1,10 +1,26 @@
 // src/middleware.ts
 import { defineMiddleware } from 'astro/middleware';
 import { languages } from './i18n/index';
+import { getCollection } from 'astro:content';
+import { registerView } from './lib/analytics';
+
+const articles = await getCollection('articles');
+const authorCollection = await getCollection("authors");
 
 export const onRequest = defineMiddleware(async (context, next) => {
     const host = context.request.headers.get('host') ?? '';
     let lang = 'es';
+
+    // Analytics tracking
+    let _exit = false;
+    while ((context.url.pathname.startsWith('/api/content/es/article/') || context.url.pathname.startsWith('/api/content/en/article/')) && !_exit) {
+        _exit = true;
+        const article = articles.find(a => a.slug === context.url.pathname.split('/article/')[1]);
+        if (!article) break;
+        const author = authorCollection.find(author => author.id === article.data.author.id);
+        await registerView(article.slug.split('/')[2], {title: article.data.title, author: author?.data.name});
+        break;
+    }
     
     const cookies = context.cookies.get('divciencia-lang');
     const cookiesTheme = context.cookies.get('divciencia-theme');
