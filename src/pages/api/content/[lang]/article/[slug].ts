@@ -4,6 +4,8 @@ import { getContainerRenderer as mdxContainerRenderer } from "@astrojs/mdx";
 import { loadRenderers } from "astro:container";
 import { clientTranslations } from "../../../../../i18n";
 
+import { registerView } from "../../../../../lib/analytics";
+
 const articles = await getCollection("articles");
 const authorCollection = await getCollection("authors");
 const renderers = await loadRenderers([mdxContainerRenderer()]);
@@ -175,6 +177,8 @@ export const GET = async ({ params }) => {
         </div>
         <a href="/articles" class="block mt-4 text-sm text-primary hover:underline">${t.article.viewMoreArticles}</a>
     </div>`
+
+    registerView(article.slug, {title: article.data.title, author: article.data.author.id});
 
     return new Response(
         JSON.stringify({
