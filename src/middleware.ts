@@ -6,11 +6,6 @@ import { registerView } from './lib/analytics';
 export const onRequest = defineMiddleware(async (context, next) => {
     const host = context.request.headers.get('host') ?? '';
     let lang = 'es';
-
-    // Analytics tracking
-    if (context.url.pathname.startsWith('/api/content/es/article/') || context.url.pathname.startsWith('/api/content/en/article/')) {
-        await registerView(context.url.pathname.split('/article/')[1]);
-    }
     
     const cookies = context.cookies.get('divciencia-lang');
     const cookiesTheme = context.cookies.get('divciencia-theme');

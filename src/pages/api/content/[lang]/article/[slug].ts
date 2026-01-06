@@ -4,7 +4,7 @@ import { getContainerRenderer as mdxContainerRenderer } from "@astrojs/mdx";
 import { loadRenderers } from "astro:container";
 import { clientTranslations } from "../../../../../i18n";
 
-import { registerArticle } from "../../../../../lib/analytics";
+import { registerView } from "../../../../../lib/analytics";
 
 const articles = await getCollection("articles");
 const authorCollection = await getCollection("authors");
@@ -14,9 +14,9 @@ const container = experimental_AstroContainer.create({renderers});
 import { ScienceList } from "../../../../../components/Science"
 import { calcReadTime } from '../../../../../components/readTime';
 
-export const prerender = true;
+export const prerender = false;
 
-export function getStaticPaths() {
+function getStaticPaths() {
     let paths = [];
     for (const lang of ['es','en']) {
         for (const article of articles) {
@@ -178,7 +178,7 @@ export const GET = async ({ params }) => {
         <a href="/articles" class="block mt-4 text-sm text-primary hover:underline">${t.article.viewMoreArticles}</a>
     </div>`
 
-    await registerArticle(article.slug.split('/')[2], {title: article.data.title, author: author?.name || 'unknown'});
+    try { await registerView(article.slug.split('/')[2], {title: article.data.title, author: author?.name }); } catch (e) {}
 
     return new Response(
         JSON.stringify({
