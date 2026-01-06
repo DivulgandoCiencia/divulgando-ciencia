@@ -1,11 +1,3 @@
----
-title: "Misterio sin título"
-author: "default_author"
-altImage: "Imagen de portada"
-description: ""
-date: "2026-01-06"
----
-
 # Cómo escribir artículos en DivulgandoCiencia
 
 Este editor admite formato Markdown y comandos con /.
@@ -16,4 +8,4 @@ Por ejemplo:
 - Citas con /quote
 - Código con /code 
 
-![](https://www.divulgandociencia.com/images/logo.webp)
+![](/images/contenido/aaa/logo.webp)
