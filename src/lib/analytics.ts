@@ -15,6 +15,7 @@ export async function registerArticle(slug: string, metadata?: {title: string, a
 }
 
 export async function registerView(slug: string, metadata?: {title: string, author: string}): Promise<void> {
+    console.log("Registering view for", slug);
     if (!slug) return;
 
     try {
