@@ -21,18 +21,33 @@ export async function registerView(slug: string, metadata?: {title: string, auth
     if (!slug) return;
 
     try {
-        const { data } = await supabase.from('articles').select('views').eq('slug', slug).maybeSingle();
+        const cleanSlug = decodeURIComponent(String(slug)).replace(/^\/+|\/+$/g, '');
+
+        const { data } = await supabase.from('articles').select('views').eq('slug', cleanSlug).maybeSingle();
         if (data) {
-            await supabase.from('articles').update({ views: (data.views || 0) + 1 }).eq('slug', slug);
-        } else {
-            if (!metadata) {
-                const article = articles.filter(a => {a.slug.split('/')[2] === slug})[0];
-                if (!article) return;
-                const author = authorCollection.filter(a => a.id === article.data.author.id)[0];
-                await supabase.from('articles').insert({ slug, views: 1, title: article.data.title, author_identifier: author.data.name });
-            };
-            await supabase.from('articles').insert({ slug, views: 1, title: metadata.title, author_identifier: metadata.author });
+            await supabase.from('articles').update({ views: (data.views || 0) + 1 }).eq('slug', cleanSlug);
+            return;
         }
+
+        // Not found in DB: try to build metadata from content collection if not provided
+        let title: string | undefined = undefined;
+        let author_identifier: string | undefined = undefined;
+
+        if (metadata) {
+            title = metadata.title;
+            author_identifier = metadata.author;
+        } else {
+            const article = articles.find(a => a.slug.split('/')[2] === cleanSlug);
+            if (article) {
+                title = article.data.title;
+                const author = authorCollection.find(a => a.id === article.data.author?.id);
+                author_identifier = author?.data?.name;
+            }
+        }
+
+        // Insert fallback with at least slug and views. Title/author may be undefined.
+        if (!title || !author_identifier) return;
+        await supabase.from('articles').insert({ slug: cleanSlug, views: 1, title, author_identifier });
     } catch (e) {
         console.log("Failed to register view", e);
     }
