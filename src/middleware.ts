@@ -9,7 +9,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
     // Analytics tracking
     if (context.url.pathname.startsWith('/api/content/es/article/') || context.url.pathname.startsWith('/api/content/en/article/')) {
-        await registerView(context.url.pathname.split('/')[2]);
+        await registerView(context.url.pathname.split('/article/')[2]);
     }
     
     const cookies = context.cookies.get('divciencia-lang');
