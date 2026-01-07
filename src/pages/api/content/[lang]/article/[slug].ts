@@ -10,11 +10,10 @@ export const GET = async ({ params, request }) => {
 
     try {
         const resp = await fetch(internalUrl, { method: 'GET', headers: { 'x-internal-proxy': '1' } });
-        if (!resp.ok) {
-            return new Response(await resp.text(), { status: resp.status, headers: { 'content-type': resp.headers.get('content-type') || 'text/plain' } });
-        }
+        if (!resp.ok) { return new Response(await resp.text(), { status: resp.status, headers: { 'content-type': resp.headers.get('content-type') || 'text/plain' } }); }
 
-        const data = await resp.json();
+        const data = await (async () => {try { return await resp.json() } catch (e) { return null }})();
+        if (data === null) { return new Response('Bad Gateway', { status: 502 }); }
 
         // Register view server-side (non-blocking for the response)
         try {

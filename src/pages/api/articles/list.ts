@@ -1,6 +1,5 @@
-import { getCollection, render, getEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { type APIRoute } from 'astro';
-import { clientTranslations } from '../../../i18n';
 
 export const GET: APIRoute = async ({ request }) => {
     const articles = (await getCollection('articles'))

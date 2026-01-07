@@ -1,7 +1,6 @@
 // src/middleware.ts
 import { defineMiddleware } from 'astro/middleware';
 import { languages } from './i18n/index';
-import { registerView } from './lib/analytics';
 
 export const onRequest = defineMiddleware(async (context, next) => {
     const host = context.request.headers.get('host') ?? '';
