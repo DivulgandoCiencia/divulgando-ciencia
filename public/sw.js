@@ -1,6 +1,6 @@
 // === CONFIGURACIÓN ===
 const PREFIX = 'divulgandociencia-cache';
-const CURRENT_VERSION = '1.0.5';
+const CURRENT_VERSION = '1.0.6';
 const CURRENT_CACHE = `${PREFIX}-v${CURRENT_VERSION}`;
 const urlsToCache = ["/", "/page/es/article", "/page/en/article", "/manifest.webmanifest", "/favicon.ico"];
 
@@ -229,15 +229,16 @@ async function cacheFirst(request) {
 
     //Offline Home Articles Hander
     if(url.pathname.startsWith('/api/content/en/home') || url.pathname.startsWith('/api/content/es/home')) return await handleHomeReq(req);
-
+    
     const cachedResponse = await caches.match(req);
-    if (cachedResponse) {
-        return cachedResponse;
-    }
     try {
         const networkResponse = await fetch(req);
+        if (networkResponse.ok && cachedResponse) caches.open(CURRENT_CACHE).then(cache => cache.put(req, networkResponse.clone()));
         return networkResponse;
     } catch (error) {
+        if (cachedResponse) {
+            return cachedResponse;
+        }
         //Offline Handler
         if(new URL(req.url).pathname == '/') {
             return new Response("Network error happened", {

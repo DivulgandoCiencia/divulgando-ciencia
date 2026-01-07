@@ -4,6 +4,7 @@ const articles = await getCollection('articles');
 const authorCollection = await getCollection("authors");
 
 export async function registerArticle(slug: string, metadata?: {title: string, author: string}): Promise<void> {
+    if (!supabase) return;
     if (!slug) return;
 
     try {
@@ -18,6 +19,7 @@ export async function registerArticle(slug: string, metadata?: {title: string, a
 }
 
 export async function registerView(slug: string, metadata?: {title: string, author: string}): Promise<void> {
+    if (!supabase) return;
     if (!slug) return;
 
     try {
@@ -54,6 +56,7 @@ export async function registerView(slug: string, metadata?: {title: string, auth
 }
 
 export async function getTrending(limit = 5): Promise<string[]> {
+    if (!supabase) return [];
     const { data } = await supabase
         .from('articles')
         .select('slug')
