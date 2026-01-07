@@ -11,6 +11,6 @@ export default defineConfig({
   markdown: {
     syntaxHighlight: false,
   },
-
+  
   adapter: vercel(),
 });

@@ -21,8 +21,7 @@ export async function registerView(slug: string, metadata?: {title: string, auth
     if (!slug) return;
 
     try {
-        const cleanSlug = decodeURIComponent(String(slug)).replace(/^\/+|\/+$/g, '');
-        console.log(slug, cleanSlug);
+        const cleanSlug = slug
 
         const { data } = await supabase.from('articles').select('views').eq('slug', cleanSlug).maybeSingle();
         if (data) {
