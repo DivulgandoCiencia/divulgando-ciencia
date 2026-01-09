@@ -1,6 +1,6 @@
 // === CONFIGURACIÓN ===
 const PREFIX = 'divulgandociencia-cache';
-const CURRENT_VERSION = '1.0.7';
+const CURRENT_VERSION = '1.0.8';
 const CURRENT_CACHE = `${PREFIX}-v${CURRENT_VERSION}`;
 const urlsToCache = ["/", "/page/es/article", "/page/en/article", "/manifest.webmanifest", "/favicon.ico"];
 
@@ -262,6 +262,7 @@ self.addEventListener("install", event => {
 });
 
 self.addEventListener("fetch", event => {
+    console.log(CURRENT_VERSION)
     event.respondWith(cacheFirst(event.request));
 });
 
