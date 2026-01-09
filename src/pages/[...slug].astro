@@ -36,6 +36,8 @@ if (Astro.url.host.includes('localhost')){redirect='';}
             window.servervars = getServer();
         </script>
         <script>
+import { record } from "astro:schema";
+
             declare global {
                 interface Window { pfresa: EventTarget; 
                     servervars: any; 
@@ -77,7 +79,18 @@ if (Astro.url.host.includes('localhost')){redirect='';}
             if ("serviceWorker" in navigator) {
                 window.addEventListener("load", () => {
                     navigator.serviceWorker.register("/sw.js")
-                    .then(() => console.log("Service Worker registrado ✅"))
+                    .then((reg) => {
+                        reg.addEventListener("updatefound", () => {
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener("statechange", () => {
+                                if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                                    if (confirm("Nueva versión disponible. ¿Desea actualizar?")) {
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        });
+                    })
                     .catch(err => console.error("Error registrando SW:", err));
                 });
             }
