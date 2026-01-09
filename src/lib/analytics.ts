@@ -19,7 +19,7 @@ export async function registerArticle(slug: string, metadata?: {title: string, a
 }
 
 export async function registerView(slug: string, metadata?: {title: string, author: string}): Promise<void> {
-    if (!supabase) return;
+    if (!supabase) console.log("Supabase not available"); return;
     if (!slug) return;
 
     try {
