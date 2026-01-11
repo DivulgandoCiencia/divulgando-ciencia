@@ -12,7 +12,9 @@
     "scope_extensions": [
         { "type": "origin", "origin": "https://divulgandociencia.com"},
         { "type": "origin", "origin": "https://es.divulgandociencia.com"},
-        { "type": "origin", "origin": "https://en.divulgandociencia.com"}
+        { "type": "origin", "origin": "https://en.divulgandociencia.com"},
+        { "type": "origin", "origin": "https://lab.divulgandociencia.com"},
+        { "type": "origin", "origin": "https://shop.divulgandociencia.com"}
     ],
     "orientation": "natural",
     "prefer_related_applications": false,
