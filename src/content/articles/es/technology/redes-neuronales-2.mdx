@@ -1,0 +1,143 @@
+---
+title: "Redes Neuronales 2 - Estructura"
+author: "neplod"
+altImage: "Imagen de portada"
+description: "Después de haber entendido qué son las redes neuronales y cómo surgieron en la primera parte, ahora vamos a entrar dentro de su “mecánica interna”. En esta sección veremos qué ocurre **dentro** de una red neuronal: cómo se comunican las neuronas, cómo los pesos y los BIAS influyen en sus decisiones, y cómo se produce realmente el aprendizaje."
+date: "2026-01-19"
+---
+import Latex from '@/components/screwdriver/Latex.astro'
+
+<span>Después de haber entendido qué son las redes neuronales y cómo surgieron en la primera parte, ahora vamos a entrar dentro de su “mecánica interna”. En esta sección veremos qué ocurre **dentro** de una red neuronal: cómo se comunican las neuronas, cómo los pesos y los BIAS influyen en sus decisiones, y cómo se produce realmente el aprendizaje.</span>
+
+# <span>**1. Estructura**</span>
+
+<span>Las Redes Neuronales están formadas de 3 elementos principales: Neuronas, Pesos y BIAS.</span>
+
+## <span>**1.1. Neuronas**</span>
+
+<span>Las neuronas son las estructuras principales de la red neuronal. Están divididas en distintas capas:</span>
+
+- <span>La capa de inicio. Donde se introducen los datos a la red neuronal.</span>
+- <span>Las capas escondidas. Se les llama así a las capas centrales de la red neuronal, puede haber tantas como sean necesarias.</span>
+- <span>La capa de salida. Donde salen los resultados de los cálculos de la red.</span>
+
+<span>Las neuronas de las distintas capas están conectadas con las de la capa anterior y la de la siguiente a través de conexiones neuronales. Una neurona de una capa tiene una conexión con todas las neuronas de la capa anterior y de la siguiente, y cada conexión entre 2 neuronas tiene un peso único.</span>
+
+<span>La función de las neuronas es sumar todos los valores que entran a esta a través de las conexiones con la capa anterior y el BIAS, y pasarles el resultado a las neuronas de la capa siguiente.</span>
+
+## <span>**1.2. Pesos**</span>
+
+<span>Los pesos son la parte de más importante de la red, son los que hacen que la red neuronal funcione.</span>
+
+<span>Un peso es un número que se encuentra en la conexión entre 2 neuronas, y su función es multiplicar el número entrante por el valor del peso.</span>
+
+<span>Los pesos cambian cuando la red neuronal evoluciona para dar un resultado más correcto al deseado.</span>
+
+<span>En cierto modo, los pesos son como los “ajustes” de una radio: pequeños cambios pueden modificar completamente lo que se escucha. Si se ajustan bien, la señal (la salida) es clara; si no, el ruido domina.</span>
+
+## <span>**1.3. BIAS**</span>
+
+<span>Son unos pesos especiales que se encuentran en las neuronas, y su única función es sumarse a los otros valores. Estos también cambian en cada mutación.</span>
+
+# <span>**2.Funcionamiento**</span>
+
+<span>El funcionamiento de una red neuronal puede parecer un misterio al principio, pero en realidad sigue un proceso lógico y matemático que se repite miles o millones de veces hasta que el sistema aprende. Veamos este proceso paso a paso:</span>
+
+## <span>**2.1. Propagación hacia adelante (Forward Propagation)**</span>
+
+<span>El primer paso es la propagación hacia adelante, donde los datos de entrada recorren la red desde la primera capa hasta la última.</span>
+
+<span>Cada neurona recibe las entradas, las multiplica por sus pesos correspondientes, suma el bias y aplica una función de activación. Este proceso se repite en cada capa, transformando los datos hasta obtener la salida final.</span>
+
+<span>Ejemplo simple:</span>
+
+<Latex formula='s=f(w_1x_1+w_2x_2+b)'/>
+
+<span>Aquí, f podría ser una función como sigmoid, ReLU o tanh, que normalizan el resultado a un número más pequeño. El resultado de cada neurona se convierte en la entrada de la siguiente capa.</span>
+
+<span>Este flujo de información se asemeja a una cadena de filtros: cada capa aprende una representación un poco más abstracta del dato original.</span>
+
+### <span>**2.1.1. Funciones de activación**</span>
+
+<span>Las funciones de activación son las responsables de que una red neuronal pueda aprender patrones complejos. Sin ellas, el modelo sería una simple función lineal.</span>
+
+<span>Algunas de las más comunes son:</span>
+
+- <span>**ReLU (Rectified Linear Unit):**</span><Latex formula=' f(x) = max(0, x)'/><span> — rápida y efectiva en redes profundas.</span>
+- <span>**Sigmoid:** </span><Latex formula='f(x) = \frac{1}{1 + e^{-x}}'/><span> — convierte la salida en un valor entre 0 y 1.</span>
+- <span>**Tanh:** </span><Latex formula='f(x) = \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}} '/><span>— valores entre -1 y 1.</span>
+
+<span>Estas funciones permiten que la red “active” o “apague” neuronas dependiendo de la información, creando relaciones no lineales entre los datos. Es decir, es como filtrara la información en servible y no usable.</span>
+
+## <span>**2.2. Corrección del error**</span>
+
+### <span>**2.2.1. Cálculo del error (Loss Function)**</span>
+
+<span>Una vez que la red produce una salida, necesitamos medir qué tan lejos está de la respuesta correcta. Esto se hace con la **función de pérdida o error**. El resultado es un número que representa qué tan bien (o mal) lo ha hecho la red en esa predicción.</span>
+
+<span>Esta parte es realizada por una máquina exterior que es la encargada de entrenar a la red de manera automática y super rápida.</span>
+
+### <span>**2.2.2. Retropropagación del error (Backpropagation)**</span>
+
+<span>Aquí ocurre la “magia” del aprendizaje. La red analiza el error y lo propaga hacia atrás, ajustando los pesos y biases para reducirlo en futuras predicciones.</span>
+
+<span>La red “aprende” qué conexiones contribuyeron más al error y las corrige proporcionalmente.</span>
+
+#### <span>**2.2.2.1. Descenso del gradiente (Gradient Descent)**</span>
+
+<span>El **gradiente descendente** es el método más común para ajustar los pesos. Imagina que el error es una montaña, y la red intenta llegar al punto más bajo. Cada paso ajusta los pesos en la dirección en la que el error disminuye más rápido.</span>
+
+<span>Matemáticamente:</span>
+
+<Latex formula='w=w-\alpha\times\frac{\partial L}{\partial w}'/>
+
+<span>Donde:</span>
+
+- <span>*w* = peso actual</span>
+- <span>*α* = tasa de aprendizaje (learning rate)</span>
+- <span>*∂L/∂w* = derivada de la pérdida respecto al peso</span>
+
+<span>Si la tasa de aprendizaje es demasiado alta, la red “rebota” y no aprende. Si es muy baja, el aprendizaje se vuelve lentísimo. Por eso hay que usar un valor intermedio, aunque no todos los valores funcionan en todas las redes neuronales, el método de aprendizaje y la función de activación también afectan a poder encontrar el valor óptimo.</span>
+
+## <span>**2.3. Entrenamiento**</span>
+
+### <span>**2.3.1. Entrenamiento por lotes y épocas**</span>
+
+<span>El entrenamiento no se hace de una sola vez con todos los datos. Normalmente se divide en pequeños grupos llamados **batches**, y cada pasada completa sobre todos los datos se llama **época (epoch)**.</span>
+
+<span>Esto permite un aprendizaje más estable y eficiente. Cada batch produce una pequeña actualización de los pesos, acercando poco a poco la red a su objetivo.</span>
+
+<span>Existen también varias formas de entrenar a una red neuronal. Un método común es entrenar todo el batch a la vez como si fuera una competición, y después se hace un método de selección de ganador, usando la mejor red o las mejores redes para usarlas como base del siguiente batch. Esto reduce el tiempo de entrenamiento, pero aumenta la cantidad de procesamiento necesaria.</span>
+
+### <span>**2.3.2. Normalización y preprocesamiento**</span>
+
+<span>Antes del entrenamiento, los datos deben normalizarse o escalarse (por ejemplo, entre 0 y 1), tal y como ocurre con las funciones de activación. Esto evita que los pesos crezcan demasiado o que ciertas entradas dominen a otras.</span>
+
+<span>Técnicas comunes:</span>
+
+- <span>Normalización Min-Max</span>
+- <span>Estandarización (Z-score)</span>
+- <span>Regularización para evitar valores extremos</span>
+
+### <span>**2.3.3. Overfitting y generalización**</span>
+
+<span>El **overfitting** ocurre cuando una red aprende demasiado bien los ejemplos de entrenamiento y falla con datos nuevos. Es como memorizar respuestas sin entender el concepto.</span>
+
+<span>Soluciones comunes:</span>
+
+- <span>**Dropout:** apagar aleatoriamente algunas neuronas durante el entrenamiento.</span>
+- <span>**Regularización L1/L2:** penalizar pesos muy grandes.</span>
+- <span>**Data augmentation:** aumentar los datos de entrenamiento con variaciones.</span>
+- <span>**Early stopping:** detener el entrenamiento antes de que el modelo empiece a sobreajustarse.</span>
+
+<span>**2.3.4. Evaluación y validación**</span>
+
+<span>Una vez entrenada, la red se evalúa con datos nunca vistos (conjunto de validación o test). Esto mide su capacidad de generalizar.</span>
+
+<span>Algunas de las métricas más comunes son **Accuracy, Recall**, **F1-score**, **AUC (área bajo la curva ROC)**</span>
+
+# <span>**3. Conclusión**</span>
+
+<span>Como vemos, el funcionamiento de una red neuronal no tiene tanto de magia como de repetición y ajuste. Es una cadena de pasos matemáticos que, ejecutados a gran <u>escala</u>, acaban generando comportamientos inteligentes.</span>
+
+<span> </span>
