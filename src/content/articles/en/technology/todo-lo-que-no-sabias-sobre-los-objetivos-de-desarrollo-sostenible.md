@@ -5,7 +5,6 @@ altImage: "Imagen de portada"
 description: "Los Objetivos de Desarrollo Sostenible son una hoja de ruta global cuyo objetivo es erradicar la pobreza, proteger el planeta y garantizar paz y prosperidad."
 date: "2026-01-26"
 ---
-
 Without hunger, without extreme poverty, with equality between men and women, with clean energy, quality education for everyone, a healthy planet… This is how I imagine the world in 2030. And you?
 
 This is more or less what the United Nations (UN) aims to achieve through the implementation of the 17 Sustainable Development Goals (SDGs).
