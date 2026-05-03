@@ -15,7 +15,7 @@ const t = clientTranslations[lang];
 const authorName = authors !== undefined ? `${authorData.name} ${t.common.and} ${(authors.lenght - 1).toString} ${t.common.more}` : authorData.name;
 ---
 
-<div class={`ooverflow-hidden rounded-lg shadow-md dark:shadow-[#151515] bg-card text-card-foreground h-full flex flex-col transform hover:translate-y-[-5px] transition-all duration-300 hover:shadow-xl ${className}`} transition:name={"article-card-"+slug.split('/')[2]}>
+<div class={`overflow-hidden rounded-lg shadow-md dark:shadow-[#151515] bg-card text-card-foreground h-full flex flex-col transform hover:translate-y-[-5px] transition-all duration-300 hover:shadow-xl ${className}`} transition:name={"article-card-"+slug.split('/')[2]}>
     <div class="h-48 w-full relative overflow-hidden">
         <a href={`/article/${slug.split('/')[2]}`}><img
             src={"/images/contenido/"+slug.split('/')[2]+"/portada.webp" || "/placeholder.svg"}

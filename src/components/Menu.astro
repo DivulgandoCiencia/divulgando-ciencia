@@ -1,10 +1,10 @@
 ---
 import Icon from './ui/Icons.astro';
 import { clientTranslations } from '../i18n';
-const lang = Astro.locals.lang;
+const lang = Astro.locals.lang || 'es';
 const t = clientTranslations[lang];
 ---
-<div id="menu" class="fixed h-[100%] inset-0 z-[100] items-center justify-center bg-[#000]/70 opacity-0 pointer-events-none transition-color duration-300">
+<div id="menu" class="fixed h-[100%] inset-0 z-[100] items-center justify-center bg-[#000]/70 opacity-0 pointer-events-none transition-color duration-300 disallow-select">
     <div id="menu-content" class="absolute min-w-[50%] h-full opacity-100 backdrop-blur bg-principal-white/95 dark:bg-principal-black/95 right-0 top-0 transition-transform duration-300 translate-x-full">
         <div class="flex items-center h-[3.75rem]">
             <button id="menu-close" class="top-4 right-4 absolute flex h-9 w-9 items-center justify-center blue-border rounded-md border bg-background transition-colors hover:bg-muted">
@@ -85,7 +85,7 @@ const t = clientTranslations[lang];
                     </a>
                 </li>
                 <li class="list-none">
-                    <a href="https://github.com/dotero-dciencia/divulgando-ciencia" target="_blank" class="hero__social-link">
+                    <a href="https://github.com/DivulgandoCiencia/divulgando-ciencia" target="_blank" class="hero__social-link">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
                         </svg>
@@ -109,12 +109,17 @@ const t = clientTranslations[lang];
             <div class="text-sm text-muted-foreground text-center mt-0.5">
                 © Divulgando Ciencia. <a style="font-size:0.75rem" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a>
             </div>
+            <div class="flex justify-center w-full">
+                <span id="dev-version-display-mobile" class="opacity-10 text-[9px] font-mono select-none cursor-pointer tracking-[0.3em] uppercase text-center"></span>
+            </div>
         </div>
     </div>
 </div>
 
-<script is:inline>
-    document.addEventListener('DOMContentLoaded', () => {
+<script>
+import { navigate } from "node_modules/astro/dist/transitions/router";
+
+    document.addEventListener('astro:page-load', () => {
         const menuToggle = document.getElementById('menu-toggle');
         const menu = document.getElementById('menu');
         const menuContent = document.getElementById('menu-content');
@@ -122,14 +127,12 @@ const t = clientTranslations[lang];
 
         if (!menuToggle || !menu || !menuContent || !menuClose) return;
         
-        // Function to open the menu
         function openMenu() {
             menu.classList.remove('opacity-0', 'pointer-events-none');
             setTimeout(() => {
                 menuContent.classList.remove('translate-x-full');
             }, 10);
             
-            // Prevent body scrolling
             document.body.style.overflow = 'hidden';
         }
         
@@ -137,35 +140,43 @@ const t = clientTranslations[lang];
             menuContent.classList.add('translate-x-full');
             menu.classList.add('opacity-0');
             
-            // Allow a little time for the animation to complete
             setTimeout(() => {
                 menu.classList.add('pointer-events-none');
-                // Remove hash from URL without page jump
                 history.pushState('', document.title, window.location.pathname + window.location.search);
             }, 300);
             
-            // Allow body scrolling again
             document.body.style.overflow = 'auto';
         }
 
-        // Event listener for menu toggle button
         menuToggle.addEventListener('click', (e) => {openMenu()});
-        // Event listener for menu close button
         menu.addEventListener('click', (e) => {
             if (e.target === menu) {
                 closeMenu();
             }
         });
-        // Event listener for menu close button
         menuClose.addEventListener('click', (e) => {
             closeMenu();
         });
 
-        // Event listener for Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeMenu();
-            }
-        });
+        const versionSpanMobile = document.getElementById('dev-version-display-mobile');
+        let mobileClickCount = 0;
+
+        if (versionSpanMobile) {
+            const version = localStorage.getItem('devVersion') || '5.0.0';
+            const devMode = localStorage.getItem('devMode') || 'false';
+            versionSpanMobile.textContent = devMode === 'true' ? `v${version} [DEVMODE]` : `v${version}`;
+            
+            versionSpanMobile.addEventListener('click', () => {
+                mobileClickCount++;
+                if (mobileClickCount === 5) {
+                    if (devMode !== 'true') {
+                        console.log("🚀 Modo Developer activado!");
+                        localStorage.setItem('devMode', 'true');
+                        versionSpanMobile.textContent = `v${version} [DEVMODE]`;
+                    }
+                    navigate('/dev');
+                }
+            });
+        }
     })
 </script>

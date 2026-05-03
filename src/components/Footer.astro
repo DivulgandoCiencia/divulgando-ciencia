@@ -1,26 +1,58 @@
 ---
 import { clientTranslations } from '../i18n';
-const lang = Astro.locals.lang;
+const lang = Astro.locals.lang || 'es';
 const t = clientTranslations[lang];
 ---
 
-<footer class="w-full py-6 md:py-0 relative z-10 bg-background shadow-[0_20px_40px_10px] shadow-[#000]/50 dark:shadow-[0_20px_40px_10px] dark:shadow-[#000]">
-<div class="container flex flex-col md:flex-row justify-between items-center gap-4 md:h-24">
-    <div class="flex items-center gap-2">
-        <a href="/">
-            <div class="flex items-center gap-2">
-                <img src="/images/logo.webp" alt="Logo de divulgandociencia.com" class="h-5 w-5 rounded-md"/>
-                <span class="font-semibold">Divulgando Ciencia</span>
-            </div>
-        </a>
+<footer transition:name="footer" class="w-full py-6 md:py-0 relative z-10 bg-background shadow-[0_20px_40px_10px] shadow-[#000]/50 dark:shadow-[0_20px_40px_10px] dark:shadow-[#000]">
+<div class="container flex flex-col disallow-select py-6 md:py-0">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4 md:h-24">
+        <div class="md:flex-1 flex justify-start">
+            <a href="/">
+                <div class="flex items-center gap-2">
+                    <img src="/images/logo.webp" alt="Logo de divulgandociencia.com" class="h-5 w-5 rounded-md"/>
+                    <span class="font-semibold">Divulgando Ciencia</span>
+                </div>
+            </a>
+        </div>
+        <div class="md:flex-1 flex justify-center gap-4 text-sm text-muted-foreground">
+            <a href="/terms" class="hover:underline underline-offset-4">{t.footer.terms}</a>
+            <a href="/contact" class="hover:underline underline-offset-4">{t.footer.contact}</a>
+        </div>
+        <div class="md:flex-1 flex justify-end text-sm text-muted-foreground">
+            <span>© Divulgando Ciencia. <a style="font-size:0.75rem" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a></span>
+        </div>
     </div>
-    <div class="flex items-center gap-4 text-sm text-muted-foreground">
-        <a href="/terms" class="hover:underline underline-offset-4">{t.footer.terms}</a>
-        <a href="/contact" class="hover:underline underline-offset-4">{t.footer.contact}</a>
-    </div>
-    <div class="text-sm text-muted-foreground">
-        © Divulgando Ciencia. <a style="font-size:0.75rem" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a>
+    <div class="justify-center pb-4 md:-mt-4 hidden md:flex">
+        <span id="dev-version-display" class="opacity-10 text-[9px] font-mono cursor-pointer tracking-[0.3em] uppercase"></span>
     </div>
 </div>
 </footer>
+
+<script>
+    import { navigate } from "astro:transitions/client";
+
+    document.addEventListener('astro:page-load', () => {
+        const versionSpan = document.getElementById('dev-version-display');
+        let clickCount = 0;
+        
+        if (versionSpan) {
+            const version = localStorage.getItem('devVersion') || '5.0.0';
+            const devMode = localStorage.getItem('devMode') || 'false';
+            versionSpan.textContent = devMode === 'true' ? `v${version} [DEVMODE]` : `v${version}`;
+            
+            versionSpan.addEventListener('click', () => {
+                clickCount++;
+                if (clickCount === 5) {
+                    if (devMode !== 'true') {
+                        console.log("🚀 Modo Developer activado!");
+                        localStorage.setItem('devMode', 'true');
+                        versionSpan.textContent = `v${version} [DEVMODE]`;
+                    }
+                    navigate('/dev');
+                }
+            });
+        }
+    });
+</script>
 

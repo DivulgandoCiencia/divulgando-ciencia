@@ -14,10 +14,13 @@ const stdinjson = JSON.stringify({'stdin':stdin})
         </button>
     </div>
     <div class="p-6 flex-1">
-        <textarea class="code w-full h-96 bg-foreground/5 text-foreground font-mono text-sm p-4 rounded-xl afocus:border-foreground/30 afocus:border focus:outline-none resize-none" placeholder="# Escribe tu código Python aquí&#10;print('¡Hola, mundo!')" disabled data-stdin={stdinjson}>
-{code || "# Escribe tu código Python aquí&#10;print('¡Hola, mundo!')"}
-        </textarea>
-        <div class="console hidden w-full bg-foreground/5 text-foreground font-mono text-sm p-4 rounded-xl h-96 overflow-y-auto space-y-[0px] whitespace-pre-wrap wrap-break-words"></div>
+        <div class="code-wrapper h-96 w-full overflow-hidden rounded-xl">
+            <textarea class="code w-full h-full overflow-auto bg-foreground/5 text-foreground font-mono text-sm p-4 rounded-xl afocus:border-foreground/30 afocus:border focus:outline-none resize-none custom-scrollbar" placeholder="# Escribe tu código Python aquí&#10;print('¡Hola, mundo!')" disabled data-stdin={stdinjson}>
+{code || "# Escribe tu código Python aquí&#10;print('¡Hola, mundo!')"}</textarea>
+        </div>
+        <div class="console-wrapper h-96 w-full overflow-hidden rounded-xl hidden">
+            <div class="console h-full w-full bg-foreground/5 text-foreground font-mono text-sm p-4 rounded-xl overflow-y-auto space-y-[0px] whitespace-pre-wrap wrap-break-words custom-scrollbar"></div>
+        </div>
     </div>
 </div>
 <div class="hidden text-foreground/50"></div>

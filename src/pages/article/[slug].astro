@@ -1,0 +1,317 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SkeletonArticle from "@/components/ui/SkeletonArticle.astro";
+import ImageLightbox from '@/components/articles/ImageLightbox.astro';
+import ShareMenu from "@/components/ui/ShareMenu.astro";
+import { frontmatter } from "@/json/frontmatter";
+
+const { slug } = Astro.params;
+const lang = Astro.locals.lang || 'es';
+
+const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', description: '' };
+---
+
+<BaseLayout cf={cf}>
+    <div id="reading-progress" class="fixed top-[64px] left-0 h-1 w-0 bg-gradient-to-r from-primary to-blue-400 z-[60] transition-all duration-150 ease-out"></div>
+
+    <div id="article-content-container" class="min-h-screen transition-all duration-500">
+        <div class="container px-4 py-8 md:py-12">
+            <SkeletonArticle />
+        </div>
+    </div>
+
+    <button id="focus-mode-toggle" class="fixed bottom-8 right-8 z-50 p-3 bg-card border blue-border text-foreground rounded-full shadow-lg hover:scale-110 transition-transform hidden md:flex items-center justify-center group" title="Modo Enfoque">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:text-primary transition-colors"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+    </button>
+
+    <style is:global>
+        .focus-active [transition-name="header"], 
+        .focus-active [transition-name="footer"], 
+        .focus-active .lg\:col-span-4 { 
+            display: none !important;
+        }
+        
+        .focus-active .lg\:col-span-8 {
+            grid-column: span 12 / span 12 !important;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+        .focus-active .prose {
+            max-width: none !important;
+        }
+
+        .focus-active #reading-progress {
+            top: 0 !important;
+        }
+        
+        .focus-active main {
+            padding-top: 2rem;
+        }
+    </style>
+
+    <ImageLightbox lang={lang} />
+    <ShareMenu id="article" lang={lang} className="!hidden article-actions-panel" />
+
+    <script>
+        document.addEventListener('astro:page-load', async () => {
+            const container = document.getElementById('article-content-container');
+            const progressBar = document.getElementById('reading-progress');
+            const scrollContainer = document.getElementById('scroll-container');
+            
+            const updateProgress = () => {
+                if (!scrollContainer || !progressBar) return;
+                const totalHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+                if (totalHeight <= 0) return;
+                const progress = (scrollContainer.scrollTop / totalHeight) * 100;
+                progressBar.style.width = `${progress}%`;
+            };
+            
+            scrollContainer?.addEventListener('scroll', updateProgress);
+
+            const focusBtn = document.getElementById('focus-mode-toggle');
+            focusBtn?.addEventListener('click', () => {
+                document.body.classList.toggle('focus-active');
+            });
+
+            const lang = document.documentElement.lang || 'es';
+            const slug = window.location.pathname.split('/').pop();
+
+            try {
+                const response = await fetch(`/api/content/${lang}/article/${slug}`);
+                if (!response.ok) throw new Error('Article not found');
+                
+                const data = await response.json();
+                
+                container.innerHTML = `
+                <div class="relative">
+                    <div id="article-header-wrapper">
+                    <header class="container px-4 py-8 md:py-12 relative z-10">
+                        <div class="flex items-center gap-2 mb-4 disallow-select">
+                            <a href="/articles?page=1&science=${data.scienceDataId}" class="text-sm font-medium hover:underline flex items-center color-${data.scienceDataColor}">
+                                <span class="mr-1">${data.scienceDataName}</span>
+                            </a>
+                            <span class="text-muted-foreground">•</span>
+                            <span class="text-sm text-muted-foreground flex items-center">
+                                <svg class="mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                ${data.readTimeNum} min de lectura
+                            </span>
+                        </div>
+
+                        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+                            ${data.articleTitle}
+                        </h1>
+
+                        <p class="text-xl text-muted-foreground max-w-3xl mb-8">
+                            ${data.articleDescription}
+                        </p>
+
+                        <div class="flex items-center justify-between flex-wrap gap-4 mb-8">
+                            ${data.authorsHeader}
+                            <div class="disallow-select flex gap-2" id="functions-container"></div>
+                        </div>
+                    </header>
+
+                    <div class="w-full max-w-5xl mx-auto px-4 mb-12">
+                        <div class="aspect-[16/9] relative rounded-xl overflow-hidden shadow-xl">
+                            <img 
+                                src="${data.portrait}"
+                                alt="${data.articleTitle}"
+                                class="w-full h-full object-cover rounded-xl"
+                                style="view-transition-name: ${data.portraitTransition};"
+                                data-img-id="featured-image"]
+                            />
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="container px-4 relative z-10">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                            <div class="lg:col-span-8">
+                                <article class="prose dark:prose-invert prose-lg max-w-none">
+                                    ${data.contentHTML}
+                                </article>
+
+                                <div class="mt-8 mb-12 disallow-select">
+                                    <div class="flex flex-wrap gap-2">
+                                        ${data.tagList}
+                                    </div>
+                                </div>
+
+                                <div class="mb-12 p-6 rounded-xl border blue-border bg-muted/20">
+                                    <h3 class="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2 disallow-select">Citar este artículo (APA)</h3>
+                                    <p id="apa-citation" class="text-sm italic"></p>
+                                </div>
+                                <div class="mb-12 ${data.hasReferencesHiddenText}">
+                                    <h3 class="text-lg font-semibold mb-3">Referencias</h3>
+                                    <ul class="space-y-3 text-sm">
+                                        ${data.referenceList}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="lg:col-span-4 disallow-select">
+                                <div class="sticky top-24 space-y-8 mb-6">
+                                    ${data.authors}
+                                    ${data.relatedArticles}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+                
+                container.classList.remove('content-fade-in');
+                void container.offsetWidth;
+                container.classList.add('content-fade-in');
+
+                (document as any).setupLightbox();
+                const shareMenu = document.querySelector('.article-actions-panel');
+                const functionsContainer = document.getElementById('functions-container');
+                if (functionsContainer) {
+                    const audioBtn = document.createElement('button');
+                    audioBtn.id = 'play-audio';
+                    audioBtn.className = 'flex items-center justify-center gap-2 rounded-md bg-background border border-input px-3 py-2 text-sm font-medium hover:bg-accent transition-colors disallow-select';
+                    audioBtn.innerHTML = `
+                        <svg id="audio-icon-play" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        <svg id="audio-icon-pause" class="hidden" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                        <span class="hidden md:block">Escuchar</span>
+                    `;
+                    functionsContainer.appendChild(audioBtn);
+                    
+                    const printBtn = document.createElement('button');
+                    printBtn.className = 'flex items-center justify-center gap-2 rounded-md bg-background border border-input px-3 py-2 text-sm font-medium hover:bg-accent transition-colors disallow-select';
+                    printBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        <span class="hidden md:block">Imprimir / PDF</span>
+                    `;
+                    printBtn.onclick = () => window.print();
+                    functionsContainer.appendChild(printBtn);
+
+                    let synthesis = window.speechSynthesis;
+                    let utterance = null;
+                    
+                    audioBtn.addEventListener('click', () => {
+                        if (synthesis.speaking && !synthesis.paused) {
+                            synthesis.pause();
+                            document.getElementById('audio-icon-play')?.classList.remove('hidden');
+                            document.getElementById('audio-icon-pause')?.classList.add('hidden');
+                        } else if (synthesis.paused) {
+                            synthesis.resume();
+                            document.getElementById('audio-icon-play')?.classList.add('hidden');
+                            document.getElementById('audio-icon-pause')?.classList.remove('hidden');
+                        } else {
+                            const text = document.querySelector('article')?.innerText;
+                            if (!text) return;
+                            utterance = new SpeechSynthesisUtterance(text);
+                            utterance.lang = lang === 'es' ? 'es-ES' : 'en-US';
+                            utterance.onend = () => {
+                                document.getElementById('audio-icon-play')?.classList.remove('hidden');
+                                document.getElementById('audio-icon-pause')?.classList.add('hidden');
+                            };
+                            synthesis.speak(utterance);
+                            document.getElementById('audio-icon-play')?.classList.add('hidden');
+                            document.getElementById('audio-icon-pause')?.classList.remove('hidden');
+                        }
+                    });
+
+                    if (shareMenu) {
+                        shareMenu.classList.remove('!hidden');
+                        setTimeout(() => {
+                            if (functionsContainer && shareMenu) {
+                                functionsContainer.appendChild(shareMenu);
+                                void (shareMenu as HTMLElement).offsetWidth;
+                            }
+                        }, 20);
+                    }
+                    
+                    const experimentalFlags = JSON.parse(localStorage.getItem('experimentalFeatures') || '{}');
+                    if (experimentalFlags.ai_summaries && 'Summarizer' in window) {
+                        const summaryBtn = document.createElement('button');
+                        summaryBtn.className = 'flex items-center justify-center gap-2 rounded-md bg-background border border-input px-3 py-2 text-sm font-medium hover:bg-accent transition-colors disallow-select';
+                        summaryBtn.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>
+                            <span class="hidden md:block">Resumen</span>
+                        `;
+                        functionsContainer.appendChild(summaryBtn);
+
+                        summaryBtn.addEventListener('click', async () => {
+                            summaryBtn.disabled = true;
+                            const articleHeaderWrapper = document.getElementById('article-header-wrapper');
+                            const summaryContainer = document.createElement('div');
+                            summaryContainer.id = 'summary-container';
+                            summaryContainer.className = 'mb-8 mr-4 ml-4 bg-muted/20 border rounded-xl p-6 md:col-span-2';
+                            articleHeaderWrapper?.parentNode?.insertBefore(summaryContainer, articleHeaderWrapper.nextSibling);
+
+                            const title = document.createElement('h3');
+                            title.className = 'text-sm font-bold mb-6 text-primary uppercase tracking-tighter';
+                            title.innerText = 'Resumen del artículo';
+                            summaryContainer.appendChild(title);
+
+                            const summary = document.createElement('p');
+                            summary.id = 'summary-ai-text';
+                            summary.innerHTML = 'Generando resumen...';
+                            summaryContainer.appendChild(summary);
+
+                            if ("Summarizer" in window) {
+                                const options = {
+                                    sharedContext: 'This is a scientific article',
+                                    type: 'tldr',
+                                    format: 'plain-text',
+                                    length: 'long',
+                                    expectedInputLanguages: ['en', 'es'],
+                                    outputLanguage: 'es',
+                                    expectedContextLanguages: ['en', 'es'],
+                                    monitor(m) {
+                                    m.addEventListener('downloadprogress', (e) => {
+                                        summary.innerHTML = `Descargando modelo de IA... (${Math.round(e.loaded * 100)}%)`;
+                                    });
+                                  }
+                                };
+                                
+                                const availability = await (window as any).Summarizer.availability();
+                                if (availability === 'unavailable') {
+                                    summary.innerHTML = 'No se pudo generar el resumen.';
+                                    return;
+                                }
+
+                                const summarizer = await (window as any).Summarizer.create(options);
+                                const text = document.querySelector('article')?.innerText;
+                                if (!text) {summarizer.destroy(); return};
+                                summary.innerHTML = 'Generando resumen...';
+                                const summaryText = await summarizer.summarize(text);
+                                summary.innerText = summaryText;
+                                summarizer.destroy();
+                            }
+                        });
+                    }
+                }
+
+                const citeText = document.getElementById('apa-citation');
+                if (citeText) {
+                    const year = new Date(data.date).getFullYear();
+                    const author = data.authorData ? data.authorData[0] : 'Divulgando Ciencia';
+                    citeText.innerText = `${author} (${year}). ${data.articleTitle}. Divulgando Ciencia.`;
+                }
+
+                const article = document.querySelector('article.prose');
+                article?.querySelectorAll("script").forEach((oldScript) => {
+                    const newScript = document.createElement("script");
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                        newScript.defer = true;
+                    } else {
+                        newScript.textContent = oldScript.textContent;
+                    }
+                    [...oldScript.attributes].forEach((attr) => {
+                        newScript.setAttribute(attr.name, attr.value);
+                    });
+                    oldScript.replaceWith(newScript);
+                });
+            } catch (e) {
+                console.error("Error cargando el artículo:", e);
+                container.innerHTML = `<div class="text-center py-20"><h2>No se pudo cargar el artículo</h2></div>`;
+            }
+        });
+    </script>
+</BaseLayout>

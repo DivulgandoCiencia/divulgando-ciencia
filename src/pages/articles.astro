@@ -1,0 +1,174 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '../components/ui/Icons.astro'
+import Button from '../components/ui/Button.astro';
+import Input from '../components/ui/Input.astro';
+import SkeletonCard from '../components/ui/SkeletonCard.astro';
+import { clientTranslations } from '../i18n';
+import { frontmatter } from "@/json/frontmatter";
+import { ScienceList } from '../components/Science';
+
+const lang = Astro.locals.lang || 'es';
+const cf = frontmatter[lang]['articles'];
+const t = clientTranslations[lang];
+
+---
+<BaseLayout cf={cf} className="disallow-select">
+    <div class="relative">
+        <div class="absolute inset-0 blue-pattern opacity-20"></div>
+
+        <header class="container px-4 py-8 md:py-10 relative z-10">
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+                {t.articles.title}
+            </h1>
+            <p class="text-xl text-muted-foreground max-w-4xl mb-8">
+                {t.articles.subtitle}
+                <span id="page-indicator" class="font-light" style='[[stylePageIndicator]]'>- {t.articles.page} [[currentPage]]</span>
+            </p>
+
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="relative flex-1">
+                    <Icon icon="search" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                        type="search" 
+                        id="search-input"
+                        placeholder={t.articles.searchPlaceholder}
+                        className="pl-10 w-full"
+                    />
+                </div>
+                    <div class="flex gap-2">
+                        <select id="science-filter" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:w-[200px]">
+                            <option value="">{t.sciences.all}</option>
+                            {ScienceList.map(science => (
+                                <option value={science.id}>{t.sciences[science.name]}</option>
+                            ))}
+                        </select>
+                        <Button variant="outline" id="filter-button" className="btn-hover-effect">
+                        <Icon icon="filter" className="mr-2 h-4 w-4" />
+                        {t.articles.filter}
+                    </Button>
+                    <Button variant="outline" id="tags-filter" className="btn-hover-effect" style="display: none;" >
+                        <Icon icon="searchx" className="mr-2 min-w-4 h-4 w-4" />
+                        <p class="max-md:hidden">{t.articles.removeTags}</p><p class="md:hidden">{t.articles.tags}</p>
+                    </Button>
+                </div>
+            </div>
+        </header>
+
+        <div class="container px-4 pb-16 relative z-10">
+            <div id="articles-grid-container">
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    <SkeletonCard />
+                    <SkeletonCard />
+                    <SkeletonCard />
+                    <SkeletonCard />
+                    <SkeletonCard />
+                    <SkeletonCard />
+                </div>
+            </div>
+
+            <div id="pagination-container" class="flex justify-center mt-12">
+                <nav class="flex items-center gap-1" aria-label="Pagination" id="pagination-nav"></nav>
+            </div>
+
+            <div id="page-info" class="text-center mt-4 text-sm text-muted-foreground"></div>
+        </div>
+    </div>
+
+    <script>
+        import { clientTranslations } from '../i18n';
+        
+        async function loadArticles() {
+            const gridContainer = document.getElementById('articles-grid-container');
+            const paginationNav = document.getElementById('pagination-nav');
+            const pageIndicator = document.getElementById('page-indicator');
+            const lang = document.documentElement.lang || 'es';
+            const t = clientTranslations[lang];
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const body = {
+                page: urlParams.get('page') || '1',
+                science: urlParams.get('science') || '',
+                search: urlParams.get('search') || '',
+                tags: urlParams.get('tags') || ''
+            };
+
+            try {
+                const response = await fetch(`/api/content/${lang}/articles`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                
+                const data = await response.json();
+
+                if (gridContainer) gridContainer.innerHTML = data.paginatedArticles;
+                if (paginationNav) paginationNav.innerHTML = data.pagination;
+                
+                if (pageIndicator) {
+                    pageIndicator.style.display = data.stylePageIndicator === 'display: none;' ? 'none' : 'inline';
+                    pageIndicator.innerHTML = `- ${t.articles.page} ${data.currentPage}`;
+                }
+
+                const tagsFilter = document.getElementById('tags-filter');
+                if (tagsFilter) tagsFilter.style.display = data.hideTags === 'display: none;' ? 'none' : 'flex';
+
+                const scienceFilter = document.getElementById('science-filter') as HTMLSelectElement;
+                if (scienceFilter && !scienceFilter.dataset.touched) {
+                    scienceFilter.value = body.science;
+                }
+
+            } catch (e) {
+                console.error("Error loading articles:", e);
+            }
+        }
+
+        document.addEventListener('astro:page-load', () => {
+            loadArticles();
+
+            const scienceFilter = document.getElementById('science-filter') as HTMLSelectElement;
+            const searchInput = document.getElementById('search-input') as HTMLInputElement;
+            const filterButton = document.getElementById('filter-button');
+            const tagsFilter = document.getElementById('tags-filter');
+
+            const applyFilters = () => {
+                const url = new URL(window.location.href);
+                url.searchParams.set('page', '1');
+                if (scienceFilter?.value) url.searchParams.set('science', scienceFilter.value);
+                else url.searchParams.delete('science');
+                
+                if (searchInput?.value) url.searchParams.set('search', searchInput.value);
+                else url.searchParams.delete('search');
+
+                window.history.pushState({}, '', url);
+                loadArticles();
+            };
+
+            if (scienceFilter) {
+                scienceFilter.addEventListener('change', () => {
+                    scienceFilter.dataset.touched = "true";
+                    applyFilters();
+                });
+            }
+
+            if (filterButton) filterButton.addEventListener('click', applyFilters);
+
+            if (searchInput) {
+                searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') applyFilters();
+                });
+            }
+
+            if (tagsFilter) {
+                tagsFilter.addEventListener('click', () => {
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('tags');
+                    window.history.pushState({}, '', url);
+                    loadArticles();
+                });
+            }
+
+            window.addEventListener('popstate', loadArticles);
+        });
+    </script>
+</BaseLayout>

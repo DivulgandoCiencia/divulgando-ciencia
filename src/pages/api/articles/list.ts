@@ -6,7 +6,7 @@ export const GET: APIRoute = async ({ request }) => {
     if (!articles || articles.length === 0) return new Response(JSON.stringify({ error: 'Article not found' }), { status: 404 });
     let slugs = articles.map((item) => {
         return {
-            slug: item.slug.split('/')[2],
+            slug: item.id.split('/')[2],
             title: item.data.title,
             description: item.data.description,
             lang: item.id.split('/')[0],

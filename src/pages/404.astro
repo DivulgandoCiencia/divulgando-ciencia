@@ -1,4 +1,58 @@
 ---
-import Content from './[...slug].astro';
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Button from '@/components/ui/Button.astro';
+import Icon from "@/components/ui/Icons.astro";
+import { frontmatter } from "@/json/frontmatter";
+import { clientTranslations } from '@/i18n';
+
+const lang = Astro.locals.lang || 'es';
+const cf = frontmatter[lang]['404'];
+const t = clientTranslations[lang];
 ---
-<Content />
+
+<BaseLayout cf={cf} className="disallow-select flex">
+    <div id="notfound-view" class="container flex flex-col items-center !justify-center flex-1 py-16 text-center">
+        <h1 class="text-6xl font-bold mb-4">404</h1>
+        <h2 class="text-2xl font-semibold mb-6">{t.notFound.title}</h2>
+        <p class="text-muted-foreground max-w-md mb-8">
+            {t.notFound.message}
+        </p>
+        <Button id="back-button">
+            <Icon icon="arrowleft" className="mr-2 h-4 w-4" />
+            {t.common.back}
+        </Button>
+    </div>
+
+    <div id="offline-view" class="hidden container flex flex-col items-center !justify-center flex-1 py-16 text-center">
+        <h1 class="text-6xl font-bold mb-4">Sin Conexión</h1>
+        <h2 class="text-2xl font-semibold mb-6">Ups! Parece que no tienes conexión</h2>
+        <p class="text-muted-foreground max-w-md mb-8">Verifica tu conexión a internet e intenta nuevamente</p>
+        <Button id="reload-button">
+            <Icon icon="reload" className="mr-2 h-4 w-4" />
+            Reintentar
+        </Button>
+    </div>
+
+    <script is:inline data-astro-rerun>
+        const init404 = () => {
+            const isOffline = !navigator.onLine;
+            const notFoundView = document.getElementById('notfound-view');
+            const offlineView = document.getElementById('offline-view');
+
+            if (isOffline) {
+                notFoundView?.classList.add('hidden');
+                offlineView?.classList.remove('hidden');
+            } else {
+                notFoundView?.classList.remove('hidden');
+                offlineView?.classList.add('hidden');
+            }
+        };
+
+        document.getElementById('back-button')?.addEventListener('click', () => window.history.back());
+        document.getElementById('reload-button')?.addEventListener('click', () => window.location.reload());
+
+        init404();
+        window.addEventListener('online', () => window.location.reload());
+        window.addEventListener('offline', init404);
+    </script>
+</BaseLayout>

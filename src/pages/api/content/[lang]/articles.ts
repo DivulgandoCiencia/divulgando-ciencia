@@ -9,12 +9,12 @@ const articlesCollection = await getCollection('articles');
 const authors = await getCollection('authors');
 let articlesDataES = []
 let articlesDataEN = []
-articlesCollection.filter(({slug}) => slug.split('/')[0] === 'es').sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).map(({data, slug, body}) => {
+articlesCollection.filter(({id}) => id.split('/')[0] === 'es').sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).map(({data, id, body}) => {
     let auths = []
-    if (data.authors) data.authors.map((author) => {auths.push([authors.filter(({id}) => id==author.id)[0].data, author.id])}); else auths=undefined;
+    if (data.authors) data.authors.map((author) => {auths.push([authors.filter((a) => a.id==author.id)[0].data, author.id])}); else auths=undefined;
     articlesDataES.push({
         title: data.title,
-        author: [authors.filter(({id}) => id == data.author.id)[0].data, data.author.id],
+        author: [authors.filter((a) => a.id == data.author.id)[0].data, data.author.id],
         authors: auths,
         description: data.description,
         tags: data.tags,
@@ -22,18 +22,18 @@ articlesCollection.filter(({slug}) => slug.split('/')[0] === 'es').sort((a, b) =
         altImage: data.altImage,
         date: data.date,
         dateName: data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }),
-        science: ScienceList.filter(({id}) => id == slug.split('/')[1])[0],
+        science: ScienceList.filter((sc) => sc.id == id.split('/')[1])[0],
         readTime: data.readTime || calcReadTime(body),
-        id: slug.split('/')[2],
-        slug: slug,
+        id: id.split('/')[2],
+        slug: id,
     })
 })
-articlesCollection.filter(({slug}) => slug.split('/')[0] === 'en').sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).map(({data, slug, body}) => {
+articlesCollection.filter(({id}) => id.split('/')[0] === 'en').sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).map(({data, id, body}) => {
     let auths = []
-    if (data.authors) data.authors.map((author) => {auths.push([authors.filter(({id}) => id==author.id)[0].data, author.id])}); else auths=undefined;
+    if (data.authors) data.authors.map((author) => {auths.push([authors.filter((a) => a.id==author.id)[0].data, author.id])}); else auths=undefined;
     articlesDataEN.push({
         title: data.title,
-        author: [authors.filter(({id}) => id == data.author.id)[0].data, data.author.id],
+        author: [authors.filter((a) => a.id == data.author.id)[0].data, data.author.id],
         authors: auths,
         description: data.description,
         tags: data.tags,
@@ -41,10 +41,10 @@ articlesCollection.filter(({slug}) => slug.split('/')[0] === 'en').sort((a, b) =
         altImage: data.altImage,
         date: data.date,
         dateName: data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }),
-        science: ScienceList.filter(({id}) => id == slug.split('/')[1])[0],
+        science: ScienceList.filter((sc) => sc.id == id.split('/')[1])[0],
         readTime: data.readTime ? data.readTime.toString() : calcReadTime(body),
-        id: slug.split('/')[2],
-        slug: slug,
+        id: id.split('/')[2],
+        slug: id,
     })
 })
 
@@ -118,7 +118,6 @@ const handler = async (body, lang = 'en') => {;
         );
     }
 
-    // Calculate pagination
     const totalArticles = filteredArticles.length
     const totalPages = Math.max(1, Math.ceil(totalArticles / articlesPerPage))
     currentPage = Math.max(1, Math.min(currentPage, totalPages));
@@ -145,7 +144,6 @@ const handler = async (body, lang = 'en') => {;
     const pages = buildPagination(currentPage, totalPages)
 
 
-    // Get articles for current page
     const startIndex = (currentPage - 1) * articlesPerPage
     const endIndex = Math.min(startIndex + articlesPerPage, totalArticles)
     const paginatedArticles = filteredArticles.slice(startIndex, endIndex)

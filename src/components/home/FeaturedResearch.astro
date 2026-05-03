@@ -1,10 +1,9 @@
 ---
 import Button from '../ui/Button.astro';
+import SkeletonCard from '../ui/SkeletonCard.astro';
 import { clientTranslations } from '../../i18n';
 const {lang} = Astro.props;
 const t = clientTranslations[lang];
-
-const { articles = [] } = Astro.props;
 ---
 
 <section class="container px-4 py-12 md:px-6 relative">
@@ -22,8 +21,27 @@ const { articles = [] } = Astro.props;
         </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 relative z-10">
-        [[featuredArticles]]
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 relative z-10" id="featured-articles-container">
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
     </div>
 </section>
+
+<script>
+    document.addEventListener('astro:page-load', async () => {
+        const container = document.getElementById('featured-articles-container');
+        if (!container) return;
+
+        const lang = document.documentElement.lang || 'es';
+        
+        try {
+            const response = await fetch(`/api/content/${lang}/home`);
+            const data = await response.json();
+            container.innerHTML = data.featuredArticles;
+        } catch (e) {
+            console.error("Error cargando destacados:", e);
+        }
+    });
+</script>
 

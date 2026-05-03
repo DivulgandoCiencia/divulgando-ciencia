@@ -2,69 +2,76 @@
 import { getCollection } from 'astro:content'
 import { ScienceList } from '../Science';
 import { calcReadTime } from '../readTime';
+import SkeletonCard from '../ui/SkeletonCard.astro';
 const { articles } = Astro.props;
-articles.sort((a, b) => b.date.getTime() - a.date.getTime())
 import { clientTranslations } from '../../i18n';
 const {lang} = Astro.props;
 const t = clientTranslations[lang];
 const authors = await getCollection('authors');
 const trendingArticles = []
-articles.map((data) => {
-    let auths = []
-    if (data.authors) data.authors.map((author) => {auths.push([authors.filter(({id}) => id==author.id)[0].data, author.id])}); else auths=undefined;
-    trendingArticles.push({
-        title: data.title,
-        author: [authors.filter(({id}) => id == data.author.id)[0].data, data.author.id],
-        description: data.description,
-        dateName: data.date.toLocaleDateString(t.articles.timeStamp, { year: 'numeric', month: 'long', day: 'numeric' }),
-        science: ScienceList.filter(({id}) => id == data.slug.split('/')[1])[0],
-        readTime: calcReadTime(data.body),
-        id: data.slug.split('/')[2],
-		slug: data.slug,
+if (articles) {
+    articles.sort((a, b) => b.date.getTime() - a.date.getTime()).map((data) => {
+        trendingArticles.push({
+            title: data.title,
+            author: [authors.filter(({id}) => id == data.author.id)[0].data, data.author.id],
+            description: data.description,
+            dateName: data.date.toLocaleDateString(t.articles.timeStamp, { year: 'numeric', month: 'long', day: 'numeric' }),
+            science: ScienceList.filter(({id}) => id == data.slug.split('/')[1])[0],
+            readTime: calcReadTime(data.body),
+            id: data.slug.split('/')[2],
+            slug: data.slug,
+        })
     })
-})
+}
 ---
 
 <div class="w-full">
     <div class="tabs">
         <div class="flex items-center justify-between mb-4" id="articles-tabs-buttons">
             <div class="flex blue-border border rounded-lg overflow-hidden">
-                <button class="px-4 py-2 bg-primary text-primary-foreground" data-tab="recent">{t.home.articles.recent}</button>
-                <button class="px-4 py-2 hover:bg-muted" style="display: none;" id="cached-articles" data-tab="cached-articles-section">{t.home.articles.saved}</button>
-                <button class="px-4 py-2 hover:bg-muted" data-tab="trending">{t.home.articles.trending}</button>
+                <button class="px-4 py-2 bg-primary text-primary-foreground transition-colors" data-tab="recent">{t.home.articles.recent}</button>
+                <button class="px-4 py-2 hover:bg-muted transition-colors" style="display: none;" id="cached-articles" data-tab="cached-articles-section">{t.home.articles.saved}</button>
+                <button class="px-4 py-2 hover:bg-muted transition-colors" data-tab="trending">{t.home.articles.trending}</button>
             </div>
         </div>
         
         <div class="tab-content" id="recent">
-            <div class="space-y-4">
-                [[recentArticles]]
+            <div class="space-y-4" id="recent-articles-container">
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
             </div>
         </div>
         
         <div class="tab-content hidden" id="cached-articles-section">
-            <div class="space-y-4">
-                [[savedArticles]]
+            <div class="space-y-4" id="saved-articles-container">
+                <SkeletonCard />
+                <SkeletonCard />
             </div>
         </div>
         
         <div class="tab-content hidden" id="trending">
-            <div class="space-y-4">
-                [[recentArticles]]
+            <div class="space-y-4" id="trending-articles-container">
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
             </div>
         </div>
     </div>
 </div>
 
-<script is:inline define:vars={{trendingArticles,t}}>
-    window.pfresa.addEventListener('page-load', () => {
+<script>
+    import { clientTranslations } from '../../i18n';
+
+    document.addEventListener('astro:page-load', async () => {
+        const lang = document.documentElement.lang || 'es';
+        const t = clientTranslations[lang];
         const tabButtons = document.querySelectorAll('[data-tab]');
         const tabContents = document.querySelectorAll('.tab-content');
         
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const tabId = button.getAttribute('data-tab');
-                
-                // Update active tab button
                 tabButtons.forEach(btn => {
                     if (btn.getAttribute('data-tab') === tabId) {
                         btn.classList.add('bg-primary', 'text-primary-foreground');
@@ -74,59 +81,39 @@ articles.map((data) => {
                         btn.classList.add('hover:bg-muted');
                     }
                 });
-                
-                // Show active tab content
                 tabContents.forEach(content => {
-                    if (content.id === tabId) {
-                        content.classList.remove('hidden');
-                    } else {
-                        content.classList.add('hidden');
-                    }
+                    content.classList.toggle('hidden', content.id !== tabId);
                 });
             });
         });
-    });
 
-    window.pfresa.addEventListener('page-load', async() => {
-        const buttons = document.getElementById('articles-tabs-buttons');
-        const trendingArticlesCards = document.querySelectorAll('#trending.tab-content')[0].children[0];
-        const slugs = [];
-        trendingArticles.forEach((article)=>{slugs.push(article.slug)})
-        const trending = fetch(window.location.origin+'/api/database/gettrending').then(async(response)=>{
-            if (!response.ok) return;
-            let data = await response.json();
-            if (data===undefined) data=slugs;
-            else if(data.length > 5) data.push(...slugs);
-            data = data.slice(0,6);
-            const readArticleButton = trendingArticlesCards.children[0].children[0].children[2].children[1].children[0].cloneNode(true);
-            trendingArticlesCards.innerHTML = '';
-            data.forEach((articleSlug)=>{ 
-                let articleData = trendingArticles.filter(({id})=> id==articleSlug)[0];
-                let articleCard = document.createElement('div');
-                articleCard.className = "rounded-lg text-card-foreground shadow-md dark:shadow-lg gradient-"+articleData.science.color;
-                articleCard.innerHTML=`
-<div class="p-6">
-    <div class="mb-2">
-        <h3 class="text-xl font-semibold"><a href="/article/${articleData.slug.split('/')[2]}" class="hover:text-primary">${articleData.title}</a></h3>
-        <div class="flex items-center gap-2 text-sm mt-1">
-            <span class="${'bg-principal-black bg-opacity-20 backdrop-blur-sm px-2 py-1 rounded-full color-'+articleData.science.color}">${t.sciences[articleData.science.name]}</span>
-            <span>${articleData.dateName}</span>
-            <span>•</span>
-            <span>${articleData.readTime} ${t.articles.readTime}</span>
-        </div>
-    </div>
-    <p class="text-muted-foreground mb-4 line-clamp-3">${articleData.description}</p>
-    <div class="flex justify-between items-center">
-        <div class="text-sm text-muted-foreground">${t.home.articles.by} ${articleData.author[0].name}</div>
-        <a href="/article/${articleData.slug.split('/')[2]}"}>
-        </a>
-    </div>
-</div>
-                `;
-                articleCard.children[0].children[2].children[1].appendChild(readArticleButton.cloneNode(true));
-                trendingArticlesCards.appendChild(articleCard);
-            })
-        })
-    })
+        const recentContainer = document.getElementById('recent-articles-container');
+        if (recentContainer) {
+            try {
+                const response = await fetch(`/api/content/${lang}/home`);
+                const data = await response.json();
+                recentContainer.innerHTML = data.recentArticles;
+            } catch (e) {
+                console.error("Error cargando recientes:", e);
+            }
+        }
+
+        const trendingContainer = document.getElementById('trending-articles-container');
+        if (trendingContainer) {
+            try {
+                const response = await fetch(`/api/database/gettrending`,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ lang })
+                });
+                const data = await response.json();
+                trendingContainer.innerHTML = data.trendingArticles;
+            } catch (e) {
+                console.error("Error cargando trending:", e);
+            }
+        }
+    });
 </script>
 

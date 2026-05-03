@@ -155,8 +155,95 @@
 }
 
 /* Smooth scrolling */
+/* Animación de entrada suave para el contenido */
+@keyframes contentFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.content-fade-in {
+    animation: contentFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 html {
     scroll-behavior: smooth;
+}
+
+/* Print Styles */
+@media print {
+    header, footer, #functions-container, #focus-mode-toggle, 
+    .disallow-select, .science-pattern, #reading-progress,
+    .lg\:col-span-4 { 
+        display: none !important;
+    }
+
+    #article-header-wrapper {
+        margin-top: 10%;
+        break-after: page;
+        page-break-before: avoid;
+        page-break-inside: avoid;
+        position: relative;
+        z-index: 1;
+    }
+
+    header.container {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 !important;
+    }
+
+    header.container h1 {
+        text-align: center;
+        font-size:3em;
+        line-height: 1;
+    }
+
+    header.container p {
+        text-align: center;
+    }
+
+    /* La imagen de portada cierra la primera página */
+    .w-full.max-w-5xl.mx-auto.px-4.mb-12 {
+        margin-bottom: 0 !important;
+    }
+
+    #author-share-container {
+        display: block !important;
+        margin-top: 2rem;
+    }
+
+    .lg\:col-span-8 {
+        grid-column: span 12 / span 12 !important;
+        width: 100% !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .prose {
+        max-width: none !important;
+    }
+
+    .prose *:not(a) {
+        color: black !important;
+    }
+
+    img, h1, h2, h3, h4, h5, h6, .rounded-xl {
+        page-break-inside: avoid;
+    }
+
+    @page {
+        margin: 1.5cm;
+    }
 }
 
 .blue-border {
@@ -272,11 +359,85 @@ html {
     }
 }
 
-/* Smooth transitions */
-a,
-button {
-    transition: all 0.2s ease;
+/*Disable selection*/
+img {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    -o-user-select: none !important;
+    -webkit-user-drag: none !important;
 }
+
+.disallow-select {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    -o-user-select: none !important;
+}
+
+/*Transition effect*/
+a, button, select {
+    transition: all 0.2s ease;
+    -webkit-user-drag: none !important;
+}
+
+button {
+    @apply disallow-select;
+}
+
+/* Premium Select Styling */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem !important;
+    cursor: pointer;
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+}
+
+.dark select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+}
+
+select:focus {
+    outline: none !important;
+    border-color: hsl(var(--primary) / 0.5) !important;
+    box-shadow: 0 0 0 2px hsl(var(--primary) / 0.1) !important;
+}
+
+select:hover {
+    border-color: hsl(var(--primary) / 0.3);
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+/*Scrollbar*/
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+}
+
+#scroll-container main {
+    min-height: calc(100vh - 64px);
+}
+
 
 /* Image lightbox zoom effect */
 @keyframes zoomIn {

@@ -10,17 +10,16 @@ export const prerender = true;
 
 export const GET = async ({params}) => {
     const { lang } = params;
-    const articles = (await getCollection('articles')).filter(({slug}) => slug.split('/')[0] === lang);
+    const articles = (await getCollection('articles')).filter(({id}) => id.split('/')[0] === lang);
     const articlesData = articles.map(article => {
-        // Handle both author and authors fields
         return {
-            slug: article.slug,
+            slug: article.id,
             body: article.body,
             ...article.data,
         };
     });
     articlesData.sort((a, b) => b.date.getTime() - a.date.getTime());
-    const featuredArticles = await Promise.all(articlesData.slice(0,3).map(async article => (await container.renderToString(FeaturedArticleCard, {props: {slug:article.slug, body:article.body, title:article.title, description:article.description, author:article.author, authors:article.authors, date:article.date, lang:lang, readTime: article.readTime || null}}))))
+    const featuredArticles = await Promise.all(articlesData.slice(0,3).map(async (article) => (await container.renderToString(FeaturedArticleCard, {props: {slug:article.slug, body:article.body, title:article.title, description:article.description, author:article.author, authors:article.authors, date:article.date, lang:lang, readTime: article.readTime || null}}))))
     const recentArticles = await Promise.all(articlesData.slice(0,6).map(async (article) => (await container.renderToString(ArticleCard, {props:{...article, lang:lang}}))))
     
     return new Response(

@@ -1,4 +1,4 @@
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import { experimental_AstroContainer } from "astro/container";
 import { getContainerRenderer as mdxContainerRenderer } from "@astrojs/mdx";
 import { loadRenderers } from "astro:container";
@@ -20,8 +20,8 @@ export function getStaticPaths() {
     let paths = [];
     for (const lang of ['es','en']) {
         for (const article of articles) {
-            if (article.slug.split('/')[0] === lang) {
-                paths.push({ params: { lang: lang, slug: article.slug.split('/')[2] } });
+            if (article.id.split('/')[0] === lang) {
+                paths.push({ params: { lang: lang, slug: article.id.split('/')[2] } });
             }
         }
     } 
@@ -32,14 +32,14 @@ export const GET = async ({ params }) => {
     const { slug, lang } = params;
     const t = clientTranslations[lang];
 
-    const article = articles.find(a => a.slug.split('/')[2] === slug && a.slug.split('/')[0] === lang);
+    const article = articles.find(a => a.id.split('/')[2] === slug && a.id.split('/')[0] === lang);
 
     if (!article) {
         return new Response(JSON.stringify({ error: "Not found" }), { status: 404 });
     }
 
-    const html = await (await container).renderToString((await article.render()).Content);
-    const science = ScienceList.filter(({id}) => article.slug.split('/')[1] == id)[0];
+    const html = await (await container).renderToString((await render(article)).Content);
+    const science = ScienceList.filter(({id}) => article.id.split('/')[1] == id)[0];
 
     const author = article.data.author ? (await authorCollection.find(a => a.id === article.data.author.id)).data : undefined;
     let authors = []; if (article.data.authors?.length > 1) {article.data.authors?.map(async(a) => {authors.push([(await authorCollection.find(b => b.id === a.id)).data, a.id])})}
@@ -94,7 +94,7 @@ export const GET = async ({ params }) => {
 
     const authorsHTML = article.data.authors?.length > 1 ? (
         `<div class="rounded-xl border blue-border bg-card p-6 shadow-md hover:shadow-lg transition-all duration-300">
-            <h3 class="text-lg font-semibold mb-4">About the Authors</h3>
+            <h3 class="text-lg font-semibold mb-4">${t.article.aboutAuthors}</h3>
             <div class="space-y-6">
                 ${authors.map(author => (
                     `<div class="flex items-start gap-4">
@@ -136,22 +136,21 @@ export const GET = async ({ params }) => {
         </li>`
     )).join('\n') : "<div/>"
 
-    //Related Articles
     let articlesL = [];
     function pushIfNotIncluded (arts: (typeof articles[0])[]) {
         let slugs = [];
         articlesL.forEach(article => {
-            slugs.push(article.slug);
+            slugs.push(article.id);
         });
         arts.forEach(article => {
-            if (!slugs.includes(article.slug)) {
+            if (!slugs.includes(article.id)) {
                 articlesL.push(article);
             }
         });
     }
 
-    if (article.data.tags !== undefined) { pushIfNotIncluded(articles.filter(a => { return a.data.tags !== undefined && a.slug !== article.slug && a.slug.split('/')[0] === article.slug.split('/')[0] ? a.data.tags.some(tag => article.data.tags.includes(tag)) : false; })); }
-    if (science !== undefined) { pushIfNotIncluded(articles.filter(a => { return a.slug.split('/')[1] === science.id && a.slug !== article.slug && a.slug.split('/')[0] === article.slug.split('/')[0]})); }
+    if (article.data.tags !== undefined) { pushIfNotIncluded(articles.filter(a => { return a.data.tags !== undefined && a.id !== article.id && a.id.split('/')[0] === article.id.split('/')[0] ? a.data.tags.some(tag => article.data.tags.includes(tag)) : false; })); }
+    if (science !== undefined) { pushIfNotIncluded(articles.filter(a => { return a.id.split('/')[1] === science.id && a.id !== article.id && a.id.split('/')[0] === article.id.split('/')[0]})); }
 
     const relatedArticles = `
     <div class="rounded-xl border blue-border bg-card p-6">
@@ -159,9 +158,9 @@ export const GET = async ({ params }) => {
         <div class="space-y-4">
             ${articlesL.slice(0,3).map(article => (
                 `<div class="group">
-                    <a href=${`/article/${article.slug.split('/')[2]}`} class="flex gap-3">
+                    <a href=${`/article/${article.id.split('/')[2]}`} class="flex gap-3">
                         <div class="h-16 w-16 rounded-md overflow-hidden flex-shrink-0">
-                            <img style="view-transition-name:${article.slug.split('/')[2]}-portrait;" src=${'/images/contenido/'+article.slug.split('/')[2]+'/portada.webp' || "/placeholder.svg"} alt=${article.data.title} class="h-full w-full object-cover rounded-md transition-transform group-hover:scale-105"/>
+                            <img style="view-transition-name:${article.id.split('/')[2]}-portrait;" src=${'/images/contenido/'+article.id.split('/')[2]+'/portada.webp' || "/placeholder.svg"} alt=${article.data.title} class="h-full w-full object-cover rounded-md transition-transform group-hover:scale-105"/>
                         </div>
                         <div>
                             <h4 class="text-sm font-medium line-clamp-2 group-hover:text-primary transition-colors">
@@ -178,17 +177,17 @@ export const GET = async ({ params }) => {
         <a href="/articles" class="block mt-4 text-sm text-primary hover:underline">${t.article.viewMoreArticles}</a>
     </div>`
 
-    try { await registerArticle(article.slug.split('/')[2], {title: article.data.title, author: author?.name }); } catch (e) {}
+    try { await registerArticle(article.id.split('/')[2], {title: article.data.title, author: author?.name }); } catch (e) {}
 
     return new Response(
         JSON.stringify({
             articleTitle: article.data.title,
             articleDescription: article.data.description,
-            portrait:"/images/contenido/" + article.slug.split('/')[2] + "/portada.webp" || "/placeholder.svg",
-            portraitTransition: article.slug.split('/')[2] + "-portrait",
+            portrait:"/images/contenido/" + article.id.split('/')[2] + "/portada.webp" || "/placeholder.svg",
+            portraitTransition: article.id.split('/')[2] + "-portrait",
             authorData: [author.name, article.data.author.id],
             date: article.data.date.toLocaleDateString(t.timeStamp, { year: 'numeric', month: 'long', day: 'numeric' }),
-            slug: article.slug,
+            slug: article.id,
 
             scienceDataId: science.id,
             scienceDataName: t.sciences[science.id],

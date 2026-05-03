@@ -15,7 +15,6 @@ export const GET = async ({ params, request }) => {
         const data = await (async () => {try { return await resp.json() } catch (e) { return null }})();
         if (data === null) { return new Response('Bad Gateway', { status: 502 }); }
 
-        // Register view server-side (non-blocking for the response)
         try {
             await registerView(slug, { title: data.articleTitle, author: data.authorData?.[0] });
         } catch (e) {

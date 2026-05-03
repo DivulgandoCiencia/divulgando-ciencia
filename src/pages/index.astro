@@ -1,0 +1,20 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import HeroSection from '@/components/home/HeroSection.astro';
+import ArticlesSection from '@/components/home/ArticlesSection.astro';
+import CommunitySection from '@/components/home/CommunitySection.astro';
+import FeaturedResearch from '@/components/home/FeaturedResearch.astro';
+import PScript from '@/components/home/ParticlesScript.astro'
+import { frontmatter } from "@/json/frontmatter";
+
+const lang = Astro.locals.lang || 'es';
+const cf = frontmatter[lang]['home'];
+---
+
+<BaseLayout cf={cf} className="disallow-select">
+    <HeroSection lang={lang} />
+    <FeaturedResearch lang={lang} />
+    <ArticlesSection lang={lang} />
+    <CommunitySection lang={lang} />
+    <PScript/>
+</BaseLayout>

@@ -1,12 +1,13 @@
-// 1. Import utilities from `astro:content`
-import { z, reference, defineCollection } from 'astro:content';
+import { reference, defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
+import { glob } from 'astro/loaders';
 
 const authors = defineCollection({
-  type: 'data',
+  loader: glob({ pattern: '**/[^_]*.json', base: "./src/content/authors" }),
   schema: z.object({
     name: z.string(),
     bio: z.string().optional(),
-    email: z.string().email().optional(),
+    email: z.email().optional(),
     social_media: z.object({
       x: z.string().optional(),
       instagram: z.string().optional(),
@@ -18,7 +19,7 @@ const authors = defineCollection({
 });
 
 const articles = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: "./src/content/articles" }),
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
@@ -38,6 +39,4 @@ const articles = defineCollection({
   }),
 });
 
-
-// 3. Export a single `collections` object to register your collection(s)
 export const collections = { articles, authors };

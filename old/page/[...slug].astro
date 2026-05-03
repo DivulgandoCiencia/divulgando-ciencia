@@ -36,7 +36,6 @@ if (Astro.url.host.includes('localhost')){redirect='';}
             window.servervars = getServer();
         </script>
         <script>
-import { record } from "astro:schema";
 
             declare global {
                 interface Window { pfresa: EventTarget; 
@@ -140,8 +139,6 @@ import { record } from "astro:schema";
                 headeribut.classList.toggle("md:hidden", false);
                 menuibox.classList.toggle("hidden", false);
             })
-
-//window.addEventListener('appinstalled', () => {hideInAppInstallPromotion();});
 
             //PFresa - A simple client-side router
             //Declaration
@@ -498,7 +495,6 @@ import { record } from "astro:schema";
                         attributeFilter: ["class"],
                     });
                 }
-                //console.log('cht')
             };
             setTheme();
         </script>

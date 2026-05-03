@@ -2,7 +2,7 @@ import { getCollection } from 'astro:content';
 import { type APIRoute } from 'astro';
 
 export const GET: APIRoute = async ({ request }) => {
-    const article = (await getCollection('articles')).filter(({slug}) => slug.split('/')[2] == request.url.split('/')[request.url.split('/').length - 1] );
+    const article = (await getCollection('articles')).filter(({id}) => id.split('/')[2] == request.url.split('/')[request.url.split('/').length - 1] );
     if (!article || article.length === 0) return new Response(JSON.stringify({ error: 'Article not found' }), { status: 404 });
 
     let response = article.map((item) => {

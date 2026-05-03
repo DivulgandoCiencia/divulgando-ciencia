@@ -19,63 +19,51 @@ import ShareMenu from "../ui/ShareMenu.astro"
     </div>
 </div>
 
-<script is:inline>
-    window.pfresa.addEventListener('page-load', () => {
-        const lightbox = document.getElementById('image-lightbox');
-        const lightboxImage = document.getElementById('lightbox-image');
-        const lightboxCaption = document.getElementById('lightbox-caption');
-        const lightboxClose = document.getElementById('lightbox-close');
+<script>
+    document.addEventListener('astro:page-load', () => {
+    (document as any).setupLightbox = () => {
+        const lightbox = document.getElementById('image-lightbox') as HTMLElement;
+        const lightboxImage = document.getElementById('lightbox-image') as HTMLImageElement;
+        const lightboxCaption = document.getElementById('lightbox-caption') as HTMLParagraphElement;
+        const lightboxClose = document.getElementById('lightbox-close') as HTMLButtonElement;
         
         if (!lightbox || !lightboxImage || !lightboxCaption || !lightboxClose) return;
 
-        // Function to open the lightbox
         function openLightbox(imgSrc, imgAlt, imgId) {
             lightboxImage.src = imgSrc;
             lightboxImage.alt = imgAlt;
             lightboxCaption.textContent = imgAlt;
             
-            // Update URL hash
             const url = new URL(window.location.href);
             url.hash = `image-${imgId}`;
             window.history.replaceState({}, "", url.href);
             
-            // Show lightbox
             lightbox.classList.remove('opacity-0', 'pointer-events-none');
             setTimeout(() => {
                 lightboxImage.classList.remove('scale-95');
             }, 10);
             
-            // Prevent body scrolling
             document.body.style.overflow = 'hidden';
         }
-        
-        // Function to close the lightbox
         function closeLightbox() {
             lightboxImage.classList.add('scale-95');
             lightbox.classList.add('opacity-0');
             
-            // Allow a little time for the animation to complete
             setTimeout(() => {
                 lightbox.classList.add('pointer-events-none');
-                // Remove hash from URL without page jump
                 history.pushState('', document.title, window.location.pathname + window.location.search);
             }, 300);
             
-            // Re-enable body scrolling
             document.body.style.overflow = '';
         }
         
-        // Add click event to all article images
         const articleImages = document.querySelectorAll('.prose img');
         articleImages.forEach((img, index) => {
-            // Add a unique ID to each image
             const imgId = `article-img-${index}`;
             img.setAttribute('data-img-id', imgId);
             
-            // Make images look clickable
             img.classList.add('cursor-pointer', 'hover:opacity-90', 'transition-opacity');
             
-            // Add click event
             img.addEventListener('click', (e) => {
                 e.preventDefault();
                 const imgSrc = img.getAttribute('src');
@@ -84,7 +72,6 @@ import ShareMenu from "../ui/ShareMenu.astro"
             });
         });
         
-        // Handle featured image
         const featuredImage = document.querySelector('[data-img-id="featured-image"]');
         if (featuredImage) {
             featuredImage.classList.add('cursor-pointer', 'hover:opacity-90', 'transition-opacity');
@@ -96,47 +83,39 @@ import ShareMenu from "../ui/ShareMenu.astro"
             });
         }
         
-        // Close lightbox when clicking the close button
         lightboxClose.addEventListener('click', closeLightbox);
         
-        // Close lightbox when clicking outside the 
         const lightboxCloseHandler = (e) => {if (e.target === lightbox) {closeLightbox();}}
         lightbox.addEventListener('click', (e) => lightboxCloseHandler(e));
         
-        // Close lightbox when pressing Escape key
         const lightboxExitHandler = (e) => {if (e.key === 'Escape' && !lightbox.classList.contains('pointer-events-none')) {closeLightbox();}}
         document.addEventListener('keydown', (e) => lightboxExitHandler(e));
         
-        // Check if URL has an image hash on page load
         if (window.location.hash && window.location.hash.startsWith('#image-')) {
-            const imgId = window.location.hash.substring(7); // Remove '#image-'
+            const imgId = window.location.hash.substring(7); 
             
             if (imgId === 'featured-image' && featuredImage) {
-                // Handle featured image
                 const imgSrc = featuredImage.getAttribute('src');
                 const imgAlt = featuredImage.getAttribute('alt') || 'Featured image';
                 openLightbox(imgSrc, imgAlt, 'featured-image');
                 featuredImage.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
-                // Handle article images
                 const targetImage = document.querySelector(`[data-img-id="${imgId}"]`);
                 if (targetImage) {
-                    // Small delay to ensure everything is loaded
                     setTimeout(() => {
                         const imgSrc = targetImage.getAttribute('src');
                         const imgAlt = targetImage.getAttribute('alt') || 'Article image';
                         openLightbox(imgSrc, imgAlt, imgId);
                         
-                        // Scroll to the image location
                         targetImage.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }, 300);
                 }
             }
         }
 
-        window.pfresa.addEventListener('before-swap', () => {
+        document.addEventListener('astro:before-swap', () => {
             document.removeEventListener('keydown', lightboxExitHandler);
             lightbox.removeEventListener('click', lightboxCloseHandler);
         });
-    });
+    }});
 </script>

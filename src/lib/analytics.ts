@@ -31,7 +31,6 @@ export async function registerView(slug: string, metadata?: {title: string, auth
             return;
         }
 
-        // Not found in DB: try to build metadata from content collection if not provided
         let title: string | undefined = undefined;
         let author_identifier: string | undefined = undefined;
 
@@ -39,7 +38,7 @@ export async function registerView(slug: string, metadata?: {title: string, auth
             title = metadata.title;
             author_identifier = metadata.author;
         } else {
-            const article = articles.find(a => a.slug.split('/')[2] === cleanSlug);
+            const article = articles.find(a => a.id.split('/')[2] === cleanSlug);
             if (article) {
                 title = article.data.title;
                 const author = authorCollection.find(a => a.id === article.data.author?.id);
@@ -47,7 +46,6 @@ export async function registerView(slug: string, metadata?: {title: string, auth
             }
         }
 
-        // Insert fallback with at least slug and views. Title/author may be undefined.
         if (!title || !author_identifier) return;
         await supabase.from('articles').insert({ slug: cleanSlug, views: 1, title, author_identifier });
     } catch (e) {

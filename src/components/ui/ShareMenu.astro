@@ -7,52 +7,51 @@ const t = clientTranslations[lang];
 const { id, title = "Share this content", className = "", display="text+icon", menuDisplay="text+icon", buttonIconClass = "h-4 w-4", menuStyle="right:0;" } = Astro.props;
 ---
 
-<div class={`share-menu-container relative inline-block ${className}`}>
+<div class={`distributor-container relative inline-block ${className} disallow-select`}>
     {display!=="icon" ? <button 
-        id={`share-trigger-${id}`}
-        class="share-trigger flex items-center justify-center gap-2 rounded-md bg-background border border-input px-3 py-2 text-sm font-medium hover:bg-accent transition-colors"
+        id={`distributor-trigger-${id}`}
+        class="distributor-trigger flex items-center justify-center gap-2 rounded-md bg-background border border-input px-3 py-2 text-sm font-medium hover:bg-accent transition-colors"
         aria-expanded="false"
         aria-haspopup="true"
     >
         <Icon icon='share2' className={buttonIconClass} />
         <span>{t.common.share}</span>
     </button> : 
-    <button id={`share-trigger-${id}`} class="absolute text-principal-white hover:text-primary transition-colors">
+    <button id={`distributor-trigger-${id}`} class="absolute text-principal-white hover:text-primary transition-colors">
         <Icon icon='share2' className={buttonIconClass} />
     </button>}
-
     <div 
-        id={`share-menu-${id}`}
-        class="share-menu absolute z-50 mt-2 origin-top-right rounded-md border bg-card shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transform opacity-0 scale-95 pointer-events-none transition-all duration-200"
+        id={`distributor-menu-${id}`}
+        class="distributor-menu absolute z-50 mt-2 origin-top-right rounded-md border bg-card shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transform opacity-0 scale-95 pointer-events-none transition-all duration-200"
         style={menuStyle}
         role="menu"
         aria-orientation="vertical"
-        aria-labelledby={`share-trigger-${id}`}
+        aria-labelledby={`distributor-trigger-${id}`}
     >
         <div class={menuDisplay!=="icon" ? "p-2 w-40" : "px-1"}>
             <div class={menuDisplay!=="icon" ? "pt-2" : "hidden"}><div class="pb-2 px-3 text-sm font-medium border-b mb-1 text-center">{title}</div></div>
             <div class={menuDisplay!=="icon" ? "py-1" : "flex"}>
-                <button class="share-option flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors" data-platform="whatsapp">
+                <button class="distributor-option flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors" data-platform="whatsapp">
                     <Icon icon="whatsapp" className="h-4 w-4 text-[#25d366]" />
                     <span class={menuDisplay!=="icon" ? "" : "hidden"}>WhatsApp</span>
                 </button>
-                <button class="share-option flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors" data-platform="twitter">
+                <button class="distributor-option flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors" data-platform="twitter">
                     <Icon icon="twitter" className="h-4 w-4 text-[#1DA1F2]" />
                     <span class={menuDisplay!=="icon" ? "" : "hidden"}>Twitter</span>
                 </button>
-                <button class="share-option flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors" data-platform="facebook">
+                <button class="distributor-option flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors" data-platform="facebook">
                     <Icon icon="facebook" className="h-4 w-4 text-[#4267B2]" />
                     <span class={menuDisplay!=="icon" ? "" : "hidden"}>Facebook</span>
                 </button>
-                <button class="share-option flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors" data-platform="linkedin">
+                <button class="distributor-option flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors" data-platform="linkedin">
                     <Icon icon="linkedin" className="h-4 w-4 text-[#0077B5]" />
                     <span class={menuDisplay!=="icon" ? "" : "hidden"}>LinkedIn</span>
                 </button>
-                <button class="share-option flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors" data-platform="email">
+                <button class="distributor-option flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors" data-platform="email">
                     <Icon icon="mail" className="h-4 w-4 text-muted-foreground" />
                     <span class={menuDisplay!=="icon" ? "" : "hidden"}>Email</span>
                 </button>
-                <button class="share-option flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors" data-platform="copy">
+                <button class="distributor-option flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors" data-platform="copy">
                     <Icon icon="link" className="h-4 w-4 text-muted-foreground" />
                     <span class={menuDisplay!=="icon" ? "" : "hidden"}>Copy Link</span>
                 </button>
@@ -61,14 +60,12 @@ const { id, title = "Share this content", className = "", display="text+icon", m
     </div>
 </div>
 
-<script is:inline define:vars={{ id }}>
-window.pfresa.addEventListener('page-load', () => {
-    const trigger = document.getElementById(`share-trigger-${id}`);
-    const menu = document.getElementById(`share-menu-${id}`);
-    
+<script define:vars={{ id }}>
+document.addEventListener('astro:page-load', () => {
+    const trigger = document.getElementById(`distributor-trigger-${id}`);
+    const menu = document.getElementById(`distributor-menu-${id}`);
     if (!trigger || !menu) return;
     
-    // Toggle menu
     trigger.addEventListener('click', (e) => {
         e.stopPropagation();
         const expanded = trigger.getAttribute('aria-expanded') === 'true';
@@ -80,52 +77,43 @@ window.pfresa.addEventListener('page-load', () => {
         }
     });
     
-    // Close menu when clicking outside
     document.addEventListener('click', (e) => {
         if (trigger.getAttribute('aria-expanded') === 'true') {
             closeMenu();
         }
     });
     
-    // Prevent menu from closing when clicking inside it
     menu.addEventListener('click', (e) => {
         e.stopPropagation();
     });
     
-    // Handle share options
-    menu.querySelectorAll('.share-option').forEach(option => {
+    menu.querySelectorAll('.distributor-option').forEach(option => {
         option.addEventListener('click', () => {
             const platform = option.getAttribute('data-platform');
-            shareContent(platform);
+            shareContent(platform, option);
             closeMenu();
         });
     });
     
-    // Open menu function
     function openMenu() {
         trigger.setAttribute('aria-expanded', 'true');
         menu.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
         menu.classList.add('opacity-100', 'scale-100');
     }
     
-    // Close menu function
     function closeMenu() {
         trigger.setAttribute('aria-expanded', 'false');
         menu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
         menu.classList.remove('opacity-100', 'scale-100');
     }
     
-    // Share content function
-    function shareContent(platform) {
-        // Get current URL and title
+    function shareContent(platform, optionElement) {
         const url = window.location.href;
         const title = document.title;
         
-        // Check if we're sharing a specific image
         const imageElement = document.querySelector(`[data-share-id="${id}"]`);
         const isImage = imageElement && imageElement.tagName === 'IMG';
         
-        // Get the specific URL to share (might be current page or specific image)
         const shareUrl = isImage ? `${window.location.href.split('#')[0]}#image-${id}` : url;
         const shareTitle = isImage ? imageElement.alt || title : title;
         
@@ -147,19 +135,19 @@ window.pfresa.addEventListener('page-load', () => {
                 break;
             case 'copy':
                 navigator.clipboard.writeText(shareUrl).then(() => {
-                    // Show success message
-                    const originalText = option.querySelector('span').textContent;
-                    option.querySelector('span').textContent = 'Link Copied!';
-                    
-                    setTimeout(() => {
-                        option.querySelector('span').textContent = originalText;
-                    }, 2000);
+                    if (optionElement) {
+                        const span = optionElement.querySelector('span');
+                        const originalText = span.textContent;
+                        span.textContent = 'Link Copied!';
+                        setTimeout(() => {
+                            span.textContent = originalText;
+                        }, 2000);
+                    }
                 });
                 break;
         }
     }
     
-    // Close on escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && trigger.getAttribute('aria-expanded') === 'true') {
             closeMenu();

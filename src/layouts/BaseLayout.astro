@@ -1,0 +1,163 @@
+---
+import Header from "@/components/Header.astro"
+import Menu from "@/components/Menu.astro"
+import Footer from "@/components/Footer.astro"
+import { clientTranslations } from "@/i18n";
+import Seo from "@/components/Seo.astro";
+import '@/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+    title?: string;
+    description?: string;
+    image?: string;
+    altIMG?: string;
+    robots?: boolean;
+    cf?: any;
+    className?: string;
+}
+
+const { title, description, image, altIMG, robots, cf, className } = Astro.props;
+
+const cookieTheme = Astro.locals.theme;
+const serverLang = Astro.locals.lang || 'es';
+
+const t = clientTranslations[serverLang];
+
+const metaTitle = title || (cf?.title ? cf.title + ' | ' : '') + 'Divulgando Ciencia';
+const metaDescription = description || (cf?.description == "" || !cf?.description ? t.common.description : cf.description);
+const metaRobots = robots !== undefined ? robots : (cf?.robots || false);
+---
+
+<!DOCTYPE html>
+<html lang={serverLang}>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <Seo 
+            title={metaTitle} 
+            description={metaDescription} 
+            image={image || ''} 
+            altIMG={altIMG || cf?.alt || ''} 
+            lang={serverLang} 
+            robots={metaRobots} 
+            author={cf?.author || ""}
+            date={cf?.date || ""}
+        />
+        <link rel="icon" type="image/svg+xml" href="/images/logo.webp" />
+        <link rel="manifest" href="/manifest.json">
+        <ClientRouter />
+        <slot name="head" />
+
+        <script>
+            const printer = (message: string, type = "log") => {
+                (console as any)[type](`%cScrewDriver`, "background: linear-gradient(90deg, #31E87D 0%, #8DF04F 100%); color: white; padding-inline: 4px; border-radius: 2px; font-family: monospace;", message)
+            }
+            window.screwdriver = window.screwdriver || {} as any
+            window.screwdriver.log = printer
+
+            let installPrompt = null;
+            
+            if ("serviceWorker" in navigator) {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker.register("/sw.js")
+                    .then((reg) => {
+                        reg.update();
+
+                        reg.addEventListener("updatefound", () => {
+                            const newWorker = reg.installing;
+                            if (!newWorker) return;
+
+                            newWorker.addEventListener("statechange", () => {
+                                if (newWorker.state === "installed") {
+                                    if (navigator.serviceWorker.controller) {
+                                        if (confirm("Actualización disponible. ¿Desea cargar la nueva versión ahora?")) {
+                                            window.location.reload();
+                                        }
+                                    } else {
+                                        console.log("[SW] Instalado correctamente.");
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch(err => console.error("Error registrando SW:", err));
+                });
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                installPrompt = e;
+                document.getElementById('header-download')?.classList.toggle("md:hidden", false);
+                document.getElementById('menu-download-box')?.classList.toggle("hidden", false);
+            })
+            document.addEventListener('click', async (e) => {
+                const target = e.target as HTMLElement;
+                if (target.id === 'header-download' || target.id === 'menu-download') {
+                    if (!installPrompt) return;
+                    const result = await installPrompt.prompt();
+                    console.log(`Install prompt was: ${result.outcome}`);
+                    installPrompt = null;
+                    document.getElementById('header-download')?.classList.add("md:hidden");
+                    document.getElementById('menu-download-box')?.classList.add("hidden");
+                }
+            });
+
+            const isSameOrGreaterVersion = (actualVersion:string, compareVersion:string) => {
+                if (!actualVersion || actualVersion === compareVersion) return true;
+                const actualVersionArray = actualVersion.split('.');
+                const compareVersionArray = compareVersion.split('.');
+                for (let i = 0; i < actualVersionArray.length; i++) if (Number(actualVersionArray[i]) < Number(compareVersionArray[i])) return false;
+                return true;
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                if (!isSameOrGreaterVersion(localStorage.getItem('devVersion'), '5.0.0')) {
+                    for (let i = 0; i < localStorage.length; i++) { if (localStorage.key(i).includes('pfresa') || localStorage.key(i).includes('page-')) localStorage.removeItem(localStorage.key(i)); }
+                    indexedDB.databases().then((dbs) => dbs.forEach(db => indexedDB.deleteDatabase(db.name)));
+                    sessionStorage.clear();
+                }
+                localStorage.setItem('devVersion', '5.0.0');
+            });
+        </script>
+
+        <script define:vars={{cookieTheme}}>
+            const setTheme = () => {
+                const THEME_KEY = "theme";
+                const DARK_CLASS = "dark";
+                const LIGHT_CLASS = "light";
+                
+                const getThemePreference = () => {
+                    if (cookieTheme) return cookieTheme;
+                    if (typeof localStorage !== "undefined" && localStorage.getItem(THEME_KEY)) return localStorage.getItem(THEME_KEY);
+                    return window.matchMedia("(prefers-color-scheme: dark)").matches ? DARK_CLASS : LIGHT_CLASS; 
+                };
+
+                const isDark = getThemePreference() === DARK_CLASS;
+                document.documentElement.classList[isDark ? "add" : "remove"](DARK_CLASS);
+                
+                if (typeof localStorage !== "undefined") {
+                    const observer = new MutationObserver(() => {
+                        const isDark = document.documentElement.classList.contains(DARK_CLASS);
+                        localStorage.setItem(THEME_KEY, isDark ? DARK_CLASS : LIGHT_CLASS);
+                    });
+                    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+                }
+            };
+            setTheme();
+            document.addEventListener('astro:after-swap', setTheme);
+        </script>
+    </head>
+    <body class="h-screen flex flex-col overflow-hidden relative selection:bg-primary/30 selection:text-primary">
+        <Menu />
+        <div class="fixed top-0 left-0 inset-0 science-pattern -z-10"></div>
+        <Header />
+        
+        <div id="scroll-container" class="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
+            <main class={"flex-1 " + className}>
+                <slot />
+            </main>
+            <Footer />
+        </div>
+    </body>
+</html>

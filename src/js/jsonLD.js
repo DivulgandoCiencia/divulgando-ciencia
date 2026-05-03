@@ -7,28 +7,43 @@ export default function jsonLDGenerator({ type, post, url }) {
         return `<script type="application/ld+json">
             {
                 "@context": "https://schema.org",
-                "@type": "BlogPosting",
-                "mainEntityOfPage": {
-                    "@type": "WebPage",
-                    "@id": "${url}"
-                },
-                "headline": "${post.titulo}",
-                "description": "${post.description}",
-                "image": "${post.portada}",
-                "datePublished": "${post.fechaOrdenar}",
-                "author": {
+                "@type": "ScholarlyArticle",
+                "headline": "${post.title}",
+                "image": ["${post.image}"],
+                "datePublished": "${post.date}",
+                "author": [{
                     "@type": "Person",
-                    "name": "${post.autor}",
-                }
+                    "name": "${post.author}"
+                }],
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "Divulgando Ciencia",
+                    "logo": {
+                        "@type": "ImageObject",
+                        "url": "https://www.divulgandociencia.com/images/logo.webp"
+                    },
+                    "email": "support@divulgandociencia.com"
+                },
+                "description": "${post.description}"
             }
         </script>`;
     }
     return `<script type="application/ld+json">
             {
-            "@context": "https://schema.org/",
-            "@type": "WebSite",
-            "name": "${siteData.title}",
-            "url": "${import.meta.env.SITE}"
+                "@context": "https://schema.org/",
+                "@type": "WebSite",
+                "name": "${siteData.title}",
+                "url": "${import.meta.env.SITE}"
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "Divulgando Ciencia",
+                    "logo": {
+                        "@type": "ImageObject",
+                        "url": "https://www.divulgandociencia.com/images/logo.webp"
+                    },
+                    "email": "support@divulgandociencia.com"
+                },
+                "description": "${post.description}"
             }
         </script>`;
 }

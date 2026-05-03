@@ -88,7 +88,9 @@ let consoles = [];
 class Console {
     constructor(e, r){
         this.codeElement = e.querySelector('.code');
+        this.codeWrapper = e.querySelector('.code-wrapper');
         this.consoleElement = e.querySelector('.console');
+        this.consoleWrapper = e.querySelector('.console-wrapper');
         this.codeButton = e.querySelector('.codeButton');
         this.consoleButton = e.querySelector('.consoleButton');
         this.runButton = e.querySelector('.runButton')
@@ -100,8 +102,8 @@ class Console {
     }
     setSelected(selected) {
         if(selected == this.selected) return;
-        if(selected == 'code') {this.selected = 'code'; this.codeElement.classList.toggle('hidden', false); this.consoleElement.classList.toggle('hidden', true); this.codeButton.classList.toggle('text-primary-foreground', true); this.codeButton.classList.toggle('bg-foreground/95', true); this.codeButton.classList.toggle('hover:bg-foreground/10', false); this.consoleButton.classList.toggle('text-primary-foreground', false); this.consoleButton.classList.toggle('bg-foreground/95', false); this.consoleButton.classList.toggle('hover:bg-foreground/10', true)}
-        if(selected == 'console') {this.selected = 'console'; this.codeElement.classList.toggle('hidden', true); this.consoleElement.classList.toggle('hidden', false); this.codeButton.classList.toggle('text-primary-foreground', false); this.codeButton.classList.toggle('bg-foreground/95', false); this.codeButton.classList.toggle('hover:bg-foreground/10', true); this.consoleButton.classList.toggle('text-primary-foreground', true); this.consoleButton.classList.toggle('bg-foreground/95', true); this.consoleButton.classList.toggle('hover:bg-foreground/10', false)}
+        if(selected == 'code') {this.selected = 'code'; this.codeWrapper.classList.toggle('hidden', false); this.consoleWrapper.classList.toggle('hidden', true); this.codeButton.classList.toggle('text-primary-foreground', true); this.codeButton.classList.toggle('bg-foreground/95', true); this.codeButton.classList.toggle('hover:bg-foreground/10', false); this.consoleButton.classList.toggle('text-primary-foreground', false); this.consoleButton.classList.toggle('bg-foreground/95', false); this.consoleButton.classList.toggle('hover:bg-foreground/10', true)}
+        if(selected == 'console') {this.selected = 'console'; this.codeWrapper.classList.toggle('hidden', true); this.consoleWrapper.classList.toggle('hidden', false); this.codeButton.classList.toggle('text-primary-foreground', false); this.codeButton.classList.toggle('bg-foreground/95', false); this.codeButton.classList.toggle('hover:bg-foreground/10', true); this.consoleButton.classList.toggle('text-primary-foreground', true); this.consoleButton.classList.toggle('bg-foreground/95', true); this.consoleButton.classList.toggle('hover:bg-foreground/10', false)}
     }
     addLine(consoleElement){
         const line = document.createElement('div');
@@ -126,11 +128,15 @@ class Console {
     }
 }
 
-const elements = Array.from(document.getElementsByClassName('pythonConsole'))
-elements.map((e) => {
-    const console = new Console(e, runCode);
-    console.addOutput('Divulgando Ciencia - Python Interpreter', console.consoleElement, 'info', true)
-    console.addOutput('Pyodide Version: v0.28.3', console.consoleElement, 'muted')
-    console.addOutput('🛈 This is a demo console, so code editing is disabled.', console.consoleElement, 'muted')
-    consoles.push(console);
-})
+const init = () => {
+    const elements = Array.from(document.getElementsByClassName('pythonConsole'))
+    elements.map((e) => {
+        const console = new Console(e, runCode);
+        console.addOutput('Divulgando Ciencia - Python Interpreter', console.consoleElement, 'info', true)
+        console.addOutput('Pyodide Version: v0.28.3', console.consoleElement, 'muted')
+        console.addOutput('🛈 This is a demo console, so code editing is disabled.', console.consoleElement, 'muted')
+        consoles.push(console);
+    })
+}
+
+init();

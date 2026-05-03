@@ -43,20 +43,18 @@ const { currentLang, className = "" } = Astro.props;
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('astro:page-load', () => {
         const button = document.getElementById('language-switcher-button');
         const dropdown = document.getElementById('language-dropdown');
         
         if (!button || !dropdown) return;
         
-        // Toggle dropdown
         button.addEventListener('click', () => {
             const expanded = button.getAttribute('aria-expanded') === 'true';
             button.setAttribute('aria-expanded', (!expanded).toString());
             dropdown.classList.toggle('hidden');
         });
         
-        // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
             if (!button.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
                 button.setAttribute('aria-expanded', 'false');
@@ -64,22 +62,18 @@ const { currentLang, className = "" } = Astro.props;
             }
         });
         
-        // Handle language selection
         const langButtons = dropdown.querySelectorAll('[data-lang]');
         langButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const lang = btn.getAttribute('data-lang');
                 if (!lang) return;
                 
-                // Set cookie
                 const expiryDate = new Date();
                 expiryDate.setFullYear(expiryDate.getFullYear() + 1);
                 document.cookie = `divciencia-lang=${lang}; path=/; max-age=${365 * 86400}; SameSite=None; Secure; domain=.divulgandociencia.com`;
                 
-                // Set in localStorage
                 localStorage.setItem('language', lang);
                 
-                // Reload page to apply new language
                 window.location.reload();
             });
         });

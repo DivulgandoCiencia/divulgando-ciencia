@@ -3,9 +3,10 @@ import { defineMiddleware } from 'astro/middleware';
 import { languages } from './i18n/index';
 import { getCollection } from 'astro:content';
 
-const articles = (await getCollection('articles')).map(a => a.slug.split('/')[2]);
+const articles = (await getCollection('articles')).map(a => a.id.split('/')[2]);
 
 export const onRequest = defineMiddleware(async (context, next) => {
+    if (context.url.pathname.startsWith('/api/content/') || context.url.pathname.startsWith('/api/intern/')) return next();
     const host = context.request.headers.get('host') ?? '';
     let lang = 'es';
     

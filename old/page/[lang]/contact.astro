@@ -1,19 +1,17 @@
 ---
+import BaseLayout from '@/layouts/BaseLayout.astro';
 import Icon from "../../../components/ui/Icons.astro";
 import Button from '../../../components/ui/Button.astro';
 import Input from '../../../components/ui/Input.astro';
 import { clientTranslations } from '../../../i18n';
+import { frontmatter } from "@/json/frontmatter";
 
-export const prerender = true;
-export async function getStaticPaths() {return ['es','en'].map((lang) => ({params: { lang },}));}
-const { lang } = Astro.params;
+const lang = Astro.locals.lang || 'es';
 const t = clientTranslations[lang];
+const cf = frontmatter[lang]['contact'];
 ---
 
-<head>
-    <meta name="robots" content="noindex, nofollow">
-</head>
-<body>
+<BaseLayout cf={cf}>
     <div class="relative">
 
         <!-- Page Header -->
@@ -77,4 +75,4 @@ const t = clientTranslations[lang];
             </div>
         </div>
     </div>
-</body>
+</BaseLayout>

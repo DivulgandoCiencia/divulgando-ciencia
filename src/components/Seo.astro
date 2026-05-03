@@ -4,14 +4,15 @@ import siteData from "../data/siteData.json";
 import jsonLDGenerator from "../js/jsonLD";
 
 const {
-    title,
+    title = '',
     description = '',
     url = Astro.url,
-    image,
-    frontmatter,
+    image = '',
     robots,
-    altIMG,
-    lang
+    altIMG = '',
+    lang = '',
+    author = '',
+    date = ''
 } = Astro.props;
 
 const imgDescription = description.length > 60 ? (description.substring(0, 60).endsWith(' ') ? description.substring(0, 59) + '...' : description.substring(0, 60).split(' ').slice(0, -1).join(' ') + '...') : description;
@@ -20,17 +21,15 @@ const actualIMG = `https://og.tailgraph.com/og?fontFamily=Roboto&title=${encodeU
 const actualURL = "https://www.divulgandociencia.com" + (url.pathname)
 
 const jsonLD = jsonLDGenerator({
-    type: frontmatter ? "post" : "website",
-    post: frontmatter,
+    type: new URL(url).pathname.startsWith("/article") ? "post" : "website",
+    post: {title, description, image, date, author, lang},
     url,
 });
 ---
 
-<!-- SEO -->
 <title>{title}</title>
 <link rel="canonical" href={actualURL} />
 
-<!-- HTML Meta Tags -->
 <meta name="description" content={description}>
 <meta name="generator" content={Astro.generator}>
 
@@ -52,5 +51,4 @@ const jsonLD = jsonLDGenerator({
 
 {robots && <meta name="robots" content="noindex, nofollow" />}
 
-<!-- JSON LD -->
 <Fragment set:html={jsonLD}/>

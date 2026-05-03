@@ -1,6 +1,6 @@
-<script is:inline>
-    window.pfresa.addEventListener('page-load', () => {
-        const canvas = document.getElementById('particlesCommunity');
+<script>
+    document.addEventListener('astro:page-load', () => {
+        const canvas = document.getElementById('particlesCommunity') as HTMLCanvasElement;
         if (!canvas) return;
 
         const ctx = canvas.getContext('2d');
@@ -36,23 +36,18 @@
             let dark = document.documentElement.classList.contains('dark');
 
             particles.forEach((particle, i) => {
-                // Update position
                 particle.x += particle.speedX;
                 particle.y += particle.speedY;
 
-                // Wrap around edges
                 if (particle.x > canvas.width) particle.x = 0;
                 if (particle.x < 0) particle.x = canvas.width;
                 if (particle.y > canvas.height) particle.y = 0;
                 if (particle.y < 0) particle.y = canvas.height;
 
-                // Draw particle
                 ctx.beginPath();
                 ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(${dark ? '255, 255, 255' : '0, 0, 0'}, ${particle.opacity})`;
                 ctx.fill();
-
-                // Draw connections
                 connectParticles(particle, i, dark);
             });
         };

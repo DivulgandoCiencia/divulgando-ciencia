@@ -3,10 +3,12 @@ import { getCollection } from "astro:content";
 const articles = await getCollection('articles');
 let frontmatter = json;
 articles.map((article) => {
-    frontmatter[article.slug.split('/')[0]]['article/'+article.slug.split('/')[2]] = {
+    frontmatter[article.id.split('/')[0]]['article/'+article.id.split('/')[2]] = {
         title: article.data.title,
         description: article.data.description,
-        image:'/images/contenido/'+article.slug.split('/')[2]+'/portada.webp'
+        image:'/images/contenido/'+article.id.split('/')[2]+'/portada.webp',
+        date: article.data.date,
+        author: article.data.author
     }
 })
 const prerender = true;
