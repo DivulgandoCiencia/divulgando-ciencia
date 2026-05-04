@@ -104,7 +104,8 @@ const metaRobots = robots !== undefined ? robots : (cf?.robots || false);
             });
 
             const isSameOrGreaterVersion = (actualVersion:string, compareVersion:string) => {
-                if (!actualVersion || actualVersion === compareVersion) return true;
+                if (!actualVersion) return false;
+                if (actualVersion === compareVersion) return true;
                 const actualVersionArray = actualVersion.split('.');
                 const compareVersionArray = compareVersion.split('.');
                 if (actualVersionArray.length !== compareVersionArray.length) return false;
