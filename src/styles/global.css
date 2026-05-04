@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
     :root {
@@ -384,7 +382,11 @@ a, button, select {
 }
 
 button {
-    @apply disallow-select;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    -o-user-select: none !important;
 }
 
 /* Premium Select Styling */
