@@ -107,17 +107,18 @@ const metaRobots = robots !== undefined ? robots : (cf?.robots || false);
                 if (!actualVersion || actualVersion === compareVersion) return true;
                 const actualVersionArray = actualVersion.split('.');
                 const compareVersionArray = compareVersion.split('.');
+                if (actualVersionArray.length !== compareVersionArray.length) return false;
                 for (let i = 0; i < actualVersionArray.length; i++) if (Number(actualVersionArray[i]) < Number(compareVersionArray[i])) return false;
                 return true;
             }
 
             document.addEventListener('DOMContentLoaded', () => {
-                if (!isSameOrGreaterVersion(localStorage.getItem('devVersion'), '5.0.0')) {
+                if (!isSameOrGreaterVersion(localStorage.getItem('devVersion'), '5.0.1')) {
                     for (let i = 0; i < localStorage.length; i++) { if (localStorage.key(i).includes('pfresa') || localStorage.key(i).includes('page-')) localStorage.removeItem(localStorage.key(i)); }
                     indexedDB.databases().then((dbs) => dbs.forEach(db => indexedDB.deleteDatabase(db.name)));
                     sessionStorage.clear();
                 }
-                localStorage.setItem('devVersion', '5.0.0');
+                localStorage.setItem('devVersion', '5.0.1');
             });
         </script>
 
@@ -148,7 +149,7 @@ const metaRobots = robots !== undefined ? robots : (cf?.robots || false);
             document.addEventListener('astro:after-swap', setTheme);
         </script>
     </head>
-    <body class="h-screen flex flex-col overflow-hidden relative selection:bg-primary/30 selection:text-primary">
+    <body class="h-screen flex flex-col overflow-hidden w-full relative selection:bg-primary/30 selection:text-primary">
         <Menu />
         <div class="fixed top-0 left-0 inset-0 science-pattern -z-10"></div>
         <Header />

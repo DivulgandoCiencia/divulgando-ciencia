@@ -12,7 +12,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
 ---
 
 <BaseLayout cf={cf}>
-    <div id="reading-progress" class="fixed top-[64px] left-0 h-1 w-0 bg-gradient-to-r from-primary to-blue-400 z-[60] transition-all duration-150 ease-out"></div>
+    <div id="reading-progress" class="fixed top-[64px] left-0 h-1 w-0 bg-linear-to-r from-primary to-blue-400 z-60 transition-all duration-150 ease-out"></div>
 
     <div id="article-content-container" class="min-h-screen transition-all duration-500">
         <div class="container px-4 py-8 md:py-12">
@@ -51,7 +51,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
     </style>
 
     <ImageLightbox lang={lang} />
-    <ShareMenu id="article" lang={lang} className="!hidden article-actions-panel" />
+    <ShareMenu id="article" lang={lang} className="hidden! article-actions-panel" />
 
     <script>
         document.addEventListener('astro:page-load', async () => {
@@ -113,7 +113,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                     </header>
 
                     <div class="w-full max-w-5xl mx-auto px-4 mb-12">
-                        <div class="aspect-[16/9] relative rounded-xl overflow-hidden shadow-xl">
+                        <div class="aspect-video relative rounded-xl overflow-hidden shadow-xl">
                             <img 
                                 src="${data.portrait}"
                                 alt="${data.articleTitle}"
@@ -216,7 +216,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                     });
 
                     if (shareMenu) {
-                        shareMenu.classList.remove('!hidden');
+                        shareMenu.classList.remove('hidden!');
                         setTimeout(() => {
                             if (functionsContainer && shareMenu) {
                                 functionsContainer.appendChild(shareMenu);

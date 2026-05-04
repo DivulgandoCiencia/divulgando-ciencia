@@ -52,7 +52,7 @@ export const GET = async ({ params }) => {
                         <img src=${author.avatar || "/placeholder.svg?height=50&width=50"} alt=${author.name} class="h-12 w-12 rounded-full object-cover border-2 border-background shadow-sm transition-transform hover:z-10 hover:scale-110" style='z-index: ${authors.slice(0, 3).length - index}'/>
                         <div class="author-tooltip opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute left-1/2 bottom-full mb-2 -translate-x-1/2 min-w-[200px] bg-card border rounded-lg shadow-lg p-3 transition-all duration-200 z-20">
                             <div class="flex items-start gap-3">
-                                <img src=${author.avatar || "/placeholder.svg?height=50&width=50"} alt=${author.name} class="h-10 w-10 rounded-full object-cover flex-shrink-0" />
+                                <img src=${author.avatar || "/placeholder.svg?height=50&width=50"} alt=${author.name} class="h-10 w-10 rounded-full object-cover shrink-0" />
                                 <div>
                                     <div class="font-medium">${author.name}</div>
                                     <div class="text-xs text-muted-foreground">${author.title}</div>
@@ -159,7 +159,7 @@ export const GET = async ({ params }) => {
             ${articlesL.slice(0,3).map(article => (
                 `<div class="group">
                     <a href=${`/article/${article.id.split('/')[2]}`} class="flex gap-3">
-                        <div class="h-16 w-16 rounded-md overflow-hidden flex-shrink-0">
+                        <div class="h-16 w-16 rounded-md overflow-hidden shrink-0">
                             <img style="view-transition-name:${article.id.split('/')[2]}-portrait;" src=${'/images/contenido/'+article.id.split('/')[2]+'/portada.webp' || "/placeholder.svg"} alt=${article.data.title} class="h-full w-full object-cover rounded-md transition-transform group-hover:scale-105"/>
                         </div>
                         <div>

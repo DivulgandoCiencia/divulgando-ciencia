@@ -10,5 +10,8 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   integrations: [mdx()],
+  markdown: {
+    syntaxHighlight: false,
+  },
   adapter: vercel(),
 });

@@ -37,7 +37,7 @@ if (science !== undefined) { pushIfNotIncluded(articleList.filter(article => { r
         {articles.slice(0,3).map(article => (
             <div class="group">
                 <a href={`/article/${article.slug.split('/')[2]}`} class="flex gap-3">
-                    <div class="h-16 w-16 rounded-md overflow-hidden flex-shrink-0">
+                    <div class="h-16 w-16 rounded-md overflow-hidden shrink-0">
                         <img 
                             src={'/images/contenido/'+article.slug.split('/')[2]+'/portada.webp' || "/placeholder.svg"} 
                             alt={article.data.title}

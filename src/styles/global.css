@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@config "../../tailwind.config.cjs";
+
+@plugin "@tailwindcss/typography";
 
 @layer base {
     :root {
@@ -47,6 +50,9 @@
         --technology-con:#f2ba48;
         --coding-con:#e9aaff;
         --scientists-con:#16dac0;
+
+        --black: #000000;
+        --white: #ffffff;
     }
 
     .dark {
@@ -94,6 +100,9 @@
         --technology-con:#623B00;
         --coding-con:#5a12b0;
         --scientists-con:#004f3e;
+
+        --black: #000000;
+        --white: #ffffff;
     }
 }
 
