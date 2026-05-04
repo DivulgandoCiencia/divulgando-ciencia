@@ -1,7 +1,17 @@
 {
-  "name": "",
+  "name": "divulgando-ciencia",
+  "version": "5.0.0",
+  "description": "Descubre el poder de la divulgación científica abierta.",
+  "homepage": "https://www.divulgandociencia.com/",
+  "bugs": {
+    "url": "https://github.com/DivulgandoCiencia/divulgando-ciencia/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DivulgandoCiencia/divulgando-ciencia.git"
+  },
+  "license": "ISC",
   "type": "module",
-  "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -11,18 +21,11 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.4",
-    "@astrojs/tailwind": "^6.0.2",
     "@astrojs/vercel": "^10.0.6",
-    "@supabase/supabase-js": "^2.49.4",
-    "astro": "^6.2.1",
-    "function-plot": "^1.24.4",
-    "insights-js": "^1.2.11",
-    "jquery": "^3.7.1",
-    "katex": "^0.16.22",
-    "tailwindcss": "^3.3.3"
-  },
-  "devDependencies": {
-    "@tailwindcss/typography": "^0.5.9",
-    "@types/postcss-import": "^14.0.0"
+    "@supabase/supabase-js": "^2.105.1",
+    "@tailwindcss/vite": "^4.2.4",
+    "astro": "^6.2.2",
+    "katex": "^0.16.45",
+    "tailwindcss": "^4.2.4"
   }
 }
