@@ -127,14 +127,14 @@ export const GET = async ({ params }) => {
         </div>`
     )
 
-    const tags = article.data.tags ? article.data.tags.map(tag => (`<a href=${`/articles?page=1&tags=${tag.toLowerCase().replace(/\s+/g, '-')}`} class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm hover:bg-primary/20 transition-all hover:scale-105">${tag}</a>`)).join("\n") : "<div/>"
+    const tags = article.data.tags ? article.data.tags.map(tag => (`<a href=${`/articles?page=1&tags=${tag.toLowerCase().replace(/\s+/g, '-')}`} class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm hover:bg-primary/20 transition-all hover:scale-105">${tag}</a>`)).join("\n") : "<div></div>"
     const references = article.data.references ? article.data.references.map(ref => (
         `<li class="border-l-2 border-primary/30 pl-4 py-1 hover:border-primary transition-colors">
             <p class="font-medium">${ref.title}</p>
             <p class="text-muted-foreground">${ref.authors}. <em>${ref.journal}</em>, ${ref.year}.</p>
             <p class="text-primary hover:underline"><a href={'https://doi.org/${ref.doi}'} target="_blank" rel="noopener noreferrer">DOI: ${ref.doi}</a></p>
         </li>`
-    )).join('\n') : "<div/>"
+    )).join('\n') : "<div></div>"
 
     let articlesL = [];
     function pushIfNotIncluded (arts: (typeof articles[0])[]) {

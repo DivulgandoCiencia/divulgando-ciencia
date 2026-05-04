@@ -20,7 +20,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
         </div>
     </div>
 
-    <button id="focus-mode-toggle" class="fixed bottom-8 right-8 z-50 p-3 bg-card border blue-border text-foreground rounded-full shadow-lg hover:scale-110 transition-transform hidden md:flex items-center justify-center group" title="Modo Enfoque">
+    <button onclick="document.body.classList.toggle('focus-active')" id="focus-mode-toggle" class="fixed bottom-8 right-8 z-50 p-3 bg-card border blue-border text-foreground rounded-full shadow-lg hover:scale-110 transition-transform hidden lg:flex items-center justify-center group" title="Modo Enfoque">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:text-primary transition-colors"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
     </button>
 
@@ -44,10 +44,6 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
         .focus-active #reading-progress {
             top: 0 !important;
         }
-        
-        .focus-active main {
-            padding-top: 2rem;
-        }
     </style>
 
     <ImageLightbox lang={lang} />
@@ -68,11 +64,6 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
             };
             
             scrollContainer?.addEventListener('scroll', updateProgress);
-
-            const focusBtn = document.getElementById('focus-mode-toggle');
-            focusBtn?.addEventListener('click', () => {
-                document.body.classList.toggle('focus-active');
-            });
 
             const lang = document.documentElement.lang || 'es';
             const slug = window.location.pathname.split('/').pop();
@@ -138,7 +129,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                                     </div>
                                 </div>
 
-                                <div class="mb-12 p-6 rounded-xl border blue-border bg-muted/20">
+                                <div class="lg:mb-12 p-6 rounded-xl border blue-border bg-muted/20">
                                     <h3 class="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2 disallow-select">Citar este artículo (APA)</h3>
                                     <p id="apa-citation" class="text-sm italic"></p>
                                 </div>

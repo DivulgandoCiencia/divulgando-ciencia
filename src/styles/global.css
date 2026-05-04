@@ -184,6 +184,9 @@ html {
 
 /* Print Styles */
 @media print {
+    html, div, section, article, header, footer, main, body {
+        overflow: visible !important;
+    }
     header, footer, #functions-container, #focus-mode-toggle, 
     .disallow-select, .science-pattern, #reading-progress,
     .lg\:col-span-4 { 
@@ -263,15 +266,18 @@ html {
     color: var(--foreground);
 }
 
-.prose p {
+.prose p, .prose span {
     margin-bottom: 1.25em;
     line-height: 1.7;
 }
 
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+    margin-top: 0.6em;
+    margin-bottom: 0.6em;
+}
+
 .prose h2 {
     font-size: 1.5em;
-    margin-top: 2em;
-    margin-bottom: 1em;
     font-weight: 700;
 }
 
