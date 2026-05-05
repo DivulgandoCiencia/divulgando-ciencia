@@ -16,6 +16,7 @@ const { currentLang, className = "" } = Astro.props;
         class="flex items-center gap-1 px-2 h-9 rounded-md blue-border border border-input bg-background hover:bg-accent transition-colors text-sm"
         aria-haspopup="true" 
         aria-expanded="false"
+        onclick="window.languageSwitcherExpand()"
     >
         <span class="flex items-center gap-1">
             <span class="w-5">{currentLang.toUpperCase()}</span>
@@ -32,6 +33,7 @@ const { currentLang, className = "" } = Astro.props;
         <div class="py-1">
             {Object.entries(LANGUAGES).map(([code, name]) => (
                 <button 
+                    onclick={"window.languageSwitcherClick('"+code+"')"}
                     class={`w-full text-left px-4 py-2 text-sm hover:bg-accent transition-colors ${currentLang === code ? 'bg-primary/10 font-medium' : ''}`}
                     data-lang={code}
                 >
@@ -49,11 +51,11 @@ const { currentLang, className = "" } = Astro.props;
         
         if (!button || !dropdown) return;
         
-        button.addEventListener('click', () => {
+        (window as any).languageSwitcherExpand = () => {
             const expanded = button.getAttribute('aria-expanded') === 'true';
             button.setAttribute('aria-expanded', (!expanded).toString());
             dropdown.classList.toggle('hidden');
-        });
+        }
         
         document.addEventListener('click', (e) => {
             if (!button.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
@@ -62,21 +64,17 @@ const { currentLang, className = "" } = Astro.props;
             }
         });
         
-        const langButtons = dropdown.querySelectorAll('[data-lang]');
-        langButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const lang = btn.getAttribute('data-lang');
-                if (!lang) return;
+
+        (window as any).languageSwitcherClick = (lang: string) => {
+            if (!lang) return;
+            
+            const expiryDate = new Date();
+            expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+            document.cookie = `divciencia-lang=${lang}; path=/; max-age=${365 * 86400}; SameSite=None; Secure; domain=.divulgandociencia.com`;
                 
-                const expiryDate = new Date();
-                expiryDate.setFullYear(expiryDate.getFullYear() + 1);
-                document.cookie = `divciencia-lang=${lang}; path=/; max-age=${365 * 86400}; SameSite=None; Secure; domain=.divulgandociencia.com`;
-                
-                localStorage.setItem('language', lang);
-                
-                window.location.reload();
-            });
-        });
+            localStorage.setItem('language', lang);
+            window.location.reload();
+        }
     });
 </script>
 
