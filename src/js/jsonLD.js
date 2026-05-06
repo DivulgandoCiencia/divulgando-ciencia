@@ -10,6 +10,7 @@ export default function jsonLDGenerator({ type, post, url }) {
                 "@type": "ScholarlyArticle",
                 "headline": "${post.title}",
                 "image": ["${post.image}"],
+                "url": "${url || "https://www.divulgandociencia.com/"}",
                 "datePublished": "${post.date}",
                 "author": [{
                     "@type": "Person",
@@ -33,7 +34,7 @@ export default function jsonLDGenerator({ type, post, url }) {
                 "@context": "https://schema.org/",
                 "@type": "WebSite",
                 "name": "${siteData.title}",
-                "url": "${import.meta.env.SITE}"
+                "url": "${url || "https://www.divulgandociencia.com/"}",
                 "publisher": {
                     "@type": "Organization",
                     "name": "Divulgando Ciencia",
