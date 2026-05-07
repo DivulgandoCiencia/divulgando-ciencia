@@ -397,6 +397,7 @@ a, button, select {
 }
 
 button {
+    cursor: pointer;
     user-select: none !important;
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
