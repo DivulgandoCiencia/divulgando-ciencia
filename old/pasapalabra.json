@@ -1,0 +1,164 @@
+[
+  {
+    "letra": "A",
+    "pregunta": "Persona que se dedica al estudio de las estrellas y los planetas.",
+    "empieza_por": true,
+    "respuestas": ["Astrónomo", "Astrónoma"]
+  },
+  {
+    "letra": "B",
+    "pregunta": "Instrumento que sirve para medir la presión atmosférica.",
+    "empieza_por": true,
+    "respuestas": ["Barómetro"]
+  },
+  {
+    "letra": "C",
+    "pregunta": "Rama de la ciencia que estudia la composición y propiedades de la materia.",
+    "empieza_por": true,
+    "respuestas": ["Química"]
+  },
+  {
+    "letra": "D",
+    "pregunta": "Partícula subatómica con carga negativa.",
+    "empieza_por": false,
+    "respuestas": ["Electrón"]
+  },
+  {
+    "letra": "E",
+    "pregunta": "Fenómeno por el cual la Tierra atrae a los cuerpos hacia su centro.",
+    "empieza_por": false,
+    "respuestas": ["Gravedad"]
+  },
+  {
+    "letra": "F",
+    "pregunta": "Proceso por el cual las plantas convierten la luz en energía química.",
+    "empieza_por": true,
+    "respuestas": ["Fotosíntesis"]
+  },
+  {
+    "letra": "G",
+    "pregunta": "Unidad de herencia que se transmite de padres a hijos.",
+    "empieza_por": true,
+    "respuestas": ["Gen"]
+  },
+  {
+    "letra": "H",
+    "pregunta": "Elemento químico más ligero y abundante del universo.",
+    "empieza_por": true,
+    "respuestas": ["Hidrógeno"]
+  },
+  {
+    "letra": "I",
+    "pregunta": "Átomo que ha ganado o perdido electrones.",
+    "empieza_por": true,
+    "respuestas": ["Ion"]
+  },
+  {
+    "letra": "J",
+    "pregunta": "Unidad de energía del Sistema Internacional.",
+    "empieza_por": true,
+    "respuestas": ["Julio"]
+  },
+  {
+    "letra": "K",
+    "pregunta": "Unidad de masa del Sistema Internacional.",
+    "empieza_por": true,
+    "respuestas": ["Kilogramo"]
+  },
+  {
+    "letra": "L",
+    "pregunta": "Órgano de la visión.",
+    "empieza_por": false,
+    "respuestas": ["Ocular"]
+  },
+  {
+    "letra": "M",
+    "pregunta": "Sustancia que compone todos los cuerpos físicos.",
+    "empieza_por": true,
+    "respuestas": ["Materia"]
+  },
+  {
+    "letra": "N",
+    "pregunta": "Partícula del núcleo atómico sin carga eléctrica.",
+    "empieza_por": true,
+    "respuestas": ["Neutrón"]
+  },
+  {
+    "letra": "Ñ",
+    "pregunta": "Contiene la Ñ. Tubo de vidrio que se usa en laboratorios.",
+    "empieza_por": false,
+    "respuestas": ["Cariñana"]
+  },
+  {
+    "letra": "O",
+    "pregunta": "Gas esencial para la respiración de los seres vivos.",
+    "empieza_por": true,
+    "respuestas": ["Oxígeno"]
+  },
+  {
+    "letra": "P",
+    "pregunta": "Partícula subatómica con carga positiva.",
+    "empieza_por": true,
+    "respuestas": ["Protón"]
+  },
+  {
+    "letra": "Q",
+    "pregunta": "Ciencia que estudia la composición de la materia.",
+    "empieza_por": true,
+    "respuestas": ["Química"]
+  },
+  {
+    "letra": "R",
+    "pregunta": "Emisión de energía en forma de ondas o partículas.",
+    "empieza_por": true,
+    "respuestas": ["Radiación"]
+  },
+  {
+    "letra": "S",
+    "pregunta": "Sistema formado por el Sol y los cuerpos que orbitan a su alrededor.",
+    "empieza_por": true,
+    "respuestas": ["Sistema Solar"]
+  },
+  {
+    "letra": "T",
+    "pregunta": "Magnitud física que indica la agitación térmica de las partículas.",
+    "empieza_por": true,
+    "respuestas": ["Temperatura"]
+  },
+  {
+    "letra": "U",
+    "pregunta": "Todo lo que existe, incluyendo el espacio, el tiempo y la materia.",
+    "empieza_por": true,
+    "respuestas": ["Universo"]
+  },
+  {
+    "letra": "V",
+    "pregunta": "Espacio que no contiene materia.",
+    "empieza_por": true,
+    "respuestas": ["Vacío"]
+  },
+  {
+    "letra": "W",
+    "pregunta": "Unidad de potencia del Sistema Internacional.",
+    "empieza_por": true,
+    "respuestas": ["Vatio"]
+  },
+  {
+    "letra": "X",
+    "pregunta": "Gas noble usado en lámparas de flash.",
+    "empieza_por": true,
+    "respuestas": ["Xenón"]
+  },
+  {
+    "letra": "Y",
+    "pregunta": "Elemento químico usado como desinfectante.",
+    "empieza_por": true,
+    "respuestas": ["Yodo"]
+  },
+  {
+    "letra": "Z",
+    "pregunta": "Lugar donde se crían y exhiben animales.",
+    "empieza_por": true,
+    "respuestas": ["Zoológico"]
+  }
+]
