@@ -3,7 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { frontmatter } from "@/json/frontmatter";
 
 const lang = Astro.locals.lang || 'es';
-const cf = frontmatter[lang]['juegos/pasapalabra'];
+const cf = frontmatter[lang]['juegos/a-ciencia-cierta'];
 ---
 <BaseLayout cf={cf} className="disallow-select">
     <div class="container px-4 py-8 md:py-12 relative z-10 flex flex-col items-center justify-center min-h-[80vh]">
@@ -16,7 +16,7 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <h1 class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">Pasapalabra Científico</h1>
+                <h1 class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-fuchsia-500 to-blue-400">A Ciencia Cierta</h1>
                 <p class="text-lg text-muted-foreground max-w-md">
                     Demuestra tus conocimientos de ciencia en este reto de la A a la Z.
                 </p>
@@ -42,6 +42,7 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
                             <select id="difficulty-opt" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-primary transition-all">
                                 <option value="normales">Solo normales</option>
                                 <option value="extremas">Solo extremas</option>
+                                <option value="basico">Basico</option>
                                 <option value="todas">Todas</option>
                             </select>
                         </div>
@@ -68,12 +69,12 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
                             <span class="block text-2xl font-bold text-success" id="correct-count">0</span>
                             <span class="text-xs uppercase opacity-50">Aciertos</span>
                         </div>
-                        <div class="h-8 w-[1px] bg-white/10"></div>
+                        <div class="h-8 w-px bg-white/10"></div>
                         <div class="text-center">
                             <span class="block text-2xl font-bold text-error" id="error-count">0</span>
                             <span class="text-xs uppercase opacity-50">Fallos</span>
                         </div>
-                        <div class="h-8 w-[1px] bg-white/10"></div>
+                        <div class="h-8 w-px bg-white/10"></div>
                         <div class="text-center">
                             <span class="block text-2xl font-bold text-primary" id="pending-count">27</span>
                             <span class="text-xs uppercase opacity-50">Quedan</span>

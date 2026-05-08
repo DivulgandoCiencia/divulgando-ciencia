@@ -24,9 +24,11 @@ export const POST: APIRoute = async ({ request }) => {
 
     let filteredData = data;
     if (dificultad == 'extremas') {
-        filteredData = data.filter(q => q.pregunta.includes('[E]'));
+        filteredData = data.filter(q => q.pregunta.includes('[E]') && !q.pregunta.includes('[B]'));
     } else if (dificultad == 'normales') {
-        filteredData = data.filter(q => !q.pregunta.includes('[E]'));
+        filteredData = data.filter(q => !q.pregunta.includes('[E]') && !q.pregunta.includes('[B]'));
+    } else if (dificultad == 'basico') {
+        filteredData = data.filter(q => q.pregunta.includes('[B]') && !q.pregunta.includes('[E]'));
     }
 
     const selectedQuestions = alphabet.map(letter => {

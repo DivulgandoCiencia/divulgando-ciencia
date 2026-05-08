@@ -8,7 +8,7 @@
         "terms": {"title": "Términos y Condiciones"},
         "juegos/los-superpoderes-del-deporte": {"title": "Soluciones Los Superpoderes del Deporte", "description": "Juego de memoria sobre los beenficios del deporte", "alt": "Juego de mesa sobre los beneficios del deporte"},
         "juegos/memory-ods": {"title": "Soluciones Rumbo a 2030", "description": "Juego de memoria sobre los ODS", "alt": "Juego de memoria sobre los ODS"},
-        "juegos/pasapalabra": {"title": "Pasapalabra Científico", "description": "Pon a prueba tus conocimientos científicos con el Rosco de Pasapalabra.", "alt": "Juego de Pasapalabra Científico"}
+        "juegos/a-ciencia-cierta": {"title": "A Ciencia Cierta", "description": "Pon a prueba tus conocimientos científicos con el Rosco de Pasapalabra.", "alt": "Juego de Pasapalabra Científico"}
     },
     "en": {
         "404": {"title": "Page Not Found"},
@@ -19,6 +19,6 @@
         "terms": {"title": "Terms of Service"},
         "juegos/los-superpoderes-del-deporte": {"title": "Soluciones Los Superpoderes del Deporte", "description": "Juego de memoria sobre los beenficios del deporte", "alt": "Juego de mesa sobre los beneficios del deporte"},
         "juegos/memory-ods": {"title": "Soluciones Rumbo a 2030", "description": "Juego de memoria sobre los ODS", "alt": "Juego de memoria sobre los ODS"},
-        "juegos/pasapalabra": {"title": "Science Pasapalabra", "description": "Test your scientific knowledge with the Pasapalabra Rosco.", "alt": "Science Pasapalabra Game"}
+        "juegos/a-ciencia-cierta": {"title": "A Ciencia Cierta", "description": "Test your scientific knowledge with the Pasapalabra Rosco.", "alt": "Science Pasapalabra Game"}
     }
-}
+}
