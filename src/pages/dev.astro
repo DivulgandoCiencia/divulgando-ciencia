@@ -54,6 +54,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             <input type="checkbox" data-flag="ai_summaries" class="flag-checkbox sr-only peer">
                             <div class="w-10 h-5 bg-muted rounded-full peer peer-disabled:bg-destructive/40 peer-checked:bg-primary relative transition-colors after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:after:translate-x-5 shadow-inner"></div>
                         </label>
+                        <label class="flag-toggle flex items-center justify-between p-4 bg-muted/20 rounded-xl border border-input cursor-pointer hover:border-primary transition-all">
+                            <div class="flex flex-col gap-1 pr-4">
+                                <span class="font-bold">PASAPALABRA_PLUS</span>
+                                <span class="text-[9px] opacity-50 text-blue-400">Nuevas opciones para el Pasapalabra.</span>
+                            </div>
+                            <input type="checkbox" data-flag="pasapalabra_plus" class="flag-checkbox sr-only peer">
+                            <div class="w-10 h-5 bg-muted rounded-full peer peer-disabled:bg-destructive/40 peer-checked:bg-primary relative transition-colors after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:after:translate-x-5 shadow-inner"></div>
+                        </label>
                     </div>
                 </div>
 
@@ -272,7 +280,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 });
                 const currentFlags = JSON.parse(localStorage.getItem('experimentalFeatures') || '{}');
                 const updatedFlags = {};
-                ['ai_summaries'].forEach((flagName: any) => updatedFlags[flagName] = currentFlags[flagName] || false);
+                ['ai_summaries', 'pasapalabra_plus'].forEach((flagName: any) => updatedFlags[flagName] = currentFlags[flagName] || false);
                 localStorage.setItem('experimentalFeatures', JSON.stringify(updatedFlags));
             };
 

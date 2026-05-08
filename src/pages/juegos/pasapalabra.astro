@@ -9,7 +9,6 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
     <div class="container px-4 py-8 md:py-12 relative z-10 flex flex-col items-center justify-center min-h-[80vh]">
         <div id="game-container" class="w-full max-w-4xl bg-white/10 dark:bg-black/20 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-3xl p-8 shadow-2xl overflow-hidden relative">
             
-            <!-- Start Screen -->
             <div id="start-screen" class="flex flex-col items-center justify-center text-center space-y-6 py-12">
                 <div class="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center animate-bounce">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -24,17 +23,37 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
                 <button id="start-btn" class="px-8 py-4 bg-primary hover:bg-primary/90 text-white rounded-full font-bold text-xl transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20">
                     Empezar Juego
                 </button>
+
+                <div id="game-options" class="hidden mt-8 p-6 bg-white/5 border border-white/10 rounded-3xl w-full max-w-sm text-left animate-in fade-in">
+                    <h3 class="text-lg font-bold mb-4 opacity-70 flex items-center gap-2 text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+                        </svg>
+                        Opciones de partida
+                    </h3>
+                    <div class="space-y-4">
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" id="no-time-opt" class="w-5 h-5 accent-primary rounded-md" />
+                            <span class="text-sm font-medium group-hover:text-primary transition-colors">Quitar límite de tiempo</span>
+                        </label>
+                        
+                        <div class="space-y-2">
+                            <span class="text-[10px] uppercase tracking-wider opacity-50 font-black">Filtrar preguntas</span>
+                            <select id="difficulty-opt" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-primary transition-all">
+                                <option value="normales">Solo normales</option>
+                                <option value="extremas">Solo extremas</option>
+                                <option value="todas">Todas</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Game Screen (Hidden initially) -->
             <div id="game-screen" class="hidden flex flex-col lg:flex-row items-center justify-around gap-12 py-4">
                 
-                <!-- Rosco Container -->
                 <div class="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px] flex items-center justify-center">
                     <div id="rosco" class="relative w-full h-full rounded-full border-0 flex items-center justify-center">
-                        <!-- Letters will be injected here -->
                     </div>
-                    <!-- Center Panel -->
                     <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                         <div class="text-center p-4 bg-white/5 dark:bg-black/40 rounded-full w-2/3 aspect-square flex flex-col items-center justify-center backdrop-blur-sm border border-white/10 shadow-inner">
                             <span id="timer" class="text-4xl font-mono font-bold text-primary">150</span>
@@ -43,7 +62,6 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
                     </div>
                 </div>
 
-                <!-- Control Panel -->
                 <div class="flex-1 w-full max-w-md space-y-6">
                     <div class="flex justify-between items-center bg-white/5 dark:bg-black/20 p-4 rounded-2xl border border-white/10">
                         <div class="text-center">
@@ -78,7 +96,6 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
                 </div>
             </div>
 
-            <!-- Result Screen (Hidden initially) -->
             <div id="result-screen" class="hidden flex flex-col items-center justify-center text-center space-y-8 py-12">
                 <h2 class="text-3xl md:text-5xl font-bold">¡Juego Terminado!</h2>
                 
@@ -180,11 +197,9 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
     </style>
 
     <script is:inline>
-        // Game Configuration
         const TOTAL_TIME = 200;
         const API_URL = '/api/juegos/pasapalabra';
 
-        // Game State
         let questions = [];
         let currentIndex = 0;
         let correctCount = 0;
@@ -192,13 +207,17 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
         let timeLeft = TOTAL_TIME;
         let timerInterval = null;
         let gameActive = false;
+        let config = {
+            noTime: false,
+            dificultad: 'todas'
+        };
 
-        // DOM Elements
         const startScreen = document.getElementById('start-screen');
         const gameScreen = document.getElementById('game-screen');
         const resultScreen = document.getElementById('result-screen');
         const rosco = document.getElementById('rosco');
         const timerEl = document.getElementById('timer');
+        const timerContainer = timerEl.parentElement;
         const correctEl = document.getElementById('correct-count');
         const errorEl = document.getElementById('error-count');
         const pendingEl = document.getElementById('pending-count');
@@ -211,7 +230,14 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
         const restartBtn = document.getElementById('restart-btn');
         const startBtn = document.getElementById('start-btn');
 
-        // Normalize string (remove accents and to lowercase)
+        const noTimeOpt = document.getElementById('no-time-opt');
+        const difficultyOpt = document.getElementById('difficulty-opt');
+        const gameOptionsContainer = document.getElementById('game-options');
+
+        const experimentalFlags = JSON.parse(localStorage.getItem('experimentalFeatures') || '{}');
+        const experimentalFeature = experimentalFlags.pasapalabra_plus || false;
+        if (experimentalFeature) gameOptionsContainer.classList.remove('hidden');
+
         function normalize(str) {
             return str
                 .normalize("NFD")
@@ -220,10 +246,8 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
                 .trim();
         }
 
-        // Initialize Rosco Letters
         function initRosco(letters) {
             rosco.innerHTML = '';
-            // Ensure we have a valid width, fallback if hidden
             const rect = rosco.getBoundingClientRect();
             const width = rect.width || 450;
             const radius = width / 2;
@@ -238,13 +262,11 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
                 node.className = 'letter-node';
                 node.id = `letter-${i}`;
                 node.textContent = item.letra;
-                // Force absolute position to avoid issues with static defaults
                 node.style.position = 'absolute';
                 node.style.left = `${x}px`;
                 node.style.top = `${y}px`;
                 node.style.transform = `translate(-50%, -50%)`;
                 
-                // Keep status colors if already played
                 if (item.status === 'correct') node.classList.add('correct');
                 if (item.status === 'error') node.classList.add('error');
                 
@@ -252,22 +274,43 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
             });
         }
 
-        // Fetch Questions
         async function loadGame() {
             try {
-                const response = await fetch(API_URL);
+                startBtn.disabled = true;
+                startBtn.textContent = "Cargando...";
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dificultad: config.dificultad })
+                });
+                
                 questions = await response.json();
-                // Add status to each question
+                
+                if (questions.error) throw new Error(questions.error);
+
                 questions = questions.map(q => ({ ...q, status: 'pending' }));
                 initRosco(questions);
                 updateStats();
+                
+                startBtn.disabled = false;
+                startBtn.textContent = "Empezar Juego";
             } catch (error) {
                 console.error("Error loading questions:", error);
-                questionText.textContent = "Error al cargar las preguntas. Por favor, intenta de nuevo.";
+                alert("Error al cargar las preguntas: " + error.message);
+                startBtn.disabled = false;
+                startBtn.textContent = "Reintentar";
             }
         }
 
-        function startGame() {
+        async function startGame() {
+            config.noTime = noTimeOpt.checked;
+            config.dificultad = difficultyOpt.value;
+
+            await loadGame();
+
+            if (questions.length === 0) return;
+
             gameActive = true;
             currentIndex = 0;
             correctCount = 0;
@@ -278,18 +321,26 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
             gameScreen.classList.remove('hidden');
             resultScreen.classList.add('hidden');
             
-            // Re-initialize rosco now that it's visible to get correct dimensions
             initRosco(questions);
             
             loadQuestion();
             startTimer();
             
-            // Focus input
             setTimeout(() => answerInput.focus(), 100);
         }
 
         function startTimer() {
             clearInterval(timerInterval);
+            
+            if (config.noTime) {
+                timerEl.textContent = "∞";
+                timerContainer.querySelector('span:last-child').textContent = "Ilimitado";
+                return;
+            }
+
+            timerContainer.querySelector('span:last-child').textContent = "Segundos";
+            timerEl.textContent = timeLeft;
+
             timerInterval = setInterval(() => {
                 timeLeft--;
                 timerEl.textContent = timeLeft;
@@ -300,11 +351,9 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
         }
 
         function loadQuestion() {
-            // Find next pending question
             const startSearch = currentIndex;
             let found = false;
 
-            // First check from current onwards
             for (let i = 0; i < questions.length; i++) {
                 const checkIndex = (startSearch + i) % questions.length;
                 if (questions[checkIndex].status === 'pending') {
@@ -321,11 +370,9 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
 
             const q = questions[currentIndex];
             
-            // Update Rosco Visuals
             document.querySelectorAll('.letter-node').forEach(n => n.classList.remove('active'));
             document.getElementById(`letter-${currentIndex}`).classList.add('active');
 
-            // Update Text
             letterIndicator.textContent = q.letra;
             questionType.textContent = q.empieza_por ? 'Empieza por...' : 'Contiene la...';
             questionText.textContent = q.pregunta;
@@ -338,7 +385,6 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
             if (!answer) return;
 
             const q = questions[currentIndex];
-            // Normalize both for comparison
             const normalizedAnswer = normalize(answer);
             const isCorrect = q.respuestas.some(r => normalize(r) === normalizedAnswer);
 
@@ -349,24 +395,40 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
                 q.status = 'correct';
                 correctCount++;
                 letterNode.classList.add('correct', 'pop');
+                updateStats();
+                setTimeout(loadQuestion, 400);
             } else {
                 q.status = 'error';
                 errorCount++;
                 letterNode.classList.add('error', 'shake');
-                // Show correct answer briefly? No, Pasapalabra usually doesn't show it until the end or it's just a failure.
-            }
+                
+                const correctOnes = q.respuestas.join(' o ');
+                questionType.textContent = '¡Incorrecto!';
+                questionType.classList.add('text-error');
+                questionType.classList.remove('text-primary');
+                questionText.innerHTML = `La respuesta correcta era: <span class="text-error font-bold">${correctOnes}</span>`;
+                
+                answerInput.disabled = true;
+                submitBtn.disabled = true;
+                pasapalabraBtn.disabled = true;
+                
+                updateStats();
 
-            updateStats();
-            
-            // Delay slightly to show color before moving to next
-            setTimeout(loadQuestion, 400);
+                setTimeout(() => {
+                    questionType.classList.remove('text-error');
+                    questionType.classList.add('text-primary');
+                    answerInput.disabled = false;
+                    submitBtn.disabled = false;
+                    pasapalabraBtn.disabled = false;
+                    loadQuestion();
+                }, 2000);
+            }
         }
 
         function handlePasapalabra() {
             const letterNode = document.getElementById(`letter-${currentIndex}`);
             letterNode.classList.remove('active');
             
-            // Move to next pending
             currentIndex = (currentIndex + 1) % questions.length;
             loadQuestion();
         }
@@ -397,10 +459,8 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
             else scoreMsg.textContent = "¡Sigue estudiando! La ciencia es apasionante.";
         }
 
-        // Event Listeners
         startBtn.addEventListener('click', startGame);
         restartBtn.addEventListener('click', () => {
-            // Reset questions status
             questions.forEach(q => q.status = 'pending');
             initRosco(questions);
             startGame();
@@ -413,10 +473,8 @@ const cf = frontmatter[lang]['juegos/pasapalabra'];
             if (e.key === 'Enter') handleAnswer();
         });
 
-        // Initialize on load
         window.addEventListener('load', loadGame);
 
-        // Resize rosco on window resize
         window.addEventListener('resize', () => {
             if (questions.length > 0) {
                 initRosco(questions)

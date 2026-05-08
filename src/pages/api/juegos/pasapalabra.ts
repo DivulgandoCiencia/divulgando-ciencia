@@ -1,12 +1,17 @@
 import { supabaseAnon } from "@/lib/supabase";
 import type { APIRoute } from "astro";
 
-export const GET: APIRoute = async () => {
+export const POST: APIRoute = async ({ request }) => {
+    let dificultad = 'normales';
+    
+    try {
+        const body = await request.json();
+        dificultad = body.dificultad || 'normales';
+    } catch (e) {}
+
     const { data, error } = await supabaseAnon
         .from("pasapalabra_preguntas")
         .select("*");
-    
-    console.log(data);
 
     if (error) {
         return new Response(JSON.stringify({ error: error.message }), { 
@@ -17,8 +22,15 @@ export const GET: APIRoute = async () => {
 
     const alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
 
+    let filteredData = data;
+    if (dificultad == 'extremas') {
+        filteredData = data.filter(q => q.pregunta.includes('[E]'));
+    } else if (dificultad == 'normales') {
+        filteredData = data.filter(q => !q.pregunta.includes('[E]'));
+    }
+
     const selectedQuestions = alphabet.map(letter => {
-        const questionsForLetter = data.filter(q => q.letra.toUpperCase() === letter);
+        const questionsForLetter = filteredData.filter(q => q.letra.toUpperCase() === letter);
         
         if (questionsForLetter.length === 0) {
             return null;
