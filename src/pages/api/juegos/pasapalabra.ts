@@ -26,7 +26,7 @@ export const POST: APIRoute = async ({ request }) => {
     if (dificultad == 'extremas') {
         filteredData = data.filter(q => q.pregunta.includes('[E]') && !q.pregunta.includes('[B]'));
     } else if (dificultad == 'normales') {
-        filteredData = data.filter(q => !q.pregunta.includes('[E]') && !q.pregunta.includes('[B]'));
+        filteredData = data.filter(q => !q.pregunta.includes('[E]'));
     } else if (dificultad == 'basico') {
         filteredData = data.filter(q => q.pregunta.includes('[B]') && !q.pregunta.includes('[E]'));
     }
