@@ -50,7 +50,10 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
     <ShareMenu id="article" lang={lang} className="hidden! article-actions-panel" />
 
     <script>
+        let __ = false;
         document.addEventListener('astro:page-load', async () => {
+            if (__) return;
+            __ = true;
             const container = document.getElementById('article-content-container');
             const progressBar = document.getElementById('reading-progress');
             const scrollContainer = document.getElementById('scroll-container');
@@ -65,7 +68,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
             
             scrollContainer?.addEventListener('scroll', updateProgress);
 
-            const lang = document.documentElement.lang || 'es';
+            let lang = document.documentElement.lang || 'es';
             const slug = window.location.pathname.split('/').pop();
 
             try {
@@ -75,82 +78,70 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                 const data = await response.json();
                 
                 container.innerHTML = `
-                <div class="relative">
-                    <div id="article-header-wrapper">
-                    <header class="container px-4 py-8 md:py-12 relative z-10">
-                        <div class="flex items-center gap-2 mb-4 disallow-select">
-                            <a href="/articles?page=1&science=${data.scienceDataId}" class="text-sm font-medium hover:underline flex items-center color-${data.scienceDataColor}">
-                                <span class="mr-1">${data.scienceDataName}</span>
-                            </a>
-                            <span class="text-muted-foreground">•</span>
-                            <span class="text-sm text-muted-foreground flex items-center">
-                                <svg class="mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                ${data.readTimeNum} min de lectura
-                            </span>
-                        </div>
+<div class="relative">
+    <div id="article-header-wrapper">
+    <header class="container px-4 py-8 md:py-12 relative z-10">
+        <div class="flex items-center gap-2 mb-4 disallow-select">
+            <a href="/articles?page=1&science=${data.scienceDataId}" class="text-sm font-medium hover:underline flex items-center color-${data.scienceDataColor}">
+                <span class="mr-1">${data.scienceDataName}</span>
+            </a>
+            <span class="text-muted-foreground">•</span>
+            <span class="text-sm text-muted-foreground flex items-center">
+                <svg class="mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                ${data.readTimeNum} min de lectura
+            </span>
+        </div>
 
-                        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
-                            ${data.articleTitle}
-                        </h1>
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">${data.articleTitle}</h1>
+        <p class="text-xl text-muted-foreground max-w-3xl mb-8">${data.articleDescription}</p>
 
-                        <p class="text-xl text-muted-foreground max-w-3xl mb-8">
-                            ${data.articleDescription}
-                        </p>
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-8">
+            ${data.authorsHeader}
+            <div class="disallow-select flex gap-2" id="functions-container"></div>
+        </div>
+    </header>
 
-                        <div class="flex items-center justify-between flex-wrap gap-4 mb-8">
-                            ${data.authorsHeader}
-                            <div class="disallow-select flex gap-2" id="functions-container"></div>
-                        </div>
-                    </header>
+    <div class="w-full max-w-5xl mx-auto px-4 mb-12">
+        <div class="aspect-video relative rounded-xl overflow-hidden shadow-xl">
+            <img src="${data.portrait}" alt="${data.articleTitle}" class="w-full h-full object-cover rounded-xl" style="view-transition-name: ${data.portraitTransition};" data-img-id="featured-image"/>
+        </div>
+    </div>
+</div>
 
-                    <div class="w-full max-w-5xl mx-auto px-4 mb-12">
-                        <div class="aspect-video relative rounded-xl overflow-hidden shadow-xl">
-                            <img 
-                                src="${data.portrait}"
-                                alt="${data.articleTitle}"
-                                class="w-full h-full object-cover rounded-xl"
-                                style="view-transition-name: ${data.portraitTransition};"
-                                data-img-id="featured-image"]
-                            />
-                        </div>
-                    </div>
-                    </div>
+<div class="container px-4 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-8">
+            <p class="text-sm text-muted-foreground italic mb-2 hidden" id="translation-notice">Not original article. Translated with Build-in AI Translator API. Content may be altered from original.</p>
+            <article class="prose dark:prose-invert prose-lg max-w-none">
+                ${data.contentHTML}
+            </article>
 
-                    <div class="container px-4 relative z-10">
-                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                            <div class="lg:col-span-8">
-                                <article class="prose dark:prose-invert prose-lg max-w-none">
-                                    ${data.contentHTML}
-                                </article>
-
-                                <div class="mt-8 mb-12 disallow-select">
-                                    <div class="flex flex-wrap gap-2">
-                                        ${data.tagList}
-                                    </div>
-                                </div>
-
-                                <div class="lg:mb-12 p-6 rounded-xl border blue-border bg-muted/20">
-                                    <h3 class="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2 disallow-select">Citar este artículo (APA)</h3>
-                                    <p id="apa-citation" class="text-sm italic"></p>
-                                </div>
-                                <div class="mb-12 ${data.hasReferencesHiddenText}">
-                                    <h3 class="text-lg font-semibold mb-3">Referencias</h3>
-                                    <ul class="space-y-3 text-sm">
-                                        ${data.referenceList}
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="lg:col-span-4 disallow-select">
-                                <div class="sticky top-24 space-y-8 mb-6">
-                                    ${data.authors}
-                                    ${data.relatedArticles}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="mt-8 mb-12 disallow-select">
+                <div class="flex flex-wrap gap-2">
+                    ${data.tagList}
                 </div>
-                `;
+            </div>
+
+            <div class="lg:mb-12 p-6 rounded-xl border blue-border bg-muted/20">
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2 disallow-select">Citar este artículo (APA)</h3>
+                <p id="apa-citation" class="text-sm italic"></p>
+            </div>
+            <div class="mb-12 ${data.hasReferencesHiddenText}">
+                <h3 class="text-lg font-semibold mb-3">Referencias</h3>
+                <ul class="space-y-3 text-sm">
+                    ${data.referenceList}
+                </ul>
+            </div>
+        </div>
+
+        <div class="lg:col-span-4 disallow-select">
+            <div class="sticky top-24 space-y-8 mb-6">
+                ${data.authors}
+                ${data.relatedArticles}
+            </div>
+        </div>
+    </div>
+</div>`;
                 
                 container.classList.remove('content-fade-in');
                 void container.offsetWidth;
@@ -160,24 +151,26 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                 const shareMenu = document.querySelector('.article-actions-panel');
                 const functionsContainer = document.getElementById('functions-container');
                 if (functionsContainer) {
+                    const moreFunctionsContainer = document.createElement('div');
+                    moreFunctionsContainer.className = 'absolute top-full mt-2 max-w-40 min-w-max rounded-xl bg-background/90 backdrop-blur-md border border-border shadow-lg opacity-0 scale-95 pointer-events-none transition-all duration-200 z-50 origin-top overflow-hidden right-0 md:right-auto md:left-0 p-1 flex flex-col gap-1';
                     const audioBtn = document.createElement('button');
                     audioBtn.id = 'play-audio';
-                    audioBtn.className = 'flex items-center justify-center gap-2 rounded-md bg-background border border-input px-3 py-2 text-sm font-medium hover:bg-accent transition-colors disallow-select';
+                    audioBtn.className = 'flex items-center justify-center gap-2 rounded-md bg-background px-3 py-2 text-sm font-medium hover:bg-accent transition-colors disallow-select';
                     audioBtn.innerHTML = `
                         <svg id="audio-icon-play" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         <svg id="audio-icon-pause" class="hidden" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
                         <span class="hidden md:block">Escuchar</span>
                     `;
-                    functionsContainer.appendChild(audioBtn);
+                    moreFunctionsContainer.appendChild(audioBtn);
                     
                     const printBtn = document.createElement('button');
-                    printBtn.className = 'flex items-center justify-center gap-2 rounded-md bg-background border border-input px-3 py-2 text-sm font-medium hover:bg-accent transition-colors disallow-select';
+                    printBtn.className = 'flex items-center justify-center gap-2 rounded-md bg-background px-3 py-2 text-sm font-medium hover:bg-accent transition-colors disallow-select';
                     printBtn.innerHTML = `
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                         <span class="hidden md:block">Imprimir / PDF</span>
                     `;
                     printBtn.onclick = () => window.print();
-                    functionsContainer.appendChild(printBtn);
+                    moreFunctionsContainer.appendChild(printBtn);
 
                     let synthesis = window.speechSynthesis;
                     let utterance = null;
@@ -205,26 +198,16 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                             document.getElementById('audio-icon-pause')?.classList.remove('hidden');
                         }
                     });
-
-                    if (shareMenu) {
-                        shareMenu.classList.remove('hidden!');
-                        setTimeout(() => {
-                            if (functionsContainer && shareMenu) {
-                                functionsContainer.appendChild(shareMenu);
-                                void (shareMenu as HTMLElement).offsetWidth;
-                            }
-                        }, 20);
-                    }
                     
                     const experimentalFlags = JSON.parse(localStorage.getItem('experimentalFeatures') || '{}');
                     if (experimentalFlags.ai_summaries && 'Summarizer' in window) {
                         const summaryBtn = document.createElement('button');
-                        summaryBtn.className = 'flex items-center justify-center gap-2 rounded-md bg-background border border-input px-3 py-2 text-sm font-medium hover:bg-accent transition-colors disallow-select';
+                        summaryBtn.className = 'flex items-center justify-center gap-2 rounded-md bg-background px-3 py-2 text-sm font-medium hover:bg-accent transition-colors disallow-select';
                         summaryBtn.innerHTML = `
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>
                             <span class="hidden md:block">Resumen</span>
                         `;
-                        functionsContainer.appendChild(summaryBtn);
+                        moreFunctionsContainer.appendChild(summaryBtn);
 
                         summaryBtn.addEventListener('click', async () => {
                             summaryBtn.disabled = true;
@@ -257,7 +240,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                                     m.addEventListener('downloadprogress', (e) => {
                                         summary.innerHTML = `Descargando modelo de IA... (${Math.round(e.loaded * 100)}%)`;
                                     });
-                                  }
+                                }
                                 };
                                 
                                 const availability = await (window as any).Summarizer.availability();
@@ -275,6 +258,209 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                                 summarizer.destroy();
                             }
                         });
+                    }
+
+                    if ('Translator' in window || 'translation' in window || ('ai' in window && 'translator' in (window as any).ai)) {
+                        const languages = [{code: 'es', name: 'Español', emoji: '🇪🇸'},{code: 'en', name: 'English', emoji: '🇺🇸'},{code: 'pt', name: 'Português', emoji: '🇧🇷'},{code: 'fr', name: 'Français', emoji: '🇫🇷'},{code: 'it', name: 'Italiano', emoji: '🇮🇹'},{code: 'de', name: 'Deutsch', emoji: '🇩🇪'},{code: 'ru', name: 'Русский', emoji: '🇷🇺'},{code: 'ja', name: '日本語', emoji: '🇯🇵'},{code: 'zh', name: '中文', emoji: '🇨🇳'},{code: 'ar', name: 'العربية', emoji: '🇸🇦'},{code: 'bg', name: 'Български', emoji: '🇧🇬'},{code: 'bn', name: 'বাংলা', emoji: '🇧🇩'},{code: 'cs', name: 'Česky', emoji: '🇨🇿'},{code: 'da', name: 'Dansk', emoji: '🇩🇰'},{code: 'el', name: 'Ελληνικά', emoji: '🇬🇷'},{code: 'fi', name: 'Suomi', emoji: '🇫🇮'},{code: 'hi', name: 'हिन्दी', emoji: '🇮🇳'},{code: 'hr', name: 'Hrvatski', emoji: '🇭🇷'},{code: 'hu', name: 'Magyar', emoji: '🇭🇺'},{code: 'id', name: 'Indonesia', emoji: '🇮🇩'},{code: 'iw', name: 'עברית', emoji: '🇮🇱'},{code: 'kn', name: 'ಕನ್ನಡ', emoji: '🇮🇳'},{code: 'ko', name: '한국어', emoji: '🇰🇷'},{code: 'lt', name: 'Lietuvių', emoji: '🇱🇹'},{code: 'mr', name: 'मराठी', emoji: '🇮🇳'},{code: 'nl', name: 'Nederlands', emoji: '🇳🇱'},{code: 'no', name: 'Norsk', emoji: '🇳🇴'},{code: 'pl', name: 'Polski', emoji: '🇵🇱'},{code: 'ro', name: 'Română', emoji: '🇷🇴'},{code: 'sk', name: 'Slovenčina', emoji: '🇸🇰'},{code: 'sl', name: 'Slovenščina', emoji: '🇸🇮'},{code: 'sv', name: 'Svenska', emoji: '🇸🇪'},{code: 'ta', name: 'தமிழ்', emoji: '🇮🇳'},{code: 'te', name: 'తెలుగు', emoji: '🇮🇳'},{code: 'th', name: 'ไทย', emoji: '🇹🇭'},{code: 'tr', name: 'Türkçe', emoji: '🇹🇷'},{code: 'uk', name: 'Українська', emoji: '🇺🇦'},{code: 'vi', name: 'Tiếng Việt', emoji: '🇻🇳'},{code: 'zh-Hant', name: '中文 (tradicional)', emoji: '🇹🇼'}];
+                        const translateWrapper = document.createElement('div');
+                        translateWrapper.className = 'relative flex items-center gap-2';
+                        translateWrapper.innerHTML = `<button id="translate-trigger" class="flex items-center justify-center gap-2 rounded-md bg-background px-3 py-2 text-sm font-medium hover:bg-accent transition-all disallow-select" title="Traducir artículo"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg></button>`;
+                        functionsContainer.appendChild(translateWrapper);
+
+                        const triggerBtn = translateWrapper.querySelector('#translate-trigger');
+                        
+                        triggerBtn?.addEventListener('click', async (e) => {
+                            e.stopPropagation();
+                            if ((triggerBtn as HTMLButtonElement).disabled) return;
+                            openLanguageSelector();
+                        });
+
+                        const translateFunc = async (targetLang: string) => {
+                            const sourceLang = lang.split('-')[0] || 'es';
+                            if (sourceLang === targetLang) {
+                                alert("The selected language can't be the same as the original.");
+                                return;
+                            }
+                            (triggerBtn as HTMLButtonElement).disabled = true;
+                            const originalHTML = triggerBtn!.innerHTML;
+                            triggerBtn!.innerHTML = `<svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>`;
+                            let translator: any;
+                            try {
+                                if ('Translator' in window) {
+                                    translator = await (window as any).Translator.create({ sourceLanguage: sourceLang, targetLanguage: targetLang });
+                                } else if ('translation' in window) {
+                                    translator = await (window as any).translation.createTranslator({ sourceLanguage: sourceLang, targetLanguage: targetLang });
+                                } else if ('ai' in window && 'translator' in (window as any).ai) {
+                                    translator = await (window as any).ai.translator.create({ sourceLanguage: sourceLang, targetLanguage: targetLang });
+                                }
+                                if (!translator) throw new Error("API de traducción no encontrada");
+                                async function gatherTextNodes(root: Element | null) {
+                                    if (!root) return [];
+                                    const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+                                    const textNodes: Node[] = [];
+                                    let n;
+                                    while(n = walk.nextNode()) {
+                                        if (n.nodeValue && n.nodeValue.trim() !== '') {
+                                            let current = n.parentElement;
+                                            let shouldSkip = false;
+                                            while (current && current !== root) {
+                                                if (
+                                                    current.tagName.toLowerCase() === 'math' ||
+                                                    current.classList.contains('code-wrapper') ||
+                                                    current.classList.contains('console-wrapper')
+                                                ) {
+                                                    shouldSkip = true;
+                                                    break;
+                                                }
+                                                current = current.parentElement;
+                                            }
+                                            if (!shouldSkip) {
+                                                textNodes.push(n);
+                                            }
+                                        }
+                                    }
+                                    return textNodes;
+                                }
+                                const title = document.querySelector('h1.text-3xl');
+                                const desc = document.querySelector('p.text-xl.text-muted-foreground');
+                                const article = document.querySelector('article.prose');
+                                const allTextNodes = [...(await gatherTextNodes(title)),...(await gatherTextNodes(desc)),...(await gatherTextNodes(article))];
+                                const images = document.querySelectorAll('img');
+                                const imagesToTranslate: HTMLImageElement[] = [];
+                                for (const img of images) {
+                                    const el = img as HTMLImageElement;
+                                    if (el.alt && el.alt.trim() !== '') imagesToTranslate.push(el);
+                                }
+                                const spanMap = new Map<Node, HTMLSpanElement>();
+                                allTextNodes.forEach(node => {
+                                    const span = document.createElement('span');
+                                    span.className = 'translating-shimmer';
+                                    node.parentNode?.insertBefore(span, node);
+                                    span.appendChild(node);
+                                    spanMap.set(node, span);
+                                });
+                                for (const node of allTextNodes) {
+                                    const span = spanMap.get(node);
+                                    const originalText = node.nodeValue || '';
+                                    const text = originalText.trim();
+                                    const matchPrefix = originalText.match(/^\s*/);
+                                    const matchSuffix = originalText.match(/\s*$/);
+                                    const prefix = matchPrefix ? matchPrefix[0] : '';
+                                    const suffix = matchSuffix ? matchSuffix[0] : '';
+                                    try {
+                                        const stream = await translator.translateStreaming(text);
+                                        for await (const chunk of stream) node.nodeValue = prefix + chunk + suffix;
+                                    } catch (err) {console.error("Error al traducir texto:", err);}
+                                    if (span && span.parentNode) {
+                                        span.parentNode.insertBefore(node, span);
+                                        span.parentNode.removeChild(span);
+                                    }
+                                }
+                                for (const el of imagesToTranslate) {
+                                    try {
+                                        const stream = await translator.translateStreaming(el.alt.trim());
+                                        for await (const chunk of stream) el.alt = chunk;
+                                    } catch (err) {}
+                                }
+                                document.querySelectorAll('span.translating-shimmer').forEach(span => {
+                                    while (span.firstChild) span.parentNode?.insertBefore(span.firstChild, span);
+                                    span.parentNode?.removeChild(span);
+                                });
+                                
+                                triggerBtn!.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
+                                (triggerBtn as HTMLButtonElement).disabled = false;
+                                setTimeout(() => {
+                                    triggerBtn!.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>` 
+                                }, 2000);
+                                lang = targetLang;
+                                (document.getElementById('translation-notice') as HTMLElement).classList.remove('hidden');
+                            } catch (e) {
+                                console.error(e);
+                                document.querySelectorAll('span.translating-shimmer').forEach(span => {
+                                    while (span.firstChild) span.parentNode?.insertBefore(span.firstChild, span);
+                                    span.parentNode?.removeChild(span);
+                                });
+                                triggerBtn!.innerHTML = originalHTML;
+                                (triggerBtn as HTMLButtonElement).disabled = false;
+                                alert("Translation could not be started.");
+                                translator?.destroy();
+                            }
+                        }
+
+                        const openLanguageSelector = () => {
+                            const overlay = document.createElement('div');
+                            overlay.className = 'fixed inset-0 z-[9999] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4';
+                            overlay.id = 'language-selector-overlay';
+
+                            const panel = document.createElement('div');
+                            panel.className = 'relative w-full max-w-3xl rounded-3xl bg-background shadow-2xl overflow-hidden ';
+                            panel.innerHTML = `
+                                <div class="flex items-center justify-between px-6 py-5 border-b border-border">
+                                    <div>
+                                        <h2 class="text-xl font-semibold">Select Language</h2>
+                                        <p class="text-sm text-muted-foreground">Select a language to translate the article</p>
+                                    </div>
+                                    <button type="button" id="language-selector-close" class="text-2xl font-semibold leading-none text-muted-foreground hover:text-foreground">×</button>
+                                </div>
+                                <div class="p-6 max-h-[70vh] overflow-auto custom-scrollbar">
+                                    <div class="grid grid-cols-3">
+                                        ${languages.map(langItem => `
+                                            <button class="language-picker-button flex items-center justify-center gap-2 m-2 rounded-full border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors" data-lang="${langItem.code}">
+                                                <span>${langItem.emoji}</span>
+                                                <span>${langItem.name}</span>
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `;
+
+                            overlay.appendChild(panel);
+                            document.body.appendChild(overlay);
+
+                            const closeModal = () => overlay.remove();
+                            overlay.addEventListener('click', (event) => {
+                                if (event.target === overlay) closeModal();
+                            });
+                            panel.querySelector('#language-selector-close')?.addEventListener('click', closeModal);
+
+                            panel.querySelectorAll<HTMLButtonElement>('.language-picker-button').forEach((btn) => {
+                                btn.addEventListener('click', async () => {
+                                    closeModal();
+                                    await translateFunc(btn.dataset.lang as string);
+                                });
+                            });
+                        };
+                    }
+
+                    const moreFunctionsTrigger = document.createElement('button');
+                    moreFunctionsTrigger.className = 'flex items-center justify-center gap-2 rounded-md bg-background px-3 py-2 text-sm font-medium hover:bg-accent transition-colors disallow-select';
+                    moreFunctionsTrigger.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>`;
+                    
+                    moreFunctionsTrigger.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        moreFunctionsContainer.classList.toggle('opacity-0');
+                        moreFunctionsContainer.classList.toggle('pointer-events-none');
+                    });
+                    
+                    document.addEventListener('click', (e: any) => {
+                        if (moreFunctionsContainer.classList.contains('opacity-0')) return;
+                        if (!(moreFunctionsContainer.contains(e.target) || moreFunctionsTrigger.contains(e.target))) moreFunctionsContainer.classList.add('opacity-0', 'pointer-events-none');
+                    });
+                    
+                    const moreFunctionsWrapper = document.createElement('div');
+                    moreFunctionsWrapper.className = 'relative flex items-center gap-2';
+                    moreFunctionsWrapper.appendChild(moreFunctionsTrigger);
+                    moreFunctionsWrapper.appendChild(moreFunctionsContainer);
+                    functionsContainer.appendChild(moreFunctionsWrapper);
+
+                    if (shareMenu) {
+                        shareMenu.classList.remove('hidden!');
+                        setTimeout(() => {
+                            if (moreFunctionsWrapper && shareMenu) {
+                                moreFunctionsWrapper.insertBefore(shareMenu, moreFunctionsWrapper.firstChild);
+                                void (shareMenu as HTMLElement).offsetWidth;
+                            }
+                        }, 50);
                     }
                 }
 
@@ -306,3 +492,15 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
         });
     </script>
 </BaseLayout>
+
+<style is:global>
+    @keyframes translation-shimmer {
+        0% { color: hsl(var(--primary)) !important; }
+        50% { color: hsl(var(--primary) / 0.5) !important; }
+        100% { color: hsl(var(--primary)) !important; }
+    }
+    .translating-shimmer {
+        animation: translation-shimmer 2s linear infinite !important;
+    }
+
+</style>

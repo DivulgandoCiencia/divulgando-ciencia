@@ -405,6 +405,10 @@ button {
     -o-user-select: none !important;
 }
 
+a {
+    cursor: pointer;
+}
+
 /* Premium Select Styling */
 select {
     appearance: none;

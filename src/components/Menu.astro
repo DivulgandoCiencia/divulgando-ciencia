@@ -5,7 +5,7 @@ const lang = Astro.locals.lang || 'es';
 const t = clientTranslations[lang];
 ---
 <div id="menu" class="fixed h-full inset-0 z-100 items-center justify-center bg-black/70 opacity-0 pointer-events-none transition-color duration-300 disallow-select">
-    <div id="menu-content" class="absolute min-w-[50%] h-full opacity-100 backdrop-blur bg-principal-white/95 dark:bg-principal-black/95 right-0 top-0 transition-transform duration-300 translate-x-full">
+    <div id="menu-content" class="absolute min-w-[50%] h-full opacity-100 backdrop-blur dark:bg-principal-black/95 bg-principal-white/95 right-0 top-0 transition-transform duration-300 translate-x-full">
         <div class="flex items-center h-15">
             <button id="menu-close" class="top-4 right-4 absolute flex h-9 w-9 items-center justify-center blue-border rounded-md border bg-background transition-colors hover:bg-muted">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -117,9 +117,11 @@ const t = clientTranslations[lang];
 </div>
 
 <script>
-import { navigate } from "node_modules/astro/dist/transitions/router";
-
+    import { navigate } from "node_modules/astro/dist/transitions/router";
+    let __ = false;
     document.addEventListener('astro:page-load', () => {
+        if (__) return;
+        __ = true;
         const menuToggle = document.getElementById('menu-toggle');
         const menu = document.getElementById('menu');
         const menuContent = document.getElementById('menu-content');

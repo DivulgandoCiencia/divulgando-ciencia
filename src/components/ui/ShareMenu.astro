@@ -8,26 +8,13 @@ const { id, title = "Share this content", className = "", display="text+icon", m
 ---
 
 <div class={`distributor-container relative inline-block ${className} disallow-select`}>
-    {display!=="icon" ? <button 
-        id={`distributor-trigger-${id}`}
-        class="distributor-trigger flex items-center justify-center gap-2 rounded-md bg-background border border-input px-3 py-2 text-sm font-medium hover:bg-accent transition-colors"
-        aria-expanded="false"
-        aria-haspopup="true"
-    >
+    {display!=="icon" ? <button id={`distributor-trigger-${id}`} class="distributor-trigger flex items-center justify-center gap-2 rounded-md bg-background px-3 py-2 text-sm font-medium hover:bg-accent transition-colors" aria-expanded="false" aria-haspopup="true">
         <Icon icon='share2' className={buttonIconClass} />
-        <span>{t.common.share}</span>
     </button> : 
     <button id={`distributor-trigger-${id}`} class="absolute text-principal-white hover:text-primary transition-colors">
         <Icon icon='share2' className={buttonIconClass} />
     </button>}
-    <div 
-        id={`distributor-menu-${id}`}
-        class="distributor-menu absolute z-50 mt-2 origin-top-right rounded-md border bg-card shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transform opacity-0 scale-95 pointer-events-none transition-all duration-200"
-        style={menuStyle}
-        role="menu"
-        aria-orientation="vertical"
-        aria-labelledby={`distributor-trigger-${id}`}
-    >
+    <div id={`distributor-menu-${id}`} class="distributor-menu absolute z-50 mt-2 origin-top-right rounded-md border bg-card shadow-lg focus:outline-none transform opacity-0 scale-95 pointer-events-none transition-all duration-200" style={menuStyle} role="menu" aria-orientation="vertical" aria-labelledby={`distributor-trigger-${id}`}>
         <div class={menuDisplay!=="icon" ? "p-2 w-40" : "px-1"}>
             <div class={menuDisplay!=="icon" ? "pt-2" : "hidden"}><div class="pb-2 px-3 text-sm font-medium border-b mb-1 text-center">{title}</div></div>
             <div class={menuDisplay!=="icon" ? "py-1" : "flex"}>
@@ -61,10 +48,12 @@ const { id, title = "Share this content", className = "", display="text+icon", m
 </div>
 
 <script define:vars={{ id }}>
+let __ = false;
 document.addEventListener('astro:page-load', () => {
     const trigger = document.getElementById(`distributor-trigger-${id}`);
     const menu = document.getElementById(`distributor-menu-${id}`);
-    if (!trigger || !menu) return;
+    if (!trigger || !menu || __) return;
+    __ = true;
     
     trigger.addEventListener('click', (e) => {
         e.stopPropagation();

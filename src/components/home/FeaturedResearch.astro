@@ -29,7 +29,10 @@ const t = clientTranslations[lang];
 </section>
 
 <script>
+    let __ = false;
     document.addEventListener('astro:page-load', async () => {
+        if (__) return;
+        __ = true;
         const container = document.getElementById('featured-articles-container');
         if (!container) return;
 

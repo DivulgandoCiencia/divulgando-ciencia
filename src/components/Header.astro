@@ -62,7 +62,10 @@ const t = clientTranslations[lang];
     </div>
     <script>
         import { navigate } from "astro:transitions/client";
+        let __ = false;
         document.addEventListener('astro:page-load', () => {
+            if (__) return;
+            __ = true;
             const searchForm = document.getElementById('header-search-form') as HTMLFormElement;
             const searchInput = document.getElementById('header-search-input') as HTMLInputElement;
             

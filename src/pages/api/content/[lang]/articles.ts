@@ -204,7 +204,7 @@ const handler = async (body, lang = 'en') => {;
         </div>
     `
     const paginationHTML = `
-        <a href="${currentPage <= 1 ? '' : `?page=${currentPage - 1}${pageFilters}`}" class="${`inline-flex items-center justify-center rounded-md text-sm font-medium h-10 w-10 border ${currentPage > 1 ? 'border-input bg-background hover:bg-accent transition-colors' : 'border-input bg-background opacity-50 cursor-not-allowed'}`}" aria-disabled=${currentPage <= 1} tabindex=${currentPage <= 1 ? -1 : 0} aria-label='Go to previous page' style=${currentPage <= 1 ? "pointer-events: none" : ''}>
+        <a href="${currentPage <= 1 ? '' : `/articles?page=${currentPage - 1}${pageFilters}`}" class="${`inline-flex items-center justify-center rounded-md text-sm font-medium h-10 w-10 border ${currentPage > 1 ? 'border-input bg-background hover:bg-accent transition-colors' : 'border-input bg-background opacity-50 cursor-not-allowed'}`}" aria-disabled=${currentPage <= 1} tabindex=${currentPage <= 1 ? -1 : 0} aria-label='Go to previous page' style=${currentPage <= 1 ? "pointer-events: none" : ''}>
             <span class="sr-only">Previous Page</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         </a>
         ${
@@ -213,14 +213,14 @@ const handler = async (body, lang = 'en') => {;
                     return '<span class="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-2 border border-input bg-background">...</span>'
                 } else {
                     if (currentPage === page) {
-                        return `<a href=${`?page=${page}${pageFilters}`} class="${`inline-flex items-center justify-center rounded-md text-sm font-medium h-10 w-10 ${currentPage === page ? 'bg-primary text-primary-foreground' : 'border border-input bg-background hover:bg-accent transition-colors'}`}" aria-label=${`Go to page ${page}`} aria-current='page'>${page}</a>`
+                        return `<a href=${`/articles?page=${page}${pageFilters}`} class="${`inline-flex items-center justify-center rounded-md text-sm font-medium h-10 w-10 ${currentPage === page ? 'bg-primary text-primary-foreground' : 'border border-input bg-background hover:bg-accent transition-colors'}`}" aria-label=${`Go to page ${page}`} aria-current='page'>${page}</a>`
                     } else {
-                        return `<a href=${`?page=${page}${pageFilters}`} class="${`inline-flex items-center justify-center rounded-md text-sm font-medium h-10 w-10 ${currentPage === page ? 'bg-primary text-primary-foreground' : 'border border-input bg-background hover:bg-accent transition-colors'}`}" aria-label=${`Go to page ${page}`}>${page}</a>`
+                        return `<a href=${`/articles?page=${page}${pageFilters}`} class="${`inline-flex items-center justify-center rounded-md text-sm font-medium h-10 w-10 ${currentPage === page ? 'bg-primary text-primary-foreground' : 'border border-input bg-background hover:bg-accent transition-colors'}`}" aria-label=${`Go to page ${page}`}>${page}</a>`
                     }
                 }
             }).join('')
         }
-        <a href="${currentPage >= totalPages ? '' : `?page=${currentPage + 1}${pageFilters}`}" class="${`inline-flex items-center justify-center rounded-md text-sm font-medium h-10 w-10 border ${currentPage < totalPages ? 'border-input bg-background hover:bg-accent transition-colors' : 'border-input bg-background opacity-50 cursor-not-allowed'}`}" aria-disabled=${currentPage >= totalPages} tabindex=${currentPage >= totalPages ? -1 : 0} aria-label='Go to next page' style=${currentPage >= totalPages ? "pointer-events: none" : ''}>
+        <a href="${currentPage >= totalPages ? '' : `/articles?page=${currentPage + 1}${pageFilters}`}" class="${`inline-flex items-center justify-center rounded-md text-sm font-medium h-10 w-10 border ${currentPage < totalPages ? 'border-input bg-background hover:bg-accent transition-colors' : 'border-input bg-background opacity-50 cursor-not-allowed'}`}" aria-disabled=${currentPage >= totalPages} tabindex=${currentPage >= totalPages ? -1 : 0} aria-label='Go to next page' style=${currentPage >= totalPages ? "pointer-events: none" : ''}>
             <span class="sr-only">Next Page</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
         </a>
     `

@@ -13,12 +13,12 @@ const authorData = (await getEntry("authors", author?.id || authors[0]?.id)).dat
 const authorName = authors !== undefined ? (authors.length > 1 ? (authors.length > 2 ? `${authorData.name} ${t.common.and} ${(authors.length - 1).toString()} ${t.common.more}` : `${authorData.name} ${t.common.and} ${((await getEntry("authors", authors[1].id)).data.name)}`) : authorData.name) : authorData.name;
 ---
 
-<div class={"rounded-lg text-card-foreground shadow-md dark:shadow-lg gradient-"+scienceData.color}>
+<div class={"rounded-lg text-card-foreground dark:shadow-lg shadow-md gradient-"+scienceData.color}>
     <div class="p-6">
         <div class="mb-2">
             <h3 class="text-xl font-semibold"><a href={`/article/${slug.split('/')[2]}`} class="hover:text-primary">{title}</a></h3>
             <div class="flex items-center gap-2 text-sm mt-1">
-                <span class={"bg-principal-black bg-opacity-20 backdrop-blur-sm px-2 py-1 rounded-full color-"+scienceData.color}>{t.sciences[scienceData.name]}</span>
+                <span class={"dark:bg-principal-black bg-principal-white bg-opacity-20 backdrop-blur-sm px-2 py-1 rounded-full color-"+scienceData.color}>{t.sciences[scienceData.name]}</span>
                 <span>{date.toLocaleDateString(t.articles.timeStamp, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 <span>•</span>
                 <span>{readTime ? readTime.toString() : calcReadTime(body)} {t.articles.readTime}</span>

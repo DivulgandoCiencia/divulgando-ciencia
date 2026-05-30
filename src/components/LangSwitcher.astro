@@ -45,7 +45,10 @@ const { currentLang, className = "" } = Astro.props;
 </div>
 
 <script>
+    let __ = false;
     document.addEventListener('astro:page-load', () => {
+        if (__) return;
+        __ = true;
         const button = document.getElementById('language-switcher-button');
         const dropdown = document.getElementById('language-dropdown');
         

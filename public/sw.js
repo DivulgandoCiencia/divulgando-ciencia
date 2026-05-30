@@ -1,5 +1,5 @@
 // === CONFIGURACIÓN ===
-const CACHE_NAME = 'dC-cache-v5.0.2'; 
+const CACHE_NAME = 'dC-cache-v5.0.3'; 
 const ASSETS_TO_CACHE = [
     '/images/logo.webp',
     '/images/landing-page/banner.webp',
