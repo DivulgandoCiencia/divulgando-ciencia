@@ -184,12 +184,12 @@ const handler = async (body, lang = 'en') => {;
                             <img alt=${"Foto de perfil de "+article.author[0].name} src=${"/images/autores/"+article.author[1]+".webp"} class="bg-principal-white h-6 w-6 rounded-full object-contain my-auto mr-2"/>
                             <div class="text-sm font-medium">
                                 ${article.authors && article.authors.length > 0
-                                    ? article.authors[0].name + (article.authors.length > 1 ? ` +${article.authors.length - 1}` : '')
+                                    ? article.authors[0][0].name + (article.authors.length > 1 ? (article.authors.length > 2 ? ` ${t.common.and} ${article.authors.length - 1} ${t.common.more}` : ` ${t.common.and} ${article.authors[1][0].name}`) : '')
                                     : article.author[0]?.name || 'Unknown Author'}
                             </div>
                         </div>
                         <a href=${"/article/"+article.slug.split('/')[2]}>
-                            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-3 hover:scale-105 transition-transform">
+                            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-3 hover:scale-105">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-4 w-4"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                                 ${t.common.readArticle}
                             </button>

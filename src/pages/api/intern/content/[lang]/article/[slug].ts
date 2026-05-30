@@ -42,36 +42,34 @@ export const GET = async ({ params }) => {
     const science = ScienceList.filter(({id}) => article.id.split('/')[1] == id)[0];
 
     const author = article.data.author ? (await authorCollection.find(a => a.id === article.data.author.id)).data : undefined;
-    let authors = []; if (article.data.authors?.length > 1) {article.data.authors?.map(async(a) => {authors.push([(await authorCollection.find(b => b.id === a.id)).data, a.id])})}
+    let authors = []; if (article.data.authors?.length > 1) {await article.data.authors?.map(async(a) => {authors.push([(await authorCollection.find(b => b.id === a.id)).data, a.id])})}
 
     const authorsHeaderHTML = article.data.authors?.length > 1 ? (
         `<div class='relative flex items-center'>
             <div class="flex -space-x-4">
                 ${authors.slice(0, 3).map((author, index) => (
-                    `<div class="author-avatar-wrapper relative group">
-                        <img src=${author.avatar || "/placeholder.svg?height=50&width=50"} alt=${author.name} class="h-12 w-12 rounded-full object-cover border-2 border-background shadow-sm transition-transform hover:z-10 hover:scale-110" style='z-index: ${authors.slice(0, 3).length - index}'/>
+                    `<div class="author-avatar-wrapper relative group" style="z-index: ${authors.slice(0, 3).length - index};">
+                        <img src=${"/images/autores/" + author[1] + ".webp" || "/placeholder.svg?height=50&width=50"} alt=${author[0].name} class="h-12 w-12 rounded-full object-cover border-2 border-background shadow-sm transition-transform hover:z-10 hover:scale-110" style="z-index: ${authors.slice(0, 3).length - index};"/>
                         <div class="author-tooltip opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute left-1/2 bottom-full mb-2 -translate-x-1/2 min-w-[200px] bg-card border rounded-lg shadow-lg p-3 transition-all duration-200 z-20">
                             <div class="flex items-start gap-3">
-                                <img src=${author.avatar || "/placeholder.svg?height=50&width=50"} alt=${author.name} class="h-10 w-10 rounded-full object-cover shrink-0" />
+                                <img src=${"/images/autores/" + author[1] + ".webp" || "/placeholder.svg?height=50&width=50"} alt=${author[0].name} class="h-10 w-10 rounded-full object-cover shrink-0" />
                                 <div>
-                                    <div class="font-medium">${author.name}</div>
-                                    <div class="text-xs text-muted-foreground">${author.title}</div>
-                                    <div class="text-xs text-muted-foreground">${author.institution}</div>
+                                    <div class="font-medium">${author[0].name}</div>
                                 </div>
                             </div>
-                            ${author.bio && (`<p class="text-xs text-muted-foreground mt-2 line-clamp-3">${author.bio}</p>`)}
+                            <p class="text-xs text-muted-foreground mt-2 line-clamp-3">${author[0].bio || t.articles.defaultBio}</p>
                             <div class="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-3 h-3 bg-card border-r border-b rotate-45"></div>
                         </div>
                     </div>`
                 )).join('\n')}
 
-                ${Math.max(0, authors.length - 3) > 0 && (
-                    `<div class="h-12 w-12 rounded-full bg-primary/10 border-2 border-background flex items-center justify-center text-sm font-medium text-primary shadow-sm z-0">
+                ${Math.max(0, authors.length - 3) > 0 ? (
+                    `<div class="h-12 w-12 rounded-full bg-primary/10 border-2 border-background flex items-center justify-center text-sm font-medium text-primary shadow-sm z-0 select-none">
                         +${Math.max(0, authors.length - 3)}
                     </div>`
-                )}
+                ) : ''}
             </div>
-            <div class="ml-4"><span class="text-sm font-medium">${authors.length === 1 ? authors[0].name : authors.length === 2 ? `${authors[0].name} ${t.common.and} ${authors[1].name}`: `${authors[0].name} ${t.common.and} ${authors.length - 1} ${t.common.more}`}</span></div>
+            <div class="ml-4"><span class="text-sm font-medium">${authors.length === 1 ? authors[0][0].name : authors.length === 2 ? `${authors[0][0].name} ${t.common.and} ${authors[1][0].name}`: `${authors[0][0].name} ${t.common.and} ${authors.length - 1} ${t.common.more}`}</span></div>
         </div>
         <style>
             .author-tooltip {
@@ -105,9 +103,7 @@ export const GET = async ({ params }) => {
                         />
                         <div>
                             <div class="font-medium">${author[0].name}</div>
-                            <div class="text-sm text-muted-foreground">title</div>
-                            <div class="text-sm text-muted-foreground">institution</div>
-                            ${author.bio && `<p class="text-sm text-muted-foreground mt-1">${author[0].bio}</p>`}
+                            <p class="text-sm text-muted-foreground mt-1">${author[0].bio || t.articles.defaultBio}</p>
                         </div>
                     </div>`
                 )).join('\n')}
@@ -156,8 +152,8 @@ export const GET = async ({ params }) => {
     <div class="rounded-xl border blue-border bg-card p-6">
         <h3 class="text-lg font-semibold mb-4">${t.article.relatedArticles}</h3>
         <div class="space-y-4">
-            ${articlesL.slice(0,3).map(article => (
-                `<div class="group">
+            ${articlesL.slice(0,3).map(article => `
+                <div class="group">
                     <a href=${`/article/${article.id.split('/')[2]}`} class="flex gap-3">
                         <div class="h-16 w-16 rounded-md overflow-hidden shrink-0">
                             <img style="view-transition-name:${article.id.split('/')[2]}-portrait;" src=${'/images/contenido/'+article.id.split('/')[2]+'/portada.webp' || "/placeholder.svg"} alt=${article.data.title} class="h-full w-full object-cover rounded-md transition-transform group-hover:scale-105"/>
@@ -167,12 +163,12 @@ export const GET = async ({ params }) => {
                                 ${article.data.title}
                             </h4>
                             <p class="text-xs text-muted-foreground mt-1">
-                                ${article.data.author !== undefined ? authorCollection.filter(({id}) => article.data.author.id === id)[0].data.name : authorCollection.filter(({id}) => article.data.authors[0].id === id)[0].data.name + ` ${t.common.and} ${(article.data.authors.length - 1).toString()} ${t.common.more}` } • ${article.data.readTime ? article.data.readTime.toString() : calcReadTime(article.body) + ' ' + t.articles.readTime}
+                                ${article.data.authors?.length > 1 ? (authorCollection.filter(({id}) => article.data.authors[0].id == id)[0].data.name + ` ${t.common.and} ${article.data.authors.length > 2 ? (article.data.authors.length - 1).toString() + ' ' + t.common.more : authorCollection.filter(({id}) => article.data.authors[1].id == id)[0].data.name}`) : authorCollection.filter(({id}) => article.data.author.id === id)[0].data.name} • ${article.data.readTime ? article.data.readTime.toString() : calcReadTime(article.body) + ' ' + t.articles.readTime}
                             </p>
                         </div>
                     </a>
                 </div>`
-            )).join('\n')}
+            ).join('\n')}
         </div>
         <a href="/articles" class="block mt-4 text-sm text-primary hover:underline">${t.article.viewMoreArticles}</a>
     </div>`

@@ -119,7 +119,7 @@ const metaRobots = robots !== undefined ? robots : (cf?.robots || false);
                     indexedDB.databases().then((dbs) => dbs.forEach(db => indexedDB.deleteDatabase(db.name)));
                     sessionStorage.clear();
                 }
-                localStorage.setItem('devVersion', '5.0.1');
+                localStorage.setItem('devVersion', '5.0.2');
             });
         </script>
 
