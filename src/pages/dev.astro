@@ -305,6 +305,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             initFeatureFlags();
         };
 
-        document.addEventListener('astro:page-load', () => {initDevConsole();});
+        document.addEventListener('page-load', () => {initDevConsole();});
     </script>
 </BaseLayout>

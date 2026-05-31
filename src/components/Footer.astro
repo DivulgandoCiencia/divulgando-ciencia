@@ -31,7 +31,7 @@ const t = clientTranslations[lang];
 
 <script>
     import { navigate } from "astro:transitions/client";
-    document.addEventListener('astro:page-load', () => {
+    document.addEventListener('page-load', () => {
         const versionSpan = document.getElementById('dev-version-display');
         let clickCount = 0;
         

@@ -123,7 +123,7 @@ const t = clientTranslations[lang];
             }
         }
 
-        document.addEventListener('astro:page-load', () => {
+        document.addEventListener('page-load', () => {
             loadArticles();
 
             const scienceFilter = document.getElementById('science-filter') as HTMLSelectElement;

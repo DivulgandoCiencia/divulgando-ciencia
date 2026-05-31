@@ -118,7 +118,7 @@ const t = clientTranslations[lang];
 
 <script>
     import { navigate } from "node_modules/astro/dist/transitions/router";
-    document.addEventListener('astro:page-load', () => {
+    document.addEventListener('page-load', () => {
         const menuToggle = document.getElementById('menu-toggle');
         const menu = document.getElementById('menu');
         const menuContent = document.getElementById('menu-content');

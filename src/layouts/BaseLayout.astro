@@ -119,8 +119,16 @@ const metaRobots = robots !== undefined ? robots : (cf?.robots || false);
                     indexedDB.databases().then((dbs) => dbs.forEach(db => indexedDB.deleteDatabase(db.name)));
                     sessionStorage.clear();
                 }
-                localStorage.setItem('devVersion', '5.0.3');
+                localStorage.setItem('devVersion', '5.0.4');
             });
+
+            let pageLoadTriggered = false;
+            document.addEventListener('astro:page-load', () => {
+                if (pageLoadTriggered) return;
+                pageLoadTriggered = true;
+                document.dispatchEvent(new Event("page-load"));
+            });
+            document.addEventListener('astro:before-swap', () => {pageLoadTriggered = false;});
         </script>
 
         <script define:vars={{cookieTheme}}>

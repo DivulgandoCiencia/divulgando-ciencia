@@ -48,7 +48,7 @@ const { id, title = "Share this content", className = "", display="text+icon", m
 </div>
 
 <script define:vars={{ id }}>
-document.addEventListener('astro:page-load', () => {
+document.addEventListener('page-load', () => {
     const trigger = document.getElementById(`distributor-trigger-${id}`);
     const menu = document.getElementById(`distributor-menu-${id}`);
     if (!trigger || !menu) return;

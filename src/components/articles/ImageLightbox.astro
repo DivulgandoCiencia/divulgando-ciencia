@@ -20,7 +20,7 @@ import ShareMenu from "../ui/ShareMenu.astro"
 </div>
 
 <script>
-    document.addEventListener('astro:page-load', () => {
+    document.addEventListener('page-load', () => {
     (document as any).setupLightbox = () => {
         const lightbox = document.getElementById('image-lightbox') as HTMLElement;
         const lightboxImage = document.getElementById('lightbox-image') as HTMLImageElement;
