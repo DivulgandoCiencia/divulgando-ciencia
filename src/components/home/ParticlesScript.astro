@@ -1,8 +1,5 @@
 <script>
-    let __ = false;
     document.addEventListener('astro:page-load', () => {
-        if (__) return;
-        __ = true;
         const canvas = document.getElementById('particlesCommunity') as HTMLCanvasElement;
         if (!canvas) return;
 

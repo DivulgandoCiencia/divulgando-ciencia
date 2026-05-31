@@ -118,10 +118,7 @@ const t = clientTranslations[lang];
 
 <script>
     import { navigate } from "node_modules/astro/dist/transitions/router";
-    let __ = false;
     document.addEventListener('astro:page-load', () => {
-        if (__) return;
-        __ = true;
         const menuToggle = document.getElementById('menu-toggle');
         const menu = document.getElementById('menu');
         const menuContent = document.getElementById('menu-content');
@@ -180,5 +177,5 @@ const t = clientTranslations[lang];
                 }
             });
         }
-    })
+    });
 </script>

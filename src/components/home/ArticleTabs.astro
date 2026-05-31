@@ -62,10 +62,7 @@ if (articles) {
 
 <script>
     import { clientTranslations } from '../../i18n';
-    let __ = false;
     document.addEventListener('astro:page-load', async () => {
-        if (__) return;
-        __ = true;
         const lang = document.documentElement.lang || 'es';
         const t = clientTranslations[lang];
         const tabButtons = document.querySelectorAll('[data-tab]');

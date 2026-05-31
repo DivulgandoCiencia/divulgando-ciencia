@@ -50,10 +50,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
     <ShareMenu id="article" lang={lang} className="hidden! article-actions-panel" />
 
     <script>
-        let __ = false;
         document.addEventListener('astro:page-load', async () => {
-            if (__) return;
-            __ = true;
             const container = document.getElementById('article-content-container');
             const progressBar = document.getElementById('reading-progress');
             const scrollContainer = document.getElementById('scroll-container');
