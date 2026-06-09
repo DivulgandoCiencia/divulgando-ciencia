@@ -53,6 +53,14 @@
 
         --black: #000000;
         --white: #ffffff;
+
+        --print-bg-white: #fff;
+        --print-bg-light: #f5f5f5;
+        --print-bg-dark: #222;
+
+        --print-fg-white: #000;
+        --print-fg-light: #000;
+        --print-fg-dark: #fff;
     }
 
     .dark {
@@ -184,11 +192,16 @@ html {
 
 /* Print Styles */
 @media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
     html, div, section, article, header, footer, main, body {
         overflow: visible !important;
     }
     header, footer, #functions-container, #focus-mode-toggle, 
-    .disallow-select, .science-pattern, #reading-progress,
+    .disallow-select, .science-pattern, #reading-progress, #print-menu-overlay, .article-actions-panel,
     .lg\:col-span-4 { 
         display: none !important;
     }
@@ -234,9 +247,29 @@ html {
         width: 100% !important;
     }
 
+    body:has(#print-context.print-bg-white) {
+        --print-bg: var(--print-bg-white);
+        --print-fg: var(--print-fg-white);
+    }
+
+    body:has(#print-context.print-bg-light) {
+        --print-bg: var(--print-bg-light);
+        --print-fg: var(--print-fg-light);
+    }
+
+    body:has(#print-context.print-bg-dark) {
+        --print-bg: var(--print-bg-dark);
+        --print-fg: var(--print-fg-dark);
+    }
+
+    body:has(#print-context) {
+        --print-bg: var(--print-bg-white);
+        --print-fg: var(--print-fg-white);
+    }
+
     body {
-        background: white !important;
-        color: black !important;
+        background: transparent !important;
+        color: var(--print-fg) !important;
     }
 
     .prose {
@@ -244,12 +277,26 @@ html {
     }
 
     .prose *:not(a) {
-        color: black !important;
+        color: var(--print-fg) !important;
     }
+
+    #print-context.print-mode-compact ~ #article-content-container .container { padding: 0 !important; max-width: 100% !important; }
+    #print-context.print-mode-compact ~ #article-content-container .prose { line-height: 1.4 !important; max-width: 100% !important; }
+    #print-context.print-mode-compact ~ #article-content-container p { margin-bottom: 0.5em !important; }
+    #print-context.print-mode-compact ~ #article-content-container h1 { font-size: 1.5em !important; margin-bottom: 0.5em !important; }
+    #print-context.print-mode-compact ~ #article-content-container h2 { font-size: 1.2em !important; margin-top: 1em !important; margin-bottom: 0.5em !important; }
+
+    #print-context.print-font-10 ~ #article-content-container .prose { font-size: 10pt !important; }
+    #print-context.print-font-11 ~ #article-content-container .prose { font-size: 11pt !important; }
+    #print-context.print-font-12 ~ #article-content-container .prose { font-size: 12pt !important; }
 
     img, h1, h2, h3, h4, h5, h6, .rounded-xl {
         page-break-inside: avoid;
     }
+
+    #print-context.print-hide-images ~ #article-content-container img { display: none !important; }
+    #print-context.print-hide-header ~ #article-content-container #article-header-wrapper,
+    #print-context.print-hide-header ~ #article-content-container .lg\:col-span-4 { display: none !important; }
 
     @page {
         margin: 1.5cm;

@@ -14,6 +14,8 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
 <BaseLayout cf={cf}>
     <div id="reading-progress" class="fixed top-[64px] left-0 h-1 w-0 bg-linear-to-r from-primary to-blue-400 z-60 transition-all duration-150 ease-out"></div>
 
+    <div id="print-context" class="hidden"></div>
+    <div id="print-special-bg" style="display:none;"></div>
     <div id="article-content-container" class="min-h-screen transition-all duration-500">
         <div class="container px-4 py-8 md:py-12">
             <SkeletonArticle />
@@ -119,10 +121,6 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                 </div>
             </div>
 
-            <div class="lg:mb-12 p-6 rounded-xl border blue-border bg-muted/20">
-                <h3 class="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2 disallow-select">Citar este artículo (APA)</h3>
-                <p id="apa-citation" class="text-sm italic"></p>
-            </div>
             <div class="mb-12 ${data.hasReferencesHiddenText}">
                 <h3 class="text-lg font-semibold mb-3">Referencias</h3>
                 <ul class="space-y-3 text-sm">
@@ -159,15 +157,6 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                         <span class="hidden md:block">Escuchar</span>
                     `;
                     moreFunctionsContainer.appendChild(audioBtn);
-                    
-                    const printBtn = document.createElement('button');
-                    printBtn.className = 'flex items-center justify-center gap-2 rounded-md bg-background px-3 py-2 text-sm font-medium hover:bg-accent transition-colors disallow-select';
-                    printBtn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                        <span class="hidden md:block">Imprimir / PDF</span>
-                    `;
-                    printBtn.onclick = () => window.print();
-                    moreFunctionsContainer.appendChild(printBtn);
 
                     let synthesis = window.speechSynthesis;
                     let utterance = null;
@@ -195,6 +184,203 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                             document.getElementById('audio-icon-pause')?.classList.remove('hidden');
                         }
                     });
+
+                    const printBtn = document.createElement('button');
+                    printBtn.className = 'flex items-center justify-center gap-2 rounded-md bg-background px-3 py-2 text-sm font-medium hover:bg-accent transition-colors disallow-select';
+                    printBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        <span class="hidden md:block">Imprimir / PDF</span>
+                    `;
+                    const openPrintMenu = () => {
+                        const overlay = document.createElement('div');
+                        overlay.className = 'fixed inset-0 z-[9999] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity';
+                        overlay.id = 'print-menu-overlay';
+
+                        const panel = document.createElement('div');
+                        panel.className = 'relative w-full max-w-2xl rounded-3xl bg-background shadow-2xl overflow-hidden';
+
+                        panel.innerHTML = `
+                            <div class="flex items-center justify-between px-6 py-5 border-b border-border">
+                                <div>
+                                    <h2 class="text-xl font-semibold">Opciones de Impresión</h2>
+                                    <p class="text-sm text-muted-foreground">Configura cómo se verá el documento al imprimir</p>
+                                </div>
+                                <button type="button" id="print-menu-close" class="text-2xl font-semibold leading-none text-muted-foreground hover:text-foreground">×</button>
+                            </div>
+                            <div class="p-6">
+                                <div class="mb-6">
+                                    <label class="text-sm font-medium mb-3 block">Modo de impresión</label>
+                                    <div class="flex p-1 bg-muted rounded-lg relative">
+                                        <div id="mode-slider" class="absolute inset-y-1 bg-background shadow-sm rounded-md transition-all duration-300 ease-out z-0 w-[calc(50%-0.25rem)] left-1"></div>
+                                        <button class="print-mode-btn flex-1 py-2 text-sm font-medium relative z-10 text-foreground transition-colors" data-mode="full">Completo</button>
+                                        <button class="print-mode-btn flex-1 py-2 text-sm font-medium relative z-10 text-muted-foreground transition-colors" data-mode="compact">Compacto</button>
+                                    </div>
+                                </div>
+
+                                <div class="mb-6 border-t border-border pt-4">
+                                    <button id="advanced-toggle" class="flex items-center justify-between w-full text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                                        <span>Opciones Avanzadas</span>
+                                        <svg id="advanced-chevron" class="w-4 h-4 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    
+                                    <div id="advanced-panel" class="hidden mt-4 space-y-5">
+                                        <div>
+                                            <label class="text-xs font-medium mb-2 block text-muted-foreground">Tamaño de fuente</label>
+                                            <div class="flex gap-2">
+                                                <button class="print-font-btn flex-1 py-1.5 border border-border rounded-md text-sm hover:bg-accent transition-colors bg-accent text-accent-foreground" data-font="10">10pt</button>
+                                                <button class="print-font-btn flex-1 py-1.5 border border-border rounded-md text-sm hover:bg-accent transition-colors" data-font="11">11pt</button>
+                                                <button class="print-font-btn flex-1 py-1.5 border border-border rounded-md text-sm hover:bg-accent transition-colors" data-font="12">12pt</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="text-xs font-medium mb-2 block text-muted-foreground">Fondo</label>
+                                            <div class="grid grid-cols-3 gap-2">
+                                                <button class="print-bg-btn flex-1 aspect-square border border-border rounded-md flex items-center justify-center hover:scale-105 transition-transform bg-white text-black ring-2 ring-primary ring-offset-2 ring-offset-background" data-bg="white" title="Blanco">
+                                                    <span class="text-xs font-medium">B</span>
+                                                </button>
+                                                <button class="print-bg-btn flex-1 aspect-square border border-border rounded-md flex items-center justify-center hover:scale-105 transition-transform bg-[#f5f5f5] text-black" data-bg="light" title="Claro">
+                                                    <span class="text-xs font-medium">C</span>
+                                                </button>
+                                                <button class="print-bg-btn flex-1 aspect-square border border-border rounded-md flex items-center justify-center hover:scale-105 transition-transform bg-[#222222] text-white" data-bg="dark" title="Oscuro">
+                                                    <span class="text-xs font-medium">O</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="space-y-2 pt-2">
+                                            <label class="flex items-center gap-2 cursor-pointer">
+                                                <input type="checkbox" class="print-opt-cb w-4 h-4 rounded border-border text-primary focus:ring-primary bg-background" data-opt="hide-images">
+                                                <span class="text-sm">Ocultar imágenes (Ahorrar tinta)</span>
+                                            </label>
+                                            <label class="flex items-center gap-2 cursor-pointer">
+                                                <input type="checkbox" class="print-opt-cb w-4 h-4 rounded border-border text-primary focus:ring-primary bg-background" data-opt="hide-header">
+                                                <span class="text-sm">Ocultar cabecera y metadatos</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-8 flex justify-end gap-3">
+                                    <button id="print-menu-cancel" class="px-4 py-2 text-sm font-medium rounded-md hover:bg-accent transition-colors">Cancelar</button>
+                                    <button id="print-menu-confirm" class="px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                        Imprimir
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+
+                        overlay.appendChild(panel);
+                        document.body.appendChild(overlay);
+
+                        const printState = {
+                            mode: 'full',
+                            font: '12',
+                            bg: 'white',
+                            hideImages: false,
+                            hideHeader: false
+                        };
+
+                        const updateClasses = () => {
+                            const ctx = document.getElementById('print-context');
+                            if (!ctx) return;
+                            ctx.className = `hidden print-mode-${printState.mode} print-font-${printState.font} print-bg-${printState.bg} ${printState.hideImages ? 'print-hide-images' : ''} ${printState.hideHeader ? 'print-hide-header' : ''}`;
+                            
+                            let pagePrintStyle = document.getElementById('page-print-style');
+                            if (!pagePrintStyle) {
+                                pagePrintStyle = document.createElement('style');
+                                pagePrintStyle.id = 'page-print-style';
+                                document.head.appendChild(pagePrintStyle);
+                            }
+                            pagePrintStyle.innerHTML = `
+@media print {
+    @page {
+        background-color: ${(()=>{
+            const style = window.getComputedStyle(document.body);
+            return style.getPropertyValue('--print-bg-'+printState.bg);
+        })()};
+    }
+}`;
+                        };
+                        updateClasses();
+
+                        const modeBtns = panel.querySelectorAll('.print-mode-btn');
+                        const modeSlider = panel.querySelector('#mode-slider');
+                        modeBtns.forEach((btn, idx) => {
+                            btn.addEventListener('click', () => {
+                                printState.mode = (btn as HTMLElement).dataset.mode as string;
+                                modeBtns.forEach(b => {
+                                    b.classList.remove('text-foreground');
+                                    b.classList.add('text-muted-foreground');
+                                });
+                                btn.classList.add('text-foreground');
+                                btn.classList.remove('text-muted-foreground');
+                                if (idx === 0) {
+                                    (modeSlider as HTMLElement).style.transform = 'translateX(0)';
+                                } else {
+                                    (modeSlider as HTMLElement).style.transform = 'translateX(100%)';
+                                }
+                                updateClasses();
+                            });
+                        });
+
+                        const advToggle = panel.querySelector('#advanced-toggle');
+                        const advPanel = panel.querySelector('#advanced-panel');
+                        const advChevron = panel.querySelector('#advanced-chevron');
+                        advToggle?.addEventListener('click', () => {
+                            advPanel?.classList.toggle('hidden');
+                            if (!advPanel?.classList.contains('hidden')) {
+                                advChevron?.classList.add('rotate-180');
+                            } else {
+                                advChevron?.classList.remove('rotate-180');
+                            }
+                        });
+
+                        const fontBtns = panel.querySelectorAll('.print-font-btn');
+                        fontBtns.forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                printState.font = (btn as HTMLElement).dataset.font as string;
+                                fontBtns.forEach(b => b.classList.remove('bg-accent', 'text-accent-foreground'));
+                                btn.classList.add('bg-accent', 'text-accent-foreground');
+                                updateClasses();
+                            });
+                        });
+
+                        const bgBtns = panel.querySelectorAll('.print-bg-btn');
+                        bgBtns.forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                printState.bg = (btn as HTMLElement).dataset.bg as string;
+                                bgBtns.forEach(b => b.classList.remove('ring-2', 'ring-primary', 'ring-offset-2', 'ring-offset-background'));
+                                btn.classList.add('ring-2', 'ring-primary', 'ring-offset-2', 'ring-offset-background');
+                                updateClasses();
+                            });
+                        });
+
+                        const cbs = panel.querySelectorAll('.print-opt-cb');
+                        cbs.forEach(cb => {
+                            cb.addEventListener('change', (e) => {
+                                const target = e.target as HTMLInputElement;
+                                const opt = target.dataset.opt;
+                                if (opt === 'hide-images') printState.hideImages = target.checked;
+                                if (opt === 'hide-header') printState.hideHeader = target.checked;
+                                updateClasses();
+                            });
+                        });
+
+                        const closeModal = () => overlay.remove();
+                        overlay.addEventListener('click', (event) => {
+                            if (event.target === overlay) closeModal();
+                        });
+                        panel.querySelector('#print-menu-close')?.addEventListener('click', closeModal);
+                        panel.querySelector('#print-menu-cancel')?.addEventListener('click', closeModal);
+                        panel.querySelector('#print-menu-confirm')?.addEventListener('click', () => {
+                            closeModal();
+                            window.print();
+                        });
+                    }
+                    printBtn.onclick = () => openPrintMenu();
+                    moreFunctionsContainer.appendChild(printBtn);
                     
                     const experimentalFlags = JSON.parse(localStorage.getItem('experimentalFeatures') || '{}');
                     if (experimentalFlags.ai_summaries && 'Summarizer' in window) {
@@ -461,13 +647,6 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                     }
                 }
 
-                const citeText = document.getElementById('apa-citation');
-                if (citeText) {
-                    const year = new Date(data.date).getFullYear();
-                    const author = data.authorData ? data.authorData[0] : 'Divulgando Ciencia';
-                    citeText.innerText = `${author} (${year}). ${data.articleTitle}. Divulgando Ciencia.`;
-                }
-
                 const article = document.querySelector('article.prose');
                 article?.querySelectorAll("script").forEach((oldScript) => {
                     const newScript = document.createElement("script");
@@ -499,5 +678,4 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
     .translating-shimmer {
         animation: translation-shimmer 2s linear infinite !important;
     }
-
 </style>
