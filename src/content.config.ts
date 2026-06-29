@@ -34,7 +34,7 @@ const articles = defineCollection({
       authors: z.string(),
       journal: z.string(),
       year: z.string(),
-      doi: z.string(),
+      url: z.string(),
     })).optional(),
   }),
 });

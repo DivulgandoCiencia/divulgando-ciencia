@@ -61,6 +61,7 @@
         --print-fg-white: #000;
         --print-fg-light: #000;
         --print-fg-dark: #fff;
+        --current-science-color: hsl(var(--primary));
     }
 
     .dark {
@@ -111,6 +112,7 @@
 
         --black: #000000;
         --white: #ffffff;
+        --current-science-color: hsl(var(--primary));
     }
 }
 
@@ -300,6 +302,16 @@ html {
 
     @page {
         margin: 1.5cm;
+    }
+
+    .no-print{
+        display: none !important;
+    }
+}
+
+@media screen {
+    .only-print {
+        display: none !important;
     }
 }
 

@@ -7,7 +7,7 @@ const translations = {
     es: esTranslations,
 }
 
-export const clientTranslations = translations
+export const clientTranslations: typeof translations | any = translations
 
 export * from './config';
 export * from './utils';

@@ -17,7 +17,7 @@ interface Props {
     className?: string;
 }
 
-const { title, description, image, altIMG, robots, cf, className } = Astro.props;
+const { title, description, image, altIMG, robots, cf, className = '' } = Astro.props;
 
 const cookieTheme = Astro.locals.theme;
 const serverLang = Astro.locals.lang || 'es';
@@ -50,6 +50,7 @@ const metaRobots = robots !== undefined ? robots : (cf?.robots || false);
         <slot name="head" />
 
         <script>
+            // @ts-nocheck
             const printer = (message: string, type = "log") => {
                 (console as any)[type](`%cScrewDriver`, "background: linear-gradient(90deg, #31E87D 0%, #8DF04F 100%); color: white; padding-inline: 4px; border-radius: 2px; font-family: monospace;", message)
             }
@@ -158,7 +159,7 @@ const metaRobots = robots !== undefined ? robots : (cf?.robots || false);
             document.addEventListener('astro:after-swap', setTheme);
         </script>
     </head>
-    <body class="h-screen flex flex-col overflow-hidden w-full relative selection:bg-primary/30 selection:text-primary">
+    <body class="h-screen flex flex-col overflow-hidden w-full relative selection:bg-(--current-science-color)/30 selection:text-(--current-science-color)">
         <Menu />
         <div class="fixed top-0 left-0 inset-0 science-pattern -z-10"></div>
         <Header />

@@ -12,7 +12,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
 ---
 
 <BaseLayout cf={cf}>
-    <div id="reading-progress" class="fixed top-[64px] left-0 h-1 w-0 bg-linear-to-r from-primary to-blue-400 z-60 transition-all duration-150 ease-out"></div>
+    <div id="reading-progress" class="fixed top-16 left-0 h-1 w-0 bg-linear-to-r from-(--current-science-color) to-(--current-science-color)/50 z-60 transition-all duration-150 ease-out"></div>
 
     <div id="print-context" class="hidden"></div>
     <div id="print-special-bg" style="display:none;"></div>
@@ -56,6 +56,8 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
             const container = document.getElementById('article-content-container');
             const progressBar = document.getElementById('reading-progress');
             const scrollContainer = document.getElementById('scroll-container');
+
+            if (!container) return;
             
             const updateProgress = () => {
                 if (!scrollContainer || !progressBar) return;
@@ -77,6 +79,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                 const data = await response.json();
                 
                 container.innerHTML = `
+<style>*{--current-science-color: var(--${data.scienceDataColor})}</style>
 <div class="relative">
     <div id="article-header-wrapper">
     <header class="container px-4 py-8 md:py-12 relative z-10">
@@ -122,7 +125,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
             </div>
 
             <div class="mb-12 ${data.hasReferencesHiddenText}">
-                <h3 class="text-lg font-semibold mb-3">Referencias</h3>
+                <h1 class="text-3xl font-semibold mb-3">Referencias</h1>
                 <ul class="space-y-3 text-sm">
                     ${data.referenceList}
                 </ul>
@@ -197,7 +200,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                         overlay.id = 'print-menu-overlay';
 
                         const panel = document.createElement('div');
-                        panel.className = 'relative w-full max-w-2xl rounded-3xl bg-background shadow-2xl overflow-hidden';
+                        panel.className = 'relative w-full max-w-2xl rounded-3xl bg-background shadow-2xl overflow-hidden disallow-select';
 
                         panel.innerHTML = `
                             <div class="flex items-center justify-between px-6 py-5 border-b border-border">
@@ -227,9 +230,9 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                                         <div>
                                             <label class="text-xs font-medium mb-2 block text-muted-foreground">Tamaño de fuente</label>
                                             <div class="flex gap-2">
-                                                <button class="print-font-btn flex-1 py-1.5 border border-border rounded-md text-sm hover:bg-accent transition-colors bg-accent text-accent-foreground" data-font="10">10pt</button>
+                                                <button class="print-font-btn flex-1 py-1.5 border border-border rounded-md text-sm hover:bg-accent transition-colors" data-font="10">10pt</button>
                                                 <button class="print-font-btn flex-1 py-1.5 border border-border rounded-md text-sm hover:bg-accent transition-colors" data-font="11">11pt</button>
-                                                <button class="print-font-btn flex-1 py-1.5 border border-border rounded-md text-sm hover:bg-accent transition-colors" data-font="12">12pt</button>
+                                                <button class="print-font-btn flex-1 py-1.5 border border-border rounded-md text-sm hover:bg-accent transition-colors bg-accent text-accent-foreground" data-font="12">12pt</button>
                                             </div>
                                         </div>
                                         
@@ -419,8 +422,8 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                                     expectedInputLanguages: ['en', 'es'],
                                     outputLanguage: 'es',
                                     expectedContextLanguages: ['en', 'es'],
-                                    monitor(m) {
-                                    m.addEventListener('downloadprogress', (e) => {
+                                    monitor(m: any) {
+                                    m.addEventListener('downloadprogress', (e: any) => {
                                         summary.innerHTML = `Descargando modelo de IA... (${Math.round(e.loaded * 100)}%)`;
                                     });
                                 }
@@ -576,7 +579,7 @@ const cf = frontmatter[lang][`article/${slug}`] || { title: 'Cargando...', descr
                             overlay.id = 'language-selector-overlay';
 
                             const panel = document.createElement('div');
-                            panel.className = 'relative w-full max-w-3xl rounded-3xl bg-background shadow-2xl overflow-hidden ';
+                            panel.className = 'relative w-full max-w-3xl rounded-3xl bg-background shadow-2xl overflow-hidden disallow-select';
                             panel.innerHTML = `
                                 <div class="flex items-center justify-between px-6 py-5 border-b border-border">
                                     <div>

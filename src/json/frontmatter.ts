@@ -1,7 +1,7 @@
 import json from './frontmatter.json'
 import { getCollection } from "astro:content";
 const articles = await getCollection('articles');
-let frontmatter = json;
+let frontmatter = json as any;
 articles.map((article) => {
     frontmatter[article.id.split('/')[0]]['article/'+article.id.split('/')[2]] = {
         title: article.data.title,

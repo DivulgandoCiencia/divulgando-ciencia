@@ -28,7 +28,7 @@ export function getStaticPaths() {
     return paths;
 }
 
-export const GET = async ({ params }) => {
+export const GET = async ({ params }: any) => {
     const { slug, lang } = params;
     const t = clientTranslations[lang];
 
@@ -128,7 +128,8 @@ export const GET = async ({ params }) => {
         `<li class="border-l-2 border-primary/30 pl-4 py-1 hover:border-primary transition-colors">
             <p class="font-medium">${ref.title}</p>
             <p class="text-muted-foreground">${ref.authors}. <em>${ref.journal}</em>, ${ref.year}.</p>
-            <p class="text-primary hover:underline"><a href={'https://doi.org/${ref.doi}'} target="_blank" rel="noopener noreferrer">DOI: ${ref.doi}</a></p>
+            <p class="text-primary hover:underline no-print"><a href='${new URL(ref.url)}' target="_blank" rel="noopener noreferrer">${new URL(ref.url).host}</a></p>
+            <p class="text-primary hover:underline only-print"><a href='${new URL(ref.url)}' target="_blank" rel="noopener noreferrer">${new URL(ref.url)}</a></p>
         </li>`
     )).join('\n') : "<div></div>"
 
