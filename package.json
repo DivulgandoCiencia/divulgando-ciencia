@@ -22,14 +22,12 @@
   "dependencies": {
     "@astrojs/mdx": "^7.0.5",
     "@astrojs/vercel": "^11.0.4",
-    "@supabase/supabase-js": "^2.105.1",
-    "@tailwindcss/typography": "^0.5.19",
-    "@tailwindcss/vite": "^4.2.4",
-    "astro": "^7.1.5",
-    "katex": "^0.16.45",
-    "tailwindcss": "^4.2.4"
+    "@supabase/supabase-js": "^2.111.0",
+    "@tailwindcss/typography": "^0.5.20",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.1.6",
+    "katex": "^0.18.1",
+    "tailwindcss": "^4.3.3"
   },
-  "overrides": {
-    "vite": "^7"
-  }
+  "overrides": {}
 }
