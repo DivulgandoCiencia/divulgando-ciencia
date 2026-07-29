@@ -20,12 +20,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^5.0.4",
-    "@astrojs/vercel": "^10.0.6",
+    "@astrojs/mdx": "^7.0.5",
+    "@astrojs/vercel": "^11.0.4",
     "@supabase/supabase-js": "^2.105.1",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.4",
-    "astro": "^6.2.2",
+    "astro": "^7.1.5",
     "katex": "^0.16.45",
     "tailwindcss": "^4.2.4"
   },
